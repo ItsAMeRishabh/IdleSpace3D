@@ -1,11 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Building : MonoBehaviour
 {
-    public string buildingName = "Name";
-    public int buildingLevel = 1;
+    public string building_Name = "Name";
+    public int building_Level = 1;
+    public double building_IridiumBoostPerLevel = 1.2;
+    public GameObject[] buildingPrefabs;
     public List<LevelUpUnlocks> levelUpUnlocks;
     public List<Troop> ownedTroops;
     public List<TroopSO> troopsSO;
@@ -24,8 +25,8 @@ public class Building : MonoBehaviour
     public BuildingSaveData GetBuildingSaveData()
     {
         BuildingSaveData data = new BuildingSaveData();
-        data.buildingName = buildingName;
-        data.buildingLevel = buildingLevel;
+        data.buildingName = building_Name;
+        data.buildingLevel = building_Level;
         data.levelUpUnlocks = levelUpUnlocks;
         data.availableTroops = ownedTroops;
         return data;
@@ -36,7 +37,7 @@ public class Building : MonoBehaviour
         double x = 0;
         foreach (Troop troop in ownedTroops)
         {
-            x += troop.GetIridiumPerTick() * troop.structureOwned;
+            x += troop.GetIridiumPerTick() * troop.troops_Owned * Mathf.Pow((float)building_IridiumBoostPerLevel, building_Level - 1);
         }
         return x;
     }
@@ -49,7 +50,7 @@ public class Building : MonoBehaviour
             {
                 foreach (Troop t in ownedTroops)
                 {
-                    if (t.structureName == so.structureName)
+                    if (t.troop_Name == so.troop_Name)
                     {
                         continue;
                     }

@@ -13,7 +13,7 @@ public class LoadSaveSystem : MonoBehaviour
 
     private GameManager gameManager;
 
-    void Start()
+    void Awake()
     {
         gameManager = GetComponent<GameManager>();
         saveWait = new WaitForSeconds(saveInterval);
@@ -30,7 +30,7 @@ public class LoadSaveSystem : MonoBehaviour
     }
 
     [ContextMenu("Save Game")]
-    public void Save(SaveData saveData)
+    public void Save(PlayerData playerData)
     {
         string saveDir = Application.persistentDataPath + "/" + folderName + "/";
 
@@ -39,19 +39,19 @@ public class LoadSaveSystem : MonoBehaviour
             Directory.CreateDirectory(saveDir);
         }
 
-        string jsonData = JsonUtility.ToJson(saveData, true);
-        File.WriteAllText(saveDir + string.Concat(GameManager.profileName, ".json"), jsonData);
+        string jsonData = JsonUtility.ToJson(playerData, true);
+        File.WriteAllText(saveDir + string.Concat(playerData.profileName, ".json"), jsonData);
 
-        GUIUtility.systemCopyBuffer = saveDir + string.Concat(GameManager.profileName, ".json");
+        GUIUtility.systemCopyBuffer = saveDir + string.Concat(playerData.profileName, ".json");
     }
 
     [ContextMenu("Load Game")]
-    public SaveData Load()
+    public PlayerData Load()
     {
         string saveDir = Application.persistentDataPath + "/" + folderName + "/";
-        string jsonData = File.ReadAllText(saveDir + string.Concat(GameManager.profileName, ".json"));
-        SaveData saveData = JsonUtility.FromJson<SaveData>(jsonData);
-        return saveData;
+        string jsonData = File.ReadAllText(saveDir + string.Concat(gameManager.playerData.profileName, ".json"));
+        PlayerData playerData = JsonUtility.FromJson<PlayerData>(jsonData);
+        return playerData;
         //return null;
         //gameManager.LoadSaveData(saveData);
     }
