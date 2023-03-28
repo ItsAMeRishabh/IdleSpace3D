@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0528895cb020c4283e95d2d50c2237, type: 3}
   m_Name: 001
   m_EditorClassIdentifier: 
-  structureName: A1
-  structureLevel: 1
-  structureOwned: 0
-  structureBaseCost: 20
-  structureBaseIridiumPerSecond: 1
-  structureIridiumMultiplier: 1
-  structureCostMultiplier: 1.2
-  structureCostMultiplierMultiplier: 1
+  troop_Name: Name
+  troop_Level: 1
+  troops_Owned: 0
+  troop_BaseCost: 20
+  troop_BaseIridiumPerSecond: 1
+  troop_IridiumBoostPerLevel: 1.2
+  troop_CostMultiplier: 1.25

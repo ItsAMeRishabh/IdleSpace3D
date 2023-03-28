@@ -252,8 +252,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d26d59d8ced87340b710fa1f688c49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Name
-  buildingLevel: 1
+  building_Name: Name
+  building_Level: 1
+  building_IridiumBoostPerLevel: 1.2
+  buildingPrefabs: []
   levelUpUnlocks: []
   ownedTroops: []
   troopsSO:
@@ -578,141 +580,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &331524161
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 331524162}
-  - component: {fileID: 331524163}
-  - component: {fileID: 331524164}
-  m_Layer: 5
-  m_Name: TotalIridium
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &331524162
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331524161}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1938010255}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25.099976, y: -24.099976}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0, y: 1}
---- !u!222 &331524163
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331524161}
-  m_CullTransparentMesh: 1
---- !u!114 &331524164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 331524161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 'Total Iridium: 0'
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 51.1
-  m_fontSizeBase: 51.1
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &364985108
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,8 +795,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d26d59d8ced87340b710fa1f688c49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Yellow
-  buildingLevel: 1
+  building_Name: Name
+  building_Level: 1
+  building_IridiumBoostPerLevel: 1.2
+  buildingPrefabs: []
   levelUpUnlocks: []
   ownedTroops: []
   troopsSO:
@@ -1849,8 +1718,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d26d59d8ced87340b710fa1f688c49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Yellow
-  buildingLevel: 1
+  building_Name: Tera Mine
+  building_Level: 1
+  building_IridiumBoostPerLevel: 1
+  buildingPrefabs: []
   levelUpUnlocks: []
   ownedTroops: []
   troopsSO:
@@ -2509,7 +2380,7 @@ RectTransform:
   m_Children:
   - {fileID: 832419409}
   m_Father: {fileID: 1938010255}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -3355,6 +3226,7 @@ GameObject:
   - component: {fileID: 1590393985}
   - component: {fileID: 1590393984}
   - component: {fileID: 1590393983}
+  - component: {fileID: 1590393986}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3388,27 +3260,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a81d9cb9cf721cc43870aed5cc1a5a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildings: []
-  iridiumPerSecondBoostDuration: 10
-  iridiumPerSecondBoostMultiplier: 5
+  playerData:
+    profileName: 
+    iridium_Total: 0
+    iridium_PerSecond: 0
+    iridium_PerClick: 0
+    iridium_PerClickLevel: 0
+    ownedBuildings: []
   upgradeClick_BaseCost: 50
-  iridiumPerClickPercent: 5
-  clickUpgradePriceMultiplier: 1.2000000476837158
-  GameUI: {fileID: 829087466}
-  totalIridiumText: {fileID: 262036854}
-  iridiumPerSecondText: {fileID: 2103131531}
-  getIridiumButton: {fileID: 1869777342}
-  boostIridiumPerSecond_Button: {fileID: 2088819120}
-  upgradeClick_Button: {fileID: 1257707532}
-  buildingUI: {fileID: 1938010254}
-  buildingTotalIridiumText: {fileID: 331524164}
-  buildingTotalIPSText: {fileID: 1858737457}
-  buildingNameText: {fileID: 1264095730}
-  buildingIPSText: {fileID: 1337045858}
-  backButton: {fileID: 1255786116}
-  troopButtonParent: {fileID: 1615492223}
-  troopButtonPrefab: {fileID: 8392431042935853529, guid: 7e8e196fbf328da45aa2b21137a0ee1d,
-    type: 3}
+  upgradeClick_PriceMultiplier: 1.2
+  iridium_PerSecondBoostMultiplier: 2
+  iridium_PerSecondBoostDuration: 10
+  defaultValues: {fileID: 0}
+  upgradeClick_CurrentCost: 1000
+  selectedBuilding: {fileID: 0}
 --- !u!4 &1590393985
 Transform:
   m_ObjectHideFlags: 0
@@ -3424,6 +3289,31 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1590393986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1590393982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e2c560fb806f246811e1ea7fbcc271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameUI: {fileID: 829087466}
+  text_TotalIridium: {fileID: 262036854}
+  text_IridiumPerSecond: {fileID: 2103131531}
+  button_GetIridium: {fileID: 1869777342}
+  button_BoostIridiumProduction: {fileID: 2088819120}
+  button_UpgradeClick: {fileID: 1257707532}
+  buildingUI: {fileID: 1938010254}
+  text_BuildingName: {fileID: 1264095730}
+  text_BuildingIridiumPerSecond: {fileID: 1337045858}
+  button_Back: {fileID: 1255786116}
+  troopButtonParent: {fileID: 1615492223}
+  troopButtonPrefab: {fileID: 8392431042935853529, guid: 7e8e196fbf328da45aa2b21137a0ee1d,
+    type: 3}
 --- !u!1 &1615492223
 GameObject:
   m_ObjectHideFlags: 0
@@ -3436,7 +3326,7 @@ GameObject:
   - component: {fileID: 1615492225}
   - component: {fileID: 1615492224}
   m_Layer: 5
-  m_Name: Buttons
+  m_Name: Troop_Butt_Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3996,141 +3886,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800265886}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1858737454
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1858737455}
-  - component: {fileID: 1858737456}
-  - component: {fileID: 1858737457}
-  m_Layer: 5
-  m_Name: TotalIPS
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1858737455
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858737454}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1938010255}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 31, y: -80.1}
-  m_SizeDelta: {x: 200, y: 50}
-  m_Pivot: {x: 0, y: 1}
---- !u!222 &1858737456
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858737454}
-  m_CullTransparentMesh: 1
---- !u!114 &1858737457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858737454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 0 Iridium/Sec
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 35.2
-  m_fontSizeBase: 35.2
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &1869777338
 GameObject:
   m_ObjectHideFlags: 0
@@ -4400,8 +4155,6 @@ RectTransform:
   m_Children:
   - {fileID: 1264095728}
   - {fileID: 1337045856}
-  - {fileID: 331524162}
-  - {fileID: 1858737455}
   - {fileID: 1963302608}
   - {fileID: 1255786113}
   m_Father: {fileID: 1738073135}
@@ -4484,7 +4237,7 @@ RectTransform:
   m_Children:
   - {fileID: 1615492226}
   m_Father: {fileID: 1938010255}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -4683,8 +4436,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d26d59d8ced87340b710fa1f688c49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Tera Mine 2
-  buildingLevel: 1
+  building_Name: Name
+  building_Level: 1
+  building_IridiumBoostPerLevel: 1.2
+  buildingPrefabs: []
   levelUpUnlocks: []
   ownedTroops: []
   troopsSO:
@@ -4776,6 +4531,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448126444132073992, guid: 6e7b727694b3a194588834b77a5d1f1d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.007
+      objectReference: {fileID: 0}
+    - target: {fileID: 8448126444132073992, guid: 6e7b727694b3a194588834b77a5d1f1d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.001
       objectReference: {fileID: 0}
     - target: {fileID: 8516261945914868351, guid: 6e7b727694b3a194588834b77a5d1f1d,
         type: 3}

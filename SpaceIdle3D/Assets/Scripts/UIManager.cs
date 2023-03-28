@@ -82,7 +82,7 @@ public class UIManager : MonoBehaviour
 
     public void ClickedOnBuilding()
     {
-        GameUI.SetActive(false);
+        //GameUI.SetActive(false);
         buildingUI.SetActive(true);
         PopulateBuildingUI();
     }
@@ -137,7 +137,7 @@ public class UIManager : MonoBehaviour
 
     public void BackClicked()
     {
-        GameUI.SetActive(true);
+        //GameUI.SetActive(true);
         buildingUI.SetActive(false);
         gameManager.selectedBuilding = null;
     }

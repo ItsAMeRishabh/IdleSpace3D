@@ -553,7 +553,7 @@ GameObject:
   - component: {fileID: 2919604478852517985}
   - component: {fileID: 7128378310964909855}
   m_Layer: 5
-  m_Name: StructureButton
+  m_Name: Troop Button Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
