@@ -17,19 +17,10 @@ public class Building : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         SOCheck();
     }
+
     void OnMouseDown()
     {
         gameManager.ClickedOnBuilding(this);
-    }
-
-    public BuildingSaveData GetBuildingSaveData()
-    {
-        BuildingSaveData data = new BuildingSaveData();
-        data.buildingName = building_Name;
-        data.buildingLevel = building_Level;
-        data.levelUpUnlocks = levelUpUnlocks;
-        data.availableTroops = ownedTroops;
-        return data;
     }
 
     public double GetIridiumPerTick()
