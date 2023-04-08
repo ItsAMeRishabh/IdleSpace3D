@@ -4,5 +4,5 @@ using System.Collections.Generic;
 public class LevelUpUnlocks
 {
     public int level;
-    public List<string> unlockedTroops;
+    public List<TroopSO> unlockedTroops;
 }

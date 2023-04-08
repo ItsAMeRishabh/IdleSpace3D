@@ -2663,16 +2663,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d26d59d8ced87340b710fa1f688c49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Yellow
-  buildingLevel: 1
-  levelUpUnlocks: []
-  ownedTroops: []
-  troopsSO:
-  - {fileID: 11400000, guid: ba253fd5a093d0845bba8adf87f64497, type: 2}
-  - {fileID: 11400000, guid: 348e55ea97b16864e8f01b5d33c883dc, type: 2}
-  - {fileID: 11400000, guid: 3e82b1612294e2d438455006036c55c0, type: 2}
-  - {fileID: 11400000, guid: 36b726829e2337242ac65364e4124940, type: 2}
-  - {fileID: 11400000, guid: 794e11138b04b27458c0f5ef766da28b, type: 2}
+  buildingSO: {fileID: 0}
+  buildingData:
+    building_Name: BuildingName
+    building_Level: 1
+    building_IridiumBoostPerLevel: 1.2
+    ownedTroops: []
 --- !u!60 &1478343468
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2829,18 +2825,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d26d59d8ced87340b710fa1f688c49b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Name
-  buildingLevel: 1
-  levelUpUnlocks: []
-  ownedTroops: []
-  troopsSO:
-  - {fileID: 11400000, guid: cbf0db96e1f6ce04a9564b0d7a4774f5, type: 2}
-  - {fileID: 11400000, guid: f6a41ad23708cae4e8e7c10021516106, type: 2}
-  - {fileID: 11400000, guid: d72e1f63cd09b0d46ad31a4ef2a29d58, type: 2}
-  - {fileID: 11400000, guid: cadd2d4b8ba43b047a18da6281ac13e9, type: 2}
-  - {fileID: 11400000, guid: 433880161e238bf48ba0cfc485d9b135, type: 2}
-  - {fileID: 11400000, guid: 684ab375e78303f4dafbd6de914d7a39, type: 2}
-  - {fileID: 11400000, guid: e694aa935de421f49bb6724b6b3daeac, type: 2}
+  buildingSO: {fileID: 0}
+  buildingData:
+    building_Name: BuildingName
+    building_Level: 1
+    building_IridiumBoostPerLevel: 1.2
+    ownedTroops: []
 --- !u!60 &1502901600
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3955,6 +3945,9 @@ GameObject:
   - component: {fileID: 2044636300}
   - component: {fileID: 2044636299}
   - component: {fileID: 2044636301}
+  - component: {fileID: 2044636304}
+  - component: {fileID: 2044636303}
+  - component: {fileID: 2044636302}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3974,27 +3967,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a81d9cb9cf721cc43870aed5cc1a5a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildings: []
-  iridiumPerSecondBoostDuration: 10
-  iridiumPerSecondBoostMultiplier: 5
+  playerData:
+    profileName: 
+    iridium_Total: 0
+    iridium_PerSecond: 0
+    iridium_PerClick: 0
+    iridium_PerClickLevel: 0
+    ownedBuildings: []
+  selectedBuilding: {fileID: 0}
   upgradeClick_BaseCost: 50
-  iridiumPerClickPercent: 5
-  clickUpgradePriceMultiplier: 1.2000000476837158
-  GameUI: {fileID: 957444426}
-  totalIridiumText: {fileID: 1911984392}
-  iridiumPerSecondText: {fileID: 1936298151}
-  getIridiumButton: {fileID: 1671119100}
-  boostIridiumPerSecond_Button: {fileID: 143270369}
-  upgradeClick_Button: {fileID: 695221881}
-  buildingUI: {fileID: 210397848}
-  buildingTotalIridiumText: {fileID: 1320617170}
-  buildingTotalIPSText: {fileID: 747278577}
-  buildingNameText: {fileID: 2061715145}
-  buildingIPSText: {fileID: 484000590}
-  backButton: {fileID: 1168751114}
-  troopButtonParent: {fileID: 1568902294}
-  troopButtonPrefab: {fileID: 8392431042935853529, guid: 7e8e196fbf328da45aa2b21137a0ee1d,
-    type: 3}
+  upgradeClick_PriceMultiplier: 1.2
+  iridium_PerSecondBoostMultiplier: 2
+  iridium_PerSecondBoostDuration: 10
+  defaultValues: {fileID: 0}
+  saveInterval: 5
+  upgradeClick_CurrentCost: 1000
 --- !u!4 &2044636300
 Transform:
   m_ObjectHideFlags: 0
@@ -4022,8 +4009,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d21d9d8182e8d4d4fae9b7fd4ebedc04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveInterval: 5
   folderName: Saves
+--- !u!114 &2044636302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044636298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9329528a6382b7240bbce523db092b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2044636303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044636298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d239a70676ede8478a85aba0d8edea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingLocations: []
+  ownedBuildings: []
+--- !u!114 &2044636304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2044636298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e2c560fb806f246811e1ea7fbcc271, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameUI: {fileID: 0}
+  text_TotalIridium: {fileID: 0}
+  text_IridiumPerSecond: {fileID: 0}
+  button_GetIridium: {fileID: 0}
+  button_BoostIridiumProduction: {fileID: 0}
+  button_UpgradeClick: {fileID: 0}
+  button_OpenBuyBuildings: {fileID: 0}
+  buildingUI: {fileID: 0}
+  text_BuildingName: {fileID: 0}
+  text_BuildingIridiumPerSecond: {fileID: 0}
+  button_Back_Building: {fileID: 0}
+  troopButtonParent: {fileID: 0}
+  troopButtonPrefab: {fileID: 0}
+  buildingBuyUI: {fileID: 0}
+  button_Back_BuyBuilding: {fileID: 0}
+  buildingButtonParent: {fileID: 0}
+  buildingButtonPrefab: {fileID: 0}
+  profileSelectionUI: {fileID: 0}
+  newProfileButton: {fileID: 0}
+  profileButtonParent: {fileID: 0}
+  profileButtonPrefab: {fileID: 0}
 --- !u!1 &2061715143
 GameObject:
   m_ObjectHideFlags: 0

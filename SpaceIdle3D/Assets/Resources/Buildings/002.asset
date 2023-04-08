@@ -15,10 +15,10 @@ MonoBehaviour:
   building_Name: Some
   building_Level: 1
   building_IridiumBoostPerLevel: 1.2
-  building_BaseCost: 150
+  building_BaseCost: 20
   building_CostMultiplier: 1.25
   buildingPrefabs:
-  - {fileID: 3999616728257321459, guid: 26ec342eaf0d9f44da552a36cb97e6dd, type: 3}
+  - {fileID: 2292723580634780923, guid: 26ec342eaf0d9f44da552a36cb97e6dd, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:

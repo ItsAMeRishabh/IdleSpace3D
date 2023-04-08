@@ -65,13 +65,18 @@ public class BuildingManager : MonoBehaviour
         {
             if (!buildingLocationsDict.ContainsKey(t))
             {
-                Building building = Instantiate(buildingSO.buildingPrefabs[buildingSO.building_Level - 1], t).GetComponent<Building>();
+                GameObject obj = Instantiate(buildingSO.buildingPrefabs[buildingSO.building_Level - 1], t);
+                Building building = obj.GetComponentInChildren<Building>();
 
                 building.buildingData = new BuildingData();
                 building.buildingData.building_Name = buildingSO.building_Name;
                 building.buildingData.building_Level = buildingSO.building_Level;
                 building.buildingData.building_IridiumBoostPerLevel = buildingSO.building_IridiumBoostPerLevel;
                 building.buildingData.ownedTroops = new List<Troop>();
+                foreach(TroopSO troop in buildingSO.allTroops)
+                {
+                    building.buildingData.ownedTroops.Add(new Troop(troop));
+                }
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
 

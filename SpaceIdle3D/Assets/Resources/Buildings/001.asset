@@ -18,14 +18,14 @@ MonoBehaviour:
   building_BaseCost: 100
   building_CostMultiplier: 1.25
   buildingPrefabs:
-  - {fileID: 267545631971151544, guid: d0749ca41fbce134896813ff1b64d263, type: 3}
-  - {fileID: 919132149155446097, guid: 905f3936e4524234499f16d23be0bfd5, type: 3}
+  - {fileID: 4548579041751584191, guid: d0749ca41fbce134896813ff1b64d263, type: 3}
+  - {fileID: 2292723580634780923, guid: 26ec342eaf0d9f44da552a36cb97e6dd, type: 3}
   - {fileID: 919132149155446097, guid: cd0d486da7ef4a74a9d0d6984862c360, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:
-    - Miner
-    - Jack's Hammer
+    - {fileID: 0}
+    - {fileID: 0}
   allTroops:
   - {fileID: 11400000, guid: b71cd5a147b518d4682612203be11cb2, type: 2}
   - {fileID: 11400000, guid: c0458d768130e0941b123e356815b580, type: 2}
