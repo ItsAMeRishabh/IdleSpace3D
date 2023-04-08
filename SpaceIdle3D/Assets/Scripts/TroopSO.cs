@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Iridium Generator", menuName = "Iridium Generator")]
+[CreateAssetMenu(menuName = "SpaceIdle3D/Troop", fileName = "Troop")]
 public class TroopSO : ScriptableObject
 {
     public string troop_Name = "Name";

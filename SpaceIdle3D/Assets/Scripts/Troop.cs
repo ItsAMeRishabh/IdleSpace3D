@@ -10,7 +10,7 @@ public class Troop
     public double troop_CurrentCost = 0;
     public double troop_BaseIridiumPerSecond = 0;
     public double troop_IridiumBoostPerLevel = 1.2;
-    public double troop_IridiumMultiplier = 1; //TODO: Make this dependant on the level of the building
+    public double troop_IridiumMultiplier = 1;
     public double troop_CostMultiplier = 1.25;
 
     public Troop(string name, int baseCost, int baseIridiumPerSecond, double iridiumBoostPerLevel, double costMultiplier)

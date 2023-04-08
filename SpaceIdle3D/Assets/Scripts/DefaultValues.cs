@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class DefaultValues : ScriptableObject
 {
     public double iridium_Total = 0;
-    public double iridium_PerSecond = 1;
-    public double iridium_PerClick = 10;
+    public double iridium_PerSecond = 0;
+    public double iridium_PerClick = 1;
     public int iridium_PerClickLevel = 1;
-    public List<Building> ownedBuildings = new List<Building>();
+    public List<BuildingData> ownedBuildings = new List<BuildingData>();
 }

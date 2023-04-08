@@ -8,5 +8,6 @@ public class PlayerData
     public double iridium_PerSecond; //Recalculated on load
     public double iridium_PerClick; //Recalculated on load
     public int iridium_PerClickLevel;
-    public List<Building> ownedBuildings = new List<Building>();
+    public List<BuildingData> ownedBuildings = new List<BuildingData>();
+    public List<Boost> boosts = new List<Boost>();
 }
