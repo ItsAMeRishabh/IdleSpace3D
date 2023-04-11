@@ -22,7 +22,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject buildingUI;
     [SerializeField] private TMP_Text text_BuildingName;
     [SerializeField] private TMP_Text text_BuildingIridiumPerSecond;
+    [SerializeField] private Button button_UpgradeBuilding;
     [SerializeField] private Button button_Back_Building;
+    private TMP_Text text_UpgradeBuildingButton;
 
     [SerializeField] private GameObject troopButtonParent;
     [SerializeField] private GameObject troopButtonPrefab;
@@ -71,10 +73,13 @@ public class UIManager : MonoBehaviour
     {
         text_GetIridiumButton = button_GetIridium.GetComponentInChildren<TMP_Text>();
         text_UpgradeClickButton = button_UpgradeClick.GetComponentInChildren<TMP_Text>();
+        text_UpgradeBuildingButton = button_UpgradeBuilding.GetComponentInChildren<TMP_Text>();
 
         button_Back_Building.onClick.AddListener(BackClicked);
+
         button_OpenBuyBuildings.onClick.AddListener(OpenShop);
         button_Back_BuyBuilding.onClick.AddListener(CloseShop);
+
         button_GetIridium.onClick.AddListener(gameManager.GetIridiumClicked);
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
         button_BoostIridiumProduction.onClick.AddListener(gameManager.BoostIridiumProductionClicked);
@@ -103,14 +108,15 @@ public class UIManager : MonoBehaviour
 
         if (buildingUI.activeSelf)
         {
-            text_BuildingName.text = gameManager.selectedBuilding.buildingData.building_Name + " (Lvl " + gameManager.selectedBuilding.buildingData.building_Level.ToString("0") + ")";
-            text_BuildingIridiumPerSecond.text = (gameManager.selectedBuilding.GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + " Iridium/s";
-            for (int i = 0; i < gameManager.selectedBuilding.buildingData.ownedTroops.Count; i++)
+            text_BuildingName.text = gameManager.BuildingManager.selectedBuilding.buildingData.building_Name + " (Lvl " + gameManager.BuildingManager.selectedBuilding.buildingData.building_Level.ToString("0") + ")";
+            text_BuildingIridiumPerSecond.text = (gameManager.BuildingManager.selectedBuilding.GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + " Iridium/s";
+            text_UpgradeBuildingButton.text = "Upgrade ($" + gameManager.BuildingManager.selectedBuilding.buildingData.building_UpgradeCost.ToString("0") + ")";
+            for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops.Count; i++)
             {
-                text_TroopNames[i].text = gameManager.selectedBuilding.buildingData.ownedTroops[i].troop_Name;
-                text_TroopCosts[i].text = "$" + gameManager.selectedBuilding.buildingData.ownedTroops[i].troop_CurrentCost.ToString("0.0");
-                text_TroopsOwned[i].text = gameManager.selectedBuilding.buildingData.ownedTroops[i].troops_Owned.ToString("0") + " owned";
-                text_TroopIPS[i].text = "+" + (gameManager.selectedBuilding.buildingData.ownedTroops[i].GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + "i/s";
+                text_TroopNames[i].text = gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops[i].troop_Name;
+                text_TroopCosts[i].text = "$" + gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops[i].troop_CurrentCost.ToString("0.0");
+                text_TroopsOwned[i].text = gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops[i].troops_Owned.ToString("0") + " owned";
+                text_TroopIPS[i].text = "+" + (gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops[i].GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + "i/s";
             }
         }
 
@@ -119,7 +125,7 @@ public class UIManager : MonoBehaviour
             for (int i = 0; i < gameManager.BuildingManager.buildingLocations.Count; i++)
             {
                 text_BuildingNames[i].text = gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name;
-                text_BuildingCosts[i].text = "$" + gameManager.BuildingManager.buildingLocations[i].buildingSO.building_BaseCost.ToString("0.0");
+                text_BuildingCosts[i].text = "$" + gameManager.BuildingManager.buildingLocations[i].buildingSO.building_CurrentCost.ToString("0.0");
 
                 text_BuildingsOwned[i].text = gameManager.BuildingManager.GetBuildingCount(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name).ToString("0") + " owned";
             }
@@ -128,7 +134,6 @@ public class UIManager : MonoBehaviour
 
     public void ClickedOnBuilding()
     {
-        //GameUI.SetActive(false);
         buildingUI.SetActive(true);
         PopulateBuildingUI();
     }
@@ -137,7 +142,7 @@ public class UIManager : MonoBehaviour
     {
         CleanUpBuildingUI();
 
-        if (gameManager.selectedBuilding != null)
+        if (gameManager.BuildingManager.selectedBuilding != null)
         {
             button_Troop = new List<Button>();
             text_TroopNames = new List<TMP_Text>();
@@ -145,12 +150,14 @@ public class UIManager : MonoBehaviour
             text_TroopsOwned = new List<TMP_Text>();
             text_TroopIPS = new List<TMP_Text>();
 
-            for (int i = 0; i < gameManager.selectedBuilding.buildingData.ownedTroops.Count; i++)
+            button_UpgradeBuilding.onClick.AddListener(() => gameManager.BuildingManager.UpgradeBuilding(gameManager.BuildingManager.selectedBuilding));
+
+            for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops.Count; i++)
             {
                 int j = i;
 
                 GameObject newButton = Instantiate(troopButtonPrefab, troopButtonParent.transform);
-                newButton.name = gameManager.selectedBuilding.buildingData.ownedTroops[i].troop_Name + " Button";
+                newButton.name = gameManager.BuildingManager.selectedBuilding.buildingData.ownedTroops[i].troop_Name + " Button";
                 button_Troop.Add(newButton.GetComponent<Button>());
                 text_TroopNames.Add(newButton.transform.GetChild(0).GetComponent<TMP_Text>());
                 text_TroopCosts.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
@@ -171,7 +178,7 @@ public class UIManager : MonoBehaviour
         text_BuildingCosts = new List<TMP_Text>();
         text_BuildingsOwned = new List<TMP_Text>();
 
-        BuildingLocations[] buildings = gameManager.BuildingManager.buildingLocations.ToArray();
+        BuildingLocation[] buildings = gameManager.BuildingManager.buildingLocations.ToArray();
 
         for (int i = 0; i < buildings.Length; i++)
         {
@@ -190,6 +197,8 @@ public class UIManager : MonoBehaviour
 
     public void CleanUpBuildingUI()
     {
+        button_UpgradeBuilding.onClick.RemoveAllListeners();
+
         foreach (Button button in button_Troop)
         {
             button.onClick.RemoveAllListeners();
@@ -229,7 +238,7 @@ public class UIManager : MonoBehaviour
     {
         //GameUI.SetActive(true);
         buildingUI.SetActive(false);
-        gameManager.selectedBuilding = null;
+        gameManager.BuildingManager.selectedBuilding = null;
     }
 
     public void OpenShop()
