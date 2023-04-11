@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [CreateAssetMenu(menuName = "SpaceIdle3D/Building", fileName = "Building")]
 public class BuildingSO : ScriptableObject
@@ -10,7 +11,9 @@ public class BuildingSO : ScriptableObject
     public double building_IridiumBoostPerLevel = 1.2;
     public double building_BaseCost = 0;
     public double building_CostMultiplier = 1.25f;
+    [NonSerialized] public double building_CurrentCost = 0;
+    public double building_UpgradeBaseCost = 0;
+    public double building_UpgradeCostMultiplier = 1.25f;
     public List<GameObject> buildingPrefabs;
     public List<LevelUpUnlocks> levelUpUnlocks;
-    public List<TroopSO> allTroops;
 }
