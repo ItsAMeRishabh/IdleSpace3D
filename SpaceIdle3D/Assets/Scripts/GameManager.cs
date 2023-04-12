@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [Header("Balancing")]
     [SerializeField] private double upgradeClick_BaseCost = 1000;
     [SerializeField] private double upgradeClick_PriceMultiplier = 1.2;
+    [HideInInspector] public double upgradeClick_CurrentCost = 1000;
     [SerializeField] private double iridium_PerSecondBoostMultiplier = 2;
     [SerializeField] private double iridium_PerSecondBoostDuration = 10;
 
@@ -28,7 +29,6 @@ public class GameManager : MonoBehaviour
     [Header("Save Configuration")]
     [SerializeField] private float saveInterval = 5f;
 
-    public double upgradeClick_CurrentCost = 1000;
     private bool iridium_PerSecondBoosted = false;
     private bool getIridium_ButtonClicked = false;
 
@@ -283,9 +283,12 @@ public class GameManager : MonoBehaviour
 
     #region Save, Load and Reset
 
+    [ContextMenu("Try Save!")]
     public void SaveGame()
     {
+        playerData.ownedBuildings = buildingManager.GetBuildingDatas();
         loadSaveSystem.Save(playerData);
+        playerData.ownedBuildings.Clear();
     }
 
     public PlayerData GetSaveData()
@@ -293,11 +296,14 @@ public class GameManager : MonoBehaviour
         return playerData;
     }
 
+    [ContextMenu("Try Load!")]
     public void LoadGame()
     {
         playerData = loadSaveSystem.Load();
-
-        StartTickCoroutine();
+        buildingManager.SpawnBuildings(playerData.ownedBuildings);
+        //UpdateIridiumPerSecond();
+        StartGame();
+        //StartTickCoroutine();
     }
 
     void ResetGame()

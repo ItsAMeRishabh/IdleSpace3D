@@ -48,9 +48,7 @@ public class BuildingManager : MonoBehaviour
 
             if (buildingSO != null)
             {
-                Building building = Instantiate(buildingSO.buildingPrefabs[buildingSO.building_Level - 1], transform).GetComponent<Building>();
-                building.buildingData = buildingData;
-                ownedBuildings.Add(building);
+                PlaceBuilding(buildingSO, buildingData);
             }
             else
             {

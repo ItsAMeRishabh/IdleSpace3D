@@ -52,7 +52,7 @@ public class LoadSaveSystem : MonoBehaviour
         GUIUtility.systemCopyBuffer = saveDir + string.Concat(playerData.profileName, ".json");
     }
 
-    [ContextMenu("Save Game")]
+    //[ContextMenu("Save Game")]
     public void Save()
     {
         string jsonData = JsonUtility.ToJson(gameManager.playerData, true);
