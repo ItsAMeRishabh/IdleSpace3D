@@ -196,7 +196,7 @@ public class BuildingManager : MonoBehaviour
             BuildingData buildingData = building.buildingData;
             buildingData.building_Level++;
             selectedBuilding = PlaceBuilding(buildingSO, buildingData);
-            gameManager.UpdateIridiumPerSecond();
+            gameManager.UpdateIridiumSources();
             gameManager.CalculateCosts();
             Destroy(building.transform.parent.gameObject);
         }

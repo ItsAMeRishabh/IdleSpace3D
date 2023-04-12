@@ -26,7 +26,7 @@ public class BoostManager : MonoBehaviour
 
         this.activeBoosts = activeBoosts;
 
-        gameManager.UpdateIridiumPerSecond();
+        gameManager.UpdateIridiumSources();
     }
 
     public void ProcessBoostTimers()
@@ -38,7 +38,7 @@ public class BoostManager : MonoBehaviour
             if (activeBoosts[i].boost_TimeRemaining <= 0)
             {
                 activeBoosts.RemoveAt(i);
-                gameManager.UpdateIridiumPerSecond();
+                gameManager.UpdateIridiumSources();
             }
         }
     }
@@ -58,7 +58,7 @@ public class BoostManager : MonoBehaviour
         {
             boost = new Boost(boostSO);
             activeBoosts.Add(boost);
-            gameManager.UpdateIridiumPerSecond();
+            gameManager.UpdateIridiumSources();
         }
     }
 }

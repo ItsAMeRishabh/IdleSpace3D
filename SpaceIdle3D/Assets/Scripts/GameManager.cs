@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Save Configuration")]
     [SerializeField] private float saveInterval = 5f;
+    [SerializeField] private bool autoSave = false;
 
     private bool getIridium_ButtonClicked = false;
 
@@ -67,12 +68,9 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-
-        //buildingManager.ownedBuildings = new List<Building>(FindObjectsOfType<Building>());
-
-        UpdateIridiumPerSecond(); //Update the iridium per second
-
         uiManager.InitializeUI(); //Initialize all UI Variables
+
+        UpdateIridiumSources(); //Update the iridium per second
 
         CalculateCosts(); //Calculate all upgrade costs
 
@@ -89,11 +87,12 @@ public class GameManager : MonoBehaviour
 
         if (profiles.Count == 0)
         {
+            Debug.Log("No saves found. Starting new game");
             StartNewGame();
         }
         else
         {
-            //Open UI to choose profile
+            //TODO: Open UI to choose profile
         }
     }
 
@@ -118,7 +117,16 @@ public class GameManager : MonoBehaviour
         tickCoroutine = StartCoroutine(Tick());
     }
 
-    public void UpdateIridiumPerSecond()
+    private void StartSaveCoroutine()
+    {
+        if (saveCoroutine != null)
+            StopCoroutine(saveCoroutine);
+
+        saveWait = new WaitForSeconds(saveInterval);
+        saveCoroutine = StartCoroutine(SaveCoroutine());
+    }
+
+    public void UpdateIridiumSources()
     {
         playerData.iridium_PerSecond = 0;
 
@@ -127,23 +135,21 @@ public class GameManager : MonoBehaviour
             playerData.iridium_PerSecond += b.GetIridiumPerTick() * ticksPerSecond;
         }
 
-        playerData.iridium_PerSecondBoosted = playerData.iridium_PerSecond;
+        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
         playerData.iridium_PerClickBoosted = playerData.iridium_PerClick;
+        playerData.iridium_PerSecondBoosted = playerData.iridium_PerSecond;
 
         foreach(Boost b in boostManager.activeBoosts)
         {
-            playerData.iridium_PerSecondBoosted *= b.boost_IridiumPerSecond;
             playerData.iridium_PerClickBoosted *= b.boost_IridiumPerClick;
+            playerData.iridium_PerSecondBoosted *= b.boost_IridiumPerSecond;
         }
 
-        //playerData.iridium_PerSecond = iridium_PerSecondBoosted ? playerData.iridium_PerSecond * iridium_PerSecondBoostMultiplier : playerData.iridium_PerSecond;
-        //playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
     }
 
     public void CalculateCosts()
     {
         upgradeClick_CurrentCost = (int)(upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
-        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
 
         foreach (Building b in buildingManager.ownedBuildings)
         {
@@ -171,6 +177,15 @@ public class GameManager : MonoBehaviour
             uiManager.UpdateAllUI();
             boostManager.ProcessBoostTimers();
             yield return tickWait;
+        }
+    }
+
+    private IEnumerator SaveCoroutine()
+    {
+        while(true)
+        {
+            yield return saveWait;
+            if(autoSave) SaveGame();
         }
     }
 
@@ -232,7 +247,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        UpdateIridiumPerSecond();
+        UpdateIridiumSources();
         CalculateCosts();
     }
 
