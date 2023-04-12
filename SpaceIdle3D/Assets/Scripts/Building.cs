@@ -22,7 +22,7 @@ public class Building : MonoBehaviour
     public double GetIridiumPerTick()
     {
         double x = 0;
-        foreach (Troop troop in buildingData.ownedTroops)
+        foreach (Troop troop in buildingData.building_OwnedTroops)
         {
             x += troop.GetIridiumPerTick() * troop.troops_Owned * Mathf.Pow((float)buildingData.building_IridiumBoostPerLevel, buildingData.building_Level - 1);
         }

@@ -7,19 +7,20 @@ using System;
 [RequireComponent(typeof(GameManager))]
 public class BuildingManager : MonoBehaviour
 {
-    public Building selectedBuilding;
+    [HideInInspector] public Building selectedBuilding;
+
     public List<BuildingLocation> buildingLocations;
-    public List<Building> ownedBuildings = new List<Building>();
+    [HideInInspector] public List<Building> ownedBuildings = new List<Building>();
 
     private Dictionary<Transform, Building> buildingLocationsDict = new Dictionary<Transform, Building>();
     private GameManager gameManager;
 
     private void Start()
     {
-        gameManager = GetComponent<GameManager>();    
+        gameManager = GetComponent<GameManager>();
     }
 
-    public List<BuildingData> GetBuildingDatas()
+    public List<BuildingData> GetBuildingDataList()
     {
         List<BuildingData> buildingDatas = new List<BuildingData>();
 
@@ -79,22 +80,22 @@ public class BuildingManager : MonoBehaviour
                 building.buildingData.building_Name = buildingSO.building_Name;
                 building.buildingData.building_Level = buildingSO.building_Level;
                 building.buildingData.building_IridiumBoostPerLevel = buildingSO.building_IridiumBoostPerLevel;
-                building.buildingData.ownedTroops = new List<Troop>();
+                building.buildingData.building_OwnedTroops = new List<Troop>();
 
                 foreach (LevelUpUnlocks levelUpUnlock in buildingSO.levelUpUnlocks)
                 {
-                    if(building.buildingData.building_Level >= levelUpUnlock.level)
+                    if (building.buildingData.building_Level >= levelUpUnlock.level)
                     {
                         List<Troop> troopsToAdd = new List<Troop>();
 
-                        foreach(TroopSO troop in levelUpUnlock.unlockedTroops)
+                        foreach (TroopSO troop in levelUpUnlock.unlockedTroops)
                         {
                             troopsToAdd.Add(new Troop(troop));
                         }
 
-                        foreach(Troop troop in troopsToAdd)
+                        foreach (Troop troop in troopsToAdd)
                         {
-                            building.buildingData.ownedTroops.Add(troop);
+                            building.buildingData.building_OwnedTroops.Add(troop);
                         }
                     }
                 }
@@ -139,9 +140,9 @@ public class BuildingManager : MonoBehaviour
 
                         foreach (TroopSO troop in levelUpUnlock.unlockedTroops)
                         {
-                            Troop foundTroop = Array.Find(building.buildingData.ownedTroops.ToArray(), x => x.troop_Name == troop.troop_Name);
+                            Troop foundTroop = Array.Find(building.buildingData.building_OwnedTroops.ToArray(), x => x.troop_Name == troop.troop_Name);
 
-                            if(foundTroop != null)
+                            if (foundTroop != null)
                             {
                                 continue;
                             }
@@ -153,7 +154,7 @@ public class BuildingManager : MonoBehaviour
 
                         foreach (Troop troop in troopsToAdd)
                         {
-                            building.buildingData.ownedTroops.Add(troop);
+                            building.buildingData.building_OwnedTroops.Add(troop);
                         }
                     }
                 }
@@ -185,16 +186,20 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
-        Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
+        if (gameManager.playerData.iridium_Total >= building.buildingData.building_UpgradeCost)
+        {
+            gameManager.playerData.iridium_Total -= building.buildingData.building_UpgradeCost;
+            Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
 
-        ownedBuildings.Remove(building);
-        buildingLocationsDict.Remove(buildingTransform);
-        BuildingData buildingData = building.buildingData;
-        buildingData.building_Level++;
-        selectedBuilding = PlaceBuilding(buildingSO, buildingData);
-        gameManager.UpdateIridiumPerSecond();
-        gameManager.CalculateCosts();
-        Destroy(building.transform.parent.gameObject);
+            ownedBuildings.Remove(building);
+            buildingLocationsDict.Remove(buildingTransform);
+            BuildingData buildingData = building.buildingData;
+            buildingData.building_Level++;
+            selectedBuilding = PlaceBuilding(buildingSO, buildingData);
+            gameManager.UpdateIridiumPerSecond();
+            gameManager.CalculateCosts();
+            Destroy(building.transform.parent.gameObject);
+        }
     }
 
     public int GetBuildingCount(string buildingName)

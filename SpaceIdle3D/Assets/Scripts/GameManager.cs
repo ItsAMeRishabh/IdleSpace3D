@@ -20,8 +20,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private double upgradeClick_BaseCost = 1000;
     [SerializeField] private double upgradeClick_PriceMultiplier = 1.2;
     [HideInInspector] public double upgradeClick_CurrentCost = 1000;
-    [SerializeField] private double iridium_PerSecondBoostMultiplier = 2;
-    [SerializeField] private double iridium_PerSecondBoostDuration = 10;
 
     [Header("Default Values SO")]
     [SerializeField] private DefaultValues defaultValues;
@@ -29,11 +27,9 @@ public class GameManager : MonoBehaviour
     [Header("Save Configuration")]
     [SerializeField] private float saveInterval = 5f;
 
-    private bool iridium_PerSecondBoosted = false;
     private bool getIridium_ButtonClicked = false;
 
     private Coroutine tickCoroutine;
-    private Coroutine boostCoroutine;
     private Coroutine saveCoroutine;
     private WaitForSeconds tickWait;
     private WaitForSeconds saveWait;
@@ -44,6 +40,8 @@ public class GameManager : MonoBehaviour
     private UIManager uiManager;
 
     public BuildingManager BuildingManager => buildingManager;
+    public LoadSaveSystem LoadSaveSystem => loadSaveSystem;
+    public BoostManager BoostManager => boostManager;
     public UIManager UIManager => uiManager;
 
     #region Utility Functions
@@ -129,8 +127,17 @@ public class GameManager : MonoBehaviour
             playerData.iridium_PerSecond += b.GetIridiumPerTick() * ticksPerSecond;
         }
 
-        playerData.iridium_PerSecond = iridium_PerSecondBoosted ? playerData.iridium_PerSecond * iridium_PerSecondBoostMultiplier : playerData.iridium_PerSecond;
-        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
+        playerData.iridium_PerSecondBoosted = playerData.iridium_PerSecond;
+        playerData.iridium_PerClickBoosted = playerData.iridium_PerClick;
+
+        foreach(Boost b in boostManager.activeBoosts)
+        {
+            playerData.iridium_PerSecondBoosted *= b.boost_IridiumPerSecond;
+            playerData.iridium_PerClickBoosted *= b.boost_IridiumPerClick;
+        }
+
+        //playerData.iridium_PerSecond = iridium_PerSecondBoosted ? playerData.iridium_PerSecond * iridium_PerSecondBoostMultiplier : playerData.iridium_PerSecond;
+        //playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
     }
 
     public void CalculateCosts()
@@ -140,7 +147,7 @@ public class GameManager : MonoBehaviour
 
         foreach (Building b in buildingManager.ownedBuildings)
         {
-            foreach (Troop t in b.buildingData.ownedTroops)
+            foreach (Troop t in b.buildingData.building_OwnedTroops)
             {
                 t.troop_CurrentCost = (int)(t.troop_BaseCost * Math.Pow(t.troop_CostMultiplier, t.troops_Owned));
             }
@@ -152,18 +159,6 @@ public class GameManager : MonoBehaviour
         {
             bl.buildingSO.building_CurrentCost = (int)(bl.buildingSO.building_BaseCost * Mathf.Pow((float)bl.buildingSO.building_CostMultiplier, buildingManager.GetBuildingCount(bl.buildingSO.building_Name)));
         }
-        //TODO : Calculate building costs
-    }
-
-    private IEnumerator IridiumPerSecondBoost()
-    {
-        iridium_PerSecondBoosted = true;
-        UpdateIridiumPerSecond();
-
-        yield return new WaitForSeconds((float)iridium_PerSecondBoostDuration);
-
-        iridium_PerSecondBoosted = false;
-        UpdateIridiumPerSecond();
     }
 
     #endregion
@@ -174,6 +169,7 @@ public class GameManager : MonoBehaviour
         {
             ProcessIridiumAdded();
             uiManager.UpdateAllUI();
+            boostManager.ProcessBoostTimers();
             yield return tickWait;
         }
     }
@@ -193,31 +189,12 @@ public class GameManager : MonoBehaviour
 
     private void ProcessClickedIridium()
     {
-        double iridiumToAdd = 0;
-        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
-        iridiumToAdd += playerData.iridium_PerClick;
-        foreach (Boost b in playerData.boosts)
-        {
-            if (b.boost_IsActive)
-            {
-                iridiumToAdd *= b.boost_IridiumPerClick;
-            }
-        }
-        playerData.iridium_Total += playerData.iridium_PerClick;
+        playerData.iridium_Total += playerData.iridium_PerClickBoosted;
     }
 
     private void ProcessIridiumPerBuilding()
     {
-        double iridiumToAdd = 0;
-        iridiumToAdd += playerData.iridium_PerSecond;
-        foreach (Boost b in playerData.boosts)
-        {
-            if (b.boost_IsActive)
-            {
-                iridiumToAdd *= b.boost_IridiumPerSecond;
-            }
-        }
-        playerData.iridium_Total += playerData.iridium_PerSecond / ticksPerSecond;
+        playerData.iridium_Total += playerData.iridium_PerSecondBoosted / ticksPerSecond;
     }
 
     #endregion
@@ -247,11 +224,11 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (playerData.iridium_Total >= buildingManager.selectedBuilding.buildingData.ownedTroops[troopIndex].troop_CurrentCost)
+            if (playerData.iridium_Total >= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
             {
-                playerData.iridium_Total -= buildingManager.selectedBuilding.buildingData.ownedTroops[troopIndex].troop_CurrentCost;
-                buildingManager.selectedBuilding.buildingData.ownedTroops[troopIndex].troops_Owned += 1;
-                buildingManager.selectedBuilding.buildingData.ownedTroops[troopIndex].troop_CurrentCost = (int)(buildingManager.selectedBuilding.buildingData.ownedTroops[troopIndex].troop_CurrentCost * buildingManager.selectedBuilding.buildingData.ownedTroops[troopIndex].troop_CostMultiplier);
+                playerData.iridium_Total -= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;
+                buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troops_Owned += 1;
+                buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost = (int)(buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost * buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CostMultiplier);
             }
         }
 
@@ -259,16 +236,6 @@ public class GameManager : MonoBehaviour
         CalculateCosts();
     }
 
-    public void BoostIridiumProductionClicked()
-    {
-        if (boostCoroutine != null)
-        {
-            StopCoroutine(boostCoroutine);
-            boostCoroutine = null;
-        }
-
-        boostCoroutine = StartCoroutine(IridiumPerSecondBoost());
-    }
 
     public void BuyBuildingClicked(BuildingSO buildingSO)
     {
@@ -279,6 +246,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void ClickedOnBuilding(Building building)
+    {
+        if (building == null) return;
+
+        if (building == buildingManager.selectedBuilding) return;
+
+        buildingManager.selectedBuilding = building;
+        uiManager.OpenBuildingMenu();
+    }
+
     #endregion
 
     #region Save, Load and Reset
@@ -286,9 +263,9 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Try Save!")]
     public void SaveGame()
     {
-        playerData.ownedBuildings = buildingManager.GetBuildingDatas();
+        playerData.ownedBuildings = buildingManager.GetBuildingDataList();
+        playerData.activeBoosts = boostManager.GetActiveBoosts();
         loadSaveSystem.Save(playerData);
-        playerData.ownedBuildings.Clear();
     }
 
     public PlayerData GetSaveData()
@@ -299,8 +276,10 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Try Load!")]
     public void LoadGame()
     {
+        uiManager.CloseAllPanels();
         playerData = loadSaveSystem.Load();
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
+        boostManager.LoadBoosts(playerData.activeBoosts);
         //UpdateIridiumPerSecond();
         StartGame();
         //StartTickCoroutine();
@@ -317,13 +296,4 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    public void ClickedOnBuilding(Building building)
-    {
-        if (building == null) return;
-
-        if (building == buildingManager.selectedBuilding) return;
-
-        buildingManager.selectedBuilding = building;
-        uiManager.ClickedOnBuilding();
-    }
 }

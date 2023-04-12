@@ -8,5 +8,5 @@ public class BuildingData
     public int building_Level = 1;
     public double building_IridiumBoostPerLevel = 1.2;
     [NonSerialized] public double building_UpgradeCost = 0;
-    public List<Troop> ownedTroops;
+    public List<Troop> building_OwnedTroops;
 }

@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfdd0f4c372ef6e4a9762ec9a764b10e, type: 3}
-  m_Name: DefaultValues
+  m_Script: {fileID: 11500000, guid: d23f10075fa4d7846b32c453987ae6f8, type: 3}
+  m_Name: 001
   m_EditorClassIdentifier: 
-  iridium_Total: 0
-  iridium_PerSecond: 0
-  iridium_PerClick: 1
-  iridium_PerClickLevel: 1
-  ownedBuildings: []
-  activeBoosts: []
+  boost_Name: BoostIPS x2
+  boost_Duration: 10
+  boost_MaxDuration: 30
+  boost_IridiumPerClick: 1
+  boost_IridiumPerSecond: 2
