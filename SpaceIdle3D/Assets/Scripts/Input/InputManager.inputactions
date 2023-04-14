@@ -1,0 +1,76 @@
+{
+    "name": "Input",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "f755493d-72f4-4816-9af7-018afd57bff4",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "5f3a162f-b5ec-4e44-b638-47806eb03176",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MoveDelta",
+                    "type": "Value",
+                    "id": "8bfe5e6d-c2c1-4884-8b09-260bc5360b4b",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6c3b12ff-9656-43d1-beba-24d3cc5b78bb",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5ff1a83d-bd4a-4157-89a8-2920c1805e77",
+                    "path": "<Touchscreen>/primaryTouch/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b74fd535-e472-4665-a3c8-6913d21122ea",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf673eed-9e5d-4af9-9ad0-7e6606acee64",
+                    "path": "<Touchscreen>/primaryTouch/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
