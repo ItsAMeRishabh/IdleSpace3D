@@ -2,157 +2,100 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Tutorial: https://www.youtube.com/watch?v=rnqF6S7PfFA
-
-[RequireComponent(typeof(Camera))]
 public class CameraManager : MonoBehaviour
 {
-    /*[SerializeField] private float movementSpeed;
-    [SerializeField] private float movementTime;
+    public Camera mainCamera;
 
-    private Vector3 targetPosition;
-    private Vector2 movementInput;
+    public float movementSpeed;
+    public float movementTime;
+    public Vector3 zoomAmount;
 
-    private InputManager inputManager;
+    private Vector3 newPosition;
+    private Vector3 newZoom;
 
-    private void Awake()
-    {
-        inputManager = new InputManager();
-        targetPosition = transform.position;
-    }
-
-    private void OnEnable()
-    {
-        inputManager.Enable();
-
-        inputManager.Camera.MoveDelta.started += OnMoveDelta;
-        inputManager.Camera.MoveDelta.performed += OnMoveDelta;
-        inputManager.Camera.MoveDelta.canceled += OnMoveDelta;
-    }
-
-    private void Update()
-    {
-        targetPosition += ;    
-    }
-
-    private void OnMoveDelta(InputAction.CallbackContext context)
-    {
-
-    }*/
-    [SerializeField] private float moveSpeed = 50;
-    [SerializeField] private float moveSmooth = 5;
-
-    private Camera mainCamera;
-    private InputManager inputManager;
-    private bool isMoving = false;
-    private Vector2 movementInput = Vector2.zero;
-    private Vector2 skewedInput = Vector2.zero;
-
-    private Transform root = null;
-    private Transform pivot = null;
-    private Transform target = null;
-
-    private Vector3 center = Vector3.zero;
-    private float right = 10;
-    private float left = 10;
-    private float up = 10;
-    private float down = 10;
-    private Vector3 angle = Vector3.zero;
-
-    private Matrix4x4 matrix = Matrix4x4.identity;
-
-    private void Awake()
-    {
-        mainCamera = GetComponent<Camera>();
-        inputManager = new InputManager();
-
-        root = new GameObject("CameraHelper").transform;
-        pivot = new GameObject("CameraPivot").transform;
-        target = new GameObject("CameraTarget").transform;
-
-        angle = transform.rotation.eulerAngles;
-        matrix = Matrix4x4.Rotate(transform.rotation);
-    }
-
-    private void OnEnable()
-    {
-        inputManager.Enable();
-        inputManager.Camera.Move.started += MoveStarted;
-        inputManager.Camera.Move.canceled += MoveReleased;
-    }
+    private Vector3 dragStartPosition;
+    private Vector3 dragCurrentPosition;
 
     private void Start()
     {
-        Initialize(Vector3.zero, 10, 10, 10, 10, angle);
+        newPosition = transform.position;
+        newZoom = mainCamera.transform.localPosition;
     }
 
     private void Update()
     {
-        if (isMoving)
+        HandleMouseInput();
+        HandleMovementInput();
+    }
+
+    private void HandleMouseInput()
+    {
+        if(Input.mouseScrollDelta.y != 0)
         {
-            movementInput = inputManager.Camera.MoveDelta.ReadValue<Vector2>();
+            newZoom += Input.mouseScrollDelta.y * zoomAmount;
+        }
 
-            if (movementInput != Vector2.zero)
+        if(Input.GetMouseButtonDown(0))
+        {
+            Plane plane = new Plane(Vector3.up, Vector3.zero);
+
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            float entry;
+
+            if(plane.Raycast(ray, out entry))
             {
-                movementInput.x /= Screen.width;
-                movementInput.y /= Screen.height;
-
-                skewedInput = matrix.MultiplyPoint3x4(movementInput);
-                skewedInput.Normalize();
-                Debug.Log($"Input: {movementInput}, Skewed Input: {skewedInput}");
-
-                root.position += root.right.normalized * skewedInput.x * moveSpeed;
-                root.position += root.forward.normalized * skewedInput.y * moveSpeed;
+                dragStartPosition = ray.GetPoint(entry);
             }
+        }
 
-            if (mainCamera.transform.position != target.position)
-            {
-                mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, target.position, moveSmooth * Time.deltaTime);
-            }
+        if(Input.GetMouseButton(0))
+        {
+            Plane plane = new Plane(Vector3.up, Vector3.zero);
 
-            if (mainCamera.transform.rotation != target.rotation)
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+            float entry;
+
+            if (plane.Raycast(ray, out entry))
             {
-                mainCamera.transform.rotation = target.rotation;
+                dragCurrentPosition = ray.GetPoint(entry);
+
+                newPosition = transform.position + dragStartPosition - dragCurrentPosition;
             }
         }
     }
 
-    private void OnDisable()
+    private void HandleMovementInput()
     {
-        inputManager.Disable();
-    }
+        if(Input.GetKey(KeyCode.W))
+        {
+            newPosition += transform.forward * movementSpeed;
+        }
+        if(Input.GetKey(KeyCode.A))
+        {
+            newPosition += transform.right * -movementSpeed;
+        }
+        if(Input.GetKey(KeyCode.S))
+        {
+            newPosition += transform.forward * -movementSpeed;
+        }
+        if(Input.GetKey(KeyCode.D))
+        {
+            newPosition += transform.right * movementSpeed;
+        }
 
-    private void Initialize(Vector3 center, float right, float left, float up, float down, Vector3 angle)
-    {
-        this.center = center;
-        this.right = right;
-        this.left = left;
-        this.up = up;
-        this.down = down;
-        this.angle = angle;
+        if(Input.GetKey(KeyCode.E))
+        {
+            newZoom += zoomAmount;
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            newZoom -= zoomAmount;
+        }
 
-        isMoving = false;
-        pivot.SetParent(root);
-        target.SetParent(pivot);
-
-        root.position = center;
-        root.localEulerAngles = Vector3.zero;
-
-        pivot.localPosition = Vector3.zero;
-        pivot.localEulerAngles = angle;
-
-        target.localPosition = new Vector3(0, 0, -10);
-        target.localEulerAngles = Vector3.zero;
-    }
-
-    private void MoveStarted(InputAction.CallbackContext context)
-    {
-        isMoving = true;
-    }
-
-    private void MoveReleased(InputAction.CallbackContext context)
-    {
-        isMoving = false;
+        transform.position = Vector3.Lerp(transform.position, newPosition, movementTime * Time.deltaTime);
+        mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, newZoom, movementTime * Time.deltaTime);
     }
 }
 
@@ -194,127 +137,5 @@ public class CameraManager : MonoBehaviour
 
         lastMousePosition = Input.mousePosition;
     }*/
-
-#endregion
-
-#region Bad Tutorial Code
-
-/*[SerializeField] private float moveSpeed = 50;
-[SerializeField] private float moveSmooth = 5;
-
-private Camera mainCamera;
-private InputManager inputManager;
-private bool isMoving = false;
-private Vector2 movementInput = Vector2.zero;
-private Vector2 skewedInput = Vector2.zero;
-
-private Transform root = null;
-private Transform pivot = null;
-private Transform target = null;
-
-private Vector3 center = Vector3.zero;
-private float right = 10;
-private float left = 10;
-private float up = 10;
-private float down = 10;
-private Vector3 angle = Vector3.zero;
-
-private Matrix4x4 matrix = Matrix4x4.identity;
-
-private void Awake()
-{
-    mainCamera = GetComponent<Camera>();
-    inputManager = new InputManager();
-
-    root = new GameObject("CameraHelper").transform;
-    pivot = new GameObject("CameraPivot").transform;
-    target = new GameObject("CameraTarget").transform;
-
-    angle = transform.rotation.eulerAngles;
-    matrix = Matrix4x4.Rotate(Quaternion.Euler(angle));
-}
-
-private void OnEnable()
-{
-    inputManager.Enable();
-    inputManager.Camera.Move.started += MoveStarted;
-    inputManager.Camera.Move.canceled += MoveReleased;
-}
-
-private void Start()
-{
-    Initialize(Vector3.zero, 10, 10, 10, 10, angle);
-}
-
-private void Update()
-{
-    if (isMoving)
-    {
-        movementInput = inputManager.Camera.MoveDelta.ReadValue<Vector2>();
-        //Matrix4x4 matrix = Matrix4x4.Rotate(Quaternion.Euler(angle));
-
-
-        if (movementInput != Vector2.zero)
-        {
-            skewedInput = matrix.MultiplyPoint3x4(movementInput);
-            skewedInput.Normalize();
-            Debug.Log($"Input: {movementInput}, Skewed Input: {skewedInput}");
-
-            movementInput.x /= Screen.width;
-            movementInput.y /= Screen.height;
-
-            root.position += root.right.normalized * skewedInput.x * moveSpeed;
-            root.position += root.forward.normalized * skewedInput.y * moveSpeed;
-        }
-
-        if (mainCamera.transform.position != target.position)
-        {
-            mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, target.position, moveSmooth * Time.deltaTime);
-        }
-
-        if (mainCamera.transform.rotation != target.rotation)
-        {
-            mainCamera.transform.rotation = target.rotation;
-        }
-    }
-}
-
-private void OnDisable()
-{
-    inputManager.Disable();
-}
-
-private void Initialize(Vector3 center, float right, float left, float up, float down, Vector3 angle)
-{
-    this.center = center;
-    this.right = right;
-    this.left = left;
-    this.up = up;
-    this.down = down;
-    this.angle = angle;
-
-    isMoving = false;
-    pivot.SetParent(root);
-    target.SetParent(pivot);
-
-    root.position = center;
-    root.localEulerAngles = Vector3.zero;
-
-    pivot.localPosition = Vector3.zero;
-    pivot.localEulerAngles = angle;
-
-    target.localPosition = new Vector3(0, 0, -10);
-    target.localEulerAngles = Vector3.zero;
-}
-
-private void MoveStarted(InputAction.CallbackContext context)
-{
-    isMoving = true;
-}
-
-private void MoveReleased(InputAction.CallbackContext context)
-{
-    isMoving = false;
-}*/
 
 #endregion
