@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d48f4752ffbcc14eb374de651ff1bd2, type: 3}
   m_Name: 001
   m_EditorClassIdentifier: 
-  building_Name: Teramine
+  building_Name: Tera Mine
   building_Level: 1
-  building_IridiumBoostPerLevel: 1.2
+  building_IridiumBoostPerLevel: 1
   building_BaseCost: 20
-  building_CostMultiplier: 1.25
+  building_CostMultiplier: 1.5
   building_UpgradeBaseCost: 100
   building_UpgradeCostMultiplier: 1.25
   buildingPrefabs:
