@@ -5692,8 +5692,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1754278060}
-  movementSpeed: 2
-  movementTime: 10
+  movementSpeed: 100
+  movementTime: 5
   zoomAmount: {x: 0, y: -2, z: 2}
 --- !u!1 &436566517
 GameObject:

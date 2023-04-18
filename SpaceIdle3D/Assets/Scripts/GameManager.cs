@@ -111,7 +111,9 @@ public class GameManager : MonoBehaviour
     private void StartTickCoroutine()
     {
         if (tickCoroutine != null)
+        {
             StopCoroutine(tickCoroutine);
+        }
 
         tickWait = new WaitForSeconds(1.0f / ticksPerSecond);
         tickCoroutine = StartCoroutine(Tick());
@@ -135,7 +137,6 @@ public class GameManager : MonoBehaviour
             playerData.iridium_PerSecond += b.GetIridiumPerTick() * ticksPerSecond;
         }
 
-        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
         playerData.iridium_PerClickBoosted = playerData.iridium_PerClick;
         playerData.iridium_PerSecondBoosted = playerData.iridium_PerSecond;
 
@@ -145,6 +146,7 @@ public class GameManager : MonoBehaviour
             playerData.iridium_PerSecondBoosted *= b.boost_IridiumPerSecond;
         }
 
+        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecondBoosted * playerData.iridium_PerClickLevel / 100f);
     }
 
     public void CalculateCosts()
@@ -227,8 +229,8 @@ public class GameManager : MonoBehaviour
             playerData.iridium_Total -= upgradeClick_CurrentCost;
             upgradeClick_CurrentCost = (int)(upgradeClick_CurrentCost * upgradeClick_PriceMultiplier);
             playerData.iridium_PerClickLevel += 1;
-            playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecond * playerData.iridium_PerClickLevel / 100f);
         }
+        UpdateIridiumSources();
     }
 
     public void TroopBuyClicked(int troopIndex)
@@ -292,12 +294,12 @@ public class GameManager : MonoBehaviour
     public void LoadGame()
     {
         uiManager.CloseAllPanels();
+
         playerData = loadSaveSystem.Load();
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
         boostManager.LoadBoosts(playerData.activeBoosts);
-        //UpdateIridiumPerSecond();
+
         StartGame();
-        //StartTickCoroutine();
     }
 
     void ResetGame()

@@ -1,6 +1,4 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
@@ -26,6 +24,35 @@ public class CameraManager : MonoBehaviour
     {
         HandleMouseInput();
         HandleMovementInput();
+    }
+
+    private void HandleTouchInput() // Replace HandleMouseInput() with HandleTouchInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0); // Get the first touch
+
+            if (touch.phase == UnityEngine.TouchPhase.Moved) // Check if touch is moving
+            {
+                newZoom += touch.deltaPosition.y * zoomAmount * 0.01f; // Scale touch delta by a factor to adjust zoom speed
+
+                Vector3 touchWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, mainCamera.nearClipPlane)); // Convert touch position to world position
+                touchWorldPosition.y = transform.position.y; // Set the y position to match the camera's y position
+
+                if (touch.deltaPosition.magnitude > 0.01f) // Check if touch has moved enough to be considered a drag
+                {
+                    if (touch.phase == UnityEngine.TouchPhase.Began) // Check if touch just started
+                    {
+                        dragStartPosition = touchWorldPosition;
+                    }
+                    else if (touch.phase == UnityEngine.TouchPhase.Moved) // Check if touch is still moving
+                    {
+                        dragCurrentPosition = touchWorldPosition;
+                        newPosition = transform.position + dragStartPosition - dragCurrentPosition;
+                    }
+                }
+            }
+        }
     }
 
     private void HandleMouseInput()
@@ -61,7 +88,11 @@ public class CameraManager : MonoBehaviour
             {
                 dragCurrentPosition = ray.GetPoint(entry);
 
-                newPosition = transform.position + dragStartPosition - dragCurrentPosition;
+                // Calculate the difference between the current drag position and the initial drag position
+                Vector3 dragOffset = dragStartPosition - dragCurrentPosition;
+
+                // Update the camera's position by adding the drag offset to the initial position
+                newPosition = transform.position + dragOffset;
             }
         }
     }
@@ -94,7 +125,9 @@ public class CameraManager : MonoBehaviour
             newZoom -= zoomAmount;
         }
 
+        Debug.Log(newPosition);
         transform.position = Vector3.Lerp(transform.position, newPosition, movementTime * Time.deltaTime);
+        
         mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, newZoom, movementTime * Time.deltaTime);
     }
 }
