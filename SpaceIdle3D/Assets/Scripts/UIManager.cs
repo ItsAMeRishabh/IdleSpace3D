@@ -319,7 +319,9 @@ public class UIManager : MonoBehaviour
 
     public void OpenBuildingMenu()
     {
-        //CloseAllPanels();
+        boostUI.SetActive(false);
+        buildingBuyUI.SetActive(false);
+
         buildingUI.SetActive(true);
         PopulateBuildingUI();
     }
@@ -332,7 +334,8 @@ public class UIManager : MonoBehaviour
 
     public void OpenShop()
     {
-        //CloseAllPanels();
+        CloseAllPanels();
+
         buildingBuyUI.SetActive(true);
         PopulateBuyBuildingUI();
     }
@@ -345,7 +348,8 @@ public class UIManager : MonoBehaviour
 
     public void OpenBoostMenu()
     {
-        //CloseAllPanels();
+        CloseAllPanels();
+
         boostUI.SetActive(true);
         PopulateBoostUI();
     }
