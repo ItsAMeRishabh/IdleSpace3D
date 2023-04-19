@@ -79,7 +79,6 @@ public class BuildingManager : MonoBehaviour
                 building.buildingData = new BuildingData();
                 building.buildingData.building_Name = buildingSO.building_Name;
                 building.buildingData.building_Level = buildingSO.building_Level;
-                building.buildingData.building_IridiumBoostPerLevel = buildingSO.building_IridiumBoostPerLevel;
                 building.buildingData.building_OwnedTroops = new List<Troop>();
 
                 foreach (LevelUpUnlocks levelUpUnlock in buildingSO.levelUpUnlocks)
@@ -186,9 +185,9 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
-        if (gameManager.playerData.iridium_Total >= building.buildingData.building_UpgradeCost)
+        if (gameManager.playerData.iridium_Total >= building.buildingSO.building_CurrentUpgradeCost)
         {
-            gameManager.playerData.iridium_Total -= building.buildingData.building_UpgradeCost;
+            gameManager.playerData.iridium_Total -= building.buildingSO.building_CurrentUpgradeCost;
             Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
 
             ownedBuildings.Remove(building);
