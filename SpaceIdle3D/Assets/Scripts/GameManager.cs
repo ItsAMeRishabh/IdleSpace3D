@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
                 t.troop_CurrentCost = (int)(t.troop_BaseCost * Math.Pow(t.troop_CostMultiplier, t.troops_Owned));
             }
 
-            b.buildingData.building_UpgradeCost = (int)(b.buildingSO.building_UpgradeBaseCost * Mathf.Pow((float)b.buildingSO.building_UpgradeCostMultiplier, b.buildingData.building_Level - 1));
+            b.buildingSO.building_CurrentUpgradeCost = (int)(b.buildingSO.building_UpgradeCosts[b.buildingData.building_Level - 1]);
         }
 
         foreach (BuildingLocation bl in buildingManager.buildingLocations)

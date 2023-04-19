@@ -129,7 +129,16 @@ public class UIManager : MonoBehaviour
         {
             text_BuildingName.text = gameManager.BuildingManager.selectedBuilding.buildingData.building_Name + " (Lvl " + gameManager.BuildingManager.selectedBuilding.buildingData.building_Level.ToString("0") + ")";
             text_BuildingIridiumPerSecond.text = (gameManager.BuildingManager.selectedBuilding.GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + " Iridium/s";
-            text_UpgradeBuildingButton.text = "Upgrade ($" + gameManager.BuildingManager.selectedBuilding.buildingData.building_UpgradeCost.ToString("0") + ")";
+            if(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost == -1)
+            {
+                text_UpgradeBuildingButton.text = "Max Level";
+                button_UpgradeBuilding.interactable = false;
+            }
+            else
+            {
+                text_UpgradeBuildingButton.text = "Upgrade ($" + gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost.ToString("0") + ")";
+                button_UpgradeBuilding.interactable = true;
+            }
             for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
             {
                 text_TroopNames[i].text = gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name;

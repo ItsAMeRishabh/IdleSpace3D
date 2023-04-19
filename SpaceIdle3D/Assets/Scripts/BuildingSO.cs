@@ -12,8 +12,8 @@ public class BuildingSO : ScriptableObject
     public double building_BaseCost = 0;
     public double building_CostMultiplier = 1.25f;
     [NonSerialized] public double building_CurrentCost = 0;
-    public double building_UpgradeBaseCost = 0;
-    public double building_UpgradeCostMultiplier = 1.25f;
+    public List<double> building_UpgradeCosts;
+    [NonSerialized] public double building_CurrentUpgradeCost = 0;
     public List<GameObject> buildingPrefabs;
     public List<LevelUpUnlocks> levelUpUnlocks;
 }

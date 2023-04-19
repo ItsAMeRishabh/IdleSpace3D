@@ -17,8 +17,10 @@ MonoBehaviour:
   building_IridiumBoostPerLevel: 1.2
   building_BaseCost: 20
   building_CostMultiplier: 1.25
-  building_UpgradeBaseCost: 50
-  building_UpgradeCostMultiplier: 1.25
+  building_UpgradeCosts:
+  - 10
+  - 20
+  - -1
   buildingPrefabs:
   - {fileID: 4548579041751584191, guid: d0749ca41fbce134896813ff1b64d263, type: 3}
   - {fileID: 2292723580634780923, guid: 26ec342eaf0d9f44da552a36cb97e6dd, type: 3}
