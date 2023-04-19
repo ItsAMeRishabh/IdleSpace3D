@@ -58,14 +58,14 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public void PlaceBuilding(BuildingSO buildingSO)
+    public bool PlaceBuilding(BuildingSO buildingSO)
     {
         BuildingLocation BLS = Array.Find(buildingLocations.ToArray(), x => x.buildingSO == buildingSO);
 
         if (BLS == null)
         {
             Debug.LogError("Building not found for " + buildingSO.building_Name);
-            return;
+            return false;
         }
 
         foreach (Transform t in BLS.buildingLocations)
@@ -104,12 +104,12 @@ public class BuildingManager : MonoBehaviour
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
                 gameManager.CalculateCosts();
-                return;
+                return true;
             }
         }
 
         Debug.LogError("No free building locations found for " + buildingSO.building_Name);
-        return;
+        return false;
     }
 
     public Building PlaceBuilding(BuildingSO buildingSO, BuildingData buildingData)

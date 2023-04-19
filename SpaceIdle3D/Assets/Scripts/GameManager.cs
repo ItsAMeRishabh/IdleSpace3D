@@ -256,13 +256,16 @@ public class GameManager : MonoBehaviour
 
     public void BuyBuildingClicked(BuildingSO buildingSO)
     {
-        if (playerData.iridium_Total >= buildingSO.building_BaseCost)
+        if (playerData.iridium_Total >= buildingSO.building_CurrentCost)
         {
-            playerData.iridium_Total -= buildingSO.building_BaseCost;
-            buildingManager.PlaceBuilding(buildingSO);
+            bool buildingPlacementSuccessful = buildingManager.PlaceBuilding(buildingSO);
+
+            if (buildingPlacementSuccessful)
+            {
+                playerData.iridium_Total -= buildingSO.building_CurrentCost;
+            }
         }
     }
-
     public void ClickedOnBuilding(Building building)
     {
         if (building == null) return;
