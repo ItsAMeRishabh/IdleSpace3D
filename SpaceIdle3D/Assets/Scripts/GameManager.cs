@@ -258,11 +258,12 @@ public class GameManager : MonoBehaviour
     {
         if (playerData.iridium_Total >= buildingSO.building_CurrentCost)
         {
+            double buildingPrice = buildingSO.building_CurrentCost;
             bool buildingPlacementSuccessful = buildingManager.PlaceBuilding(buildingSO);
 
             if (buildingPlacementSuccessful)
             {
-                playerData.iridium_Total -= buildingSO.building_CurrentCost;
+                playerData.iridium_Total -= buildingPrice;
             }
         }
     }

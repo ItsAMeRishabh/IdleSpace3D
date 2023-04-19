@@ -16,7 +16,10 @@ public class Building : MonoBehaviour
 
     void OnMouseDown()
     {
-        gameManager.ClickedOnBuilding(this);
+        if (!DetectClickOnUI.IsPointerOverUIElement())
+        {
+            gameManager.ClickedOnBuilding(this);
+        }
     }
 
     public double GetIridiumPerTick()
