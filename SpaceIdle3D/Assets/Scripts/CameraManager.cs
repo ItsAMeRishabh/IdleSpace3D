@@ -70,7 +70,7 @@ public class CameraManager : MonoBehaviour
 
             float entry;
 
-            if(plane.Raycast(ray, out entry))
+            if(plane.Raycast(ray, out entry) && !DetectClickOnUI.IsPointerOverUIElement())
             {
                 dragStartPosition = ray.GetPoint(entry);
             }
@@ -84,7 +84,7 @@ public class CameraManager : MonoBehaviour
 
             float entry;
 
-            if (plane.Raycast(ray, out entry))
+            if (plane.Raycast(ray, out entry) && !DetectClickOnUI.IsPointerOverUIElement())
             {
                 dragCurrentPosition = ray.GetPoint(entry);
 
