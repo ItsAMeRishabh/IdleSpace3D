@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public class PlayerData
 {
     public string profileName;
+    public JsonDateTime lastSaveTime;
     public double iridium_Total;
     public double iridium_PerSecond; //Recalculated on load
     public double iridium_PerSecondBoosted;

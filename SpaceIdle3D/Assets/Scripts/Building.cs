@@ -16,7 +16,10 @@ public class Building : MonoBehaviour
 
     void OnMouseDown()
     {
-        gameManager.ClickedOnBuilding(this);
+        if (!DetectClickOnUI.IsPointerOverUIElement())
+        {
+            gameManager.ClickedOnBuilding(this);
+        }
     }
 
     public double GetIridiumPerTick()
@@ -24,7 +27,7 @@ public class Building : MonoBehaviour
         double x = 0;
         foreach (Troop troop in buildingData.building_OwnedTroops)
         {
-            x += troop.GetIridiumPerTick() * troop.troops_Owned * Mathf.Pow((float)buildingData.building_IridiumBoostPerLevel, buildingData.building_Level - 1);
+            x += troop.GetIridiumPerTick() * troop.troops_Owned * Mathf.Pow((float)buildingSO.building_IridiumBoostPerLevel, buildingData.building_Level - 1);
         }
         return x;
     }

@@ -58,14 +58,14 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public void PlaceBuilding(BuildingSO buildingSO)
+    public bool PlaceBuilding(BuildingSO buildingSO)
     {
         BuildingLocation BLS = Array.Find(buildingLocations.ToArray(), x => x.buildingSO == buildingSO);
 
         if (BLS == null)
         {
             Debug.LogError("Building not found for " + buildingSO.building_Name);
-            return;
+            return false;
         }
 
         foreach (Transform t in BLS.buildingLocations)
@@ -79,7 +79,6 @@ public class BuildingManager : MonoBehaviour
                 building.buildingData = new BuildingData();
                 building.buildingData.building_Name = buildingSO.building_Name;
                 building.buildingData.building_Level = buildingSO.building_Level;
-                building.buildingData.building_IridiumBoostPerLevel = buildingSO.building_IridiumBoostPerLevel;
                 building.buildingData.building_OwnedTroops = new List<Troop>();
 
                 foreach (LevelUpUnlocks levelUpUnlock in buildingSO.levelUpUnlocks)
@@ -104,12 +103,12 @@ public class BuildingManager : MonoBehaviour
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
                 gameManager.CalculateCosts();
-                return;
+                return true;
             }
         }
 
         Debug.LogError("No free building locations found for " + buildingSO.building_Name);
-        return;
+        return false;
     }
 
     public Building PlaceBuilding(BuildingSO buildingSO, BuildingData buildingData)
@@ -186,9 +185,9 @@ public class BuildingManager : MonoBehaviour
             return;
         }
 
-        if (gameManager.playerData.iridium_Total >= building.buildingData.building_UpgradeCost)
+        if (gameManager.playerData.iridium_Total >= building.buildingSO.building_CurrentUpgradeCost)
         {
-            gameManager.playerData.iridium_Total -= building.buildingData.building_UpgradeCost;
+            gameManager.playerData.iridium_Total -= building.buildingSO.building_CurrentUpgradeCost;
             Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
 
             ownedBuildings.Remove(building);
