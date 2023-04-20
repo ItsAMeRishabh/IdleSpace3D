@@ -4,9 +4,11 @@ public class CameraManager : MonoBehaviour
 {
     public Camera mainCamera;
 
-    public float movementSpeed;
-    public float movementTime;
-    public Vector3 zoomAmount;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float movementTime;
+    [SerializeField] private Vector3 zoomAmount;
+    [SerializeField] private float zoomLowerLimit;
+    [SerializeField] private float zoomUpperLimit;
 
     private Vector3 newPosition;
     private Vector3 newZoom;
@@ -125,7 +127,9 @@ public class CameraManager : MonoBehaviour
             newZoom -= zoomAmount;
         }
 
-        Debug.Log(newPosition);
+        newZoom.y = Mathf.Clamp(newZoom.y, zoomLowerLimit, zoomUpperLimit);
+        newZoom.z = Mathf.Clamp(newZoom.z, -zoomUpperLimit, -zoomLowerLimit);
+
         transform.position = Vector3.Lerp(transform.position, newPosition, movementTime * Time.deltaTime);
         
         mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, newZoom, movementTime * Time.deltaTime);
