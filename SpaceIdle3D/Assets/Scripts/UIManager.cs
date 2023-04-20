@@ -98,6 +98,9 @@ public class UIManager : MonoBehaviour
         button_GetIridium.onClick.AddListener(gameManager.GetIridiumClicked);
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
 
+        button_Profiles = new List<Button>();
+        text_ProfileNames = new List<TMP_Text>();
+
         button_Troop = new List<Button>();
         text_TroopNames = new List<TMP_Text>();
         text_TroopCosts = new List<TMP_Text>();
@@ -180,6 +183,32 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void PopulateProfileSelectUI(List<string> profilesList)
+    {
+        CleanUpProfileSelectUI();
+
+        OpenProfileSelect();
+
+        button_Profiles = new List<Button>();
+        text_ProfileNames = new List<TMP_Text>();
+
+        for(int i = 0; i < profilesList.Count; i++)
+        {
+            int j = i;
+            GameObject newButton = Instantiate(profileButtonPrefab, profileButtonParent.transform);
+            newButton.name = profilesList[i];
+
+            Button button = newButton.GetComponent<Button>();
+            TMP_Text tmp_text = newButton.GetComponentInChildren<TMP_Text>();
+
+            button_Profiles.Add(button);
+            text_ProfileNames.Add(tmp_text);
+
+            button.onClick.AddListener(()=> gameManager.LoadGame(profilesList[j]));
+            tmp_text.text = profilesList[i];
+        }
+    }
+
     public void PopulateBoostUI()
     {
         CleanUpBoostUI();
@@ -197,7 +226,7 @@ public class UIManager : MonoBehaviour
             newButton.name = gameManager.BoostManager.boostSOs[i].boost_Name;
 
             button_Boosts.Add(newButton.GetComponent<Button>());
-            text_BoostNames.Add(newButton.GetComponentInChildren<TMP_Text>());
+            text_BoostNames.Add(newButton.transform.GetChild(0).GetComponent<TMP_Text>());
             text_BoostDurations.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
             text_BoostDurationRemainings.Add(newButton.transform.GetChild(2).GetComponent<TMP_Text>());
 
@@ -260,6 +289,22 @@ public class UIManager : MonoBehaviour
 
             button_Buildings[i].onClick.AddListener(() => gameManager.BuyBuildingClicked(buildings[j].buildingSO));
         }
+    }
+
+    public void CleanUpProfileSelectUI()
+    {
+        foreach(Button button in button_Profiles)
+        {
+            button.onClick.RemoveAllListeners();
+        }
+
+        foreach(Button button in button_Profiles)
+        {
+            Destroy(button.gameObject);
+        }
+
+        button_Profiles.Clear();
+        text_ProfileNames.Clear();
     }
 
     public void CleanUpBoostUI()
@@ -326,6 +371,11 @@ public class UIManager : MonoBehaviour
         CloseBoostMenu();
     }
 
+    public void OpenProfileSelect()
+    {
+        profileSelectionUI.SetActive(true);
+    }
+
     public void OpenBuildingMenu()
     {
         boostUI.SetActive(false);
@@ -347,6 +397,11 @@ public class UIManager : MonoBehaviour
 
         buildingBuyUI.SetActive(true);
         PopulateBuyBuildingUI();
+    }
+
+    public void CloseProfileUI()
+    {
+        profileSelectionUI.SetActive(false);
     }
 
     public void CloseShop()

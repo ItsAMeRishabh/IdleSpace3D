@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DefaultValues defaultValues;
 
     [Header("Save Configuration")]
+    [SerializeField] private bool startFreshOnLaunch = false;
     [SerializeField] private float saveInterval = 5f;
     [SerializeField] private bool autoSave = false;
 
@@ -57,8 +58,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //CheckForSaves();
-        StartGame();
+        uiManager.InitializeUI();
+
+        if (startFreshOnLaunch)
+        {
+            StartGame();
+        }
+        else
+        {
+            CheckForSaves();
+        }
     }
 
     private void OnDestroy()
@@ -68,7 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
-        uiManager.InitializeUI(); //Initialize all UI Variables
+        uiManager.CloseProfileUI();
 
         UpdateIridiumSources(); //Update the iridium per second
 
@@ -92,7 +101,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            //TODO: Open UI to choose profile
+            uiManager.PopulateProfileSelectUI(profiles);
         }
     }
 
@@ -140,7 +149,7 @@ public class GameManager : MonoBehaviour
         playerData.iridium_PerClickBoosted = playerData.iridium_PerClick;
         playerData.iridium_PerSecondBoosted = playerData.iridium_PerSecond;
 
-        foreach(Boost b in boostManager.activeBoosts)
+        foreach (Boost b in boostManager.activeBoosts)
         {
             playerData.iridium_PerClickBoosted *= b.boost_IridiumPerClick;
             playerData.iridium_PerSecondBoosted *= b.boost_IridiumPerSecond;
@@ -184,10 +193,10 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator SaveCoroutine()
     {
-        while(true)
+        while (true)
         {
             yield return saveWait;
-            if(autoSave) SaveGame();
+            if (autoSave) SaveGame();
         }
     }
 
@@ -284,6 +293,7 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Try Save!")]
     public void SaveGame()
     {
+        playerData.lastSaveTime = DateTime.Now;
         playerData.ownedBuildings = buildingManager.GetBuildingDataList();
         playerData.activeBoosts = boostManager.GetActiveBoosts();
         loadSaveSystem.Save(playerData);
@@ -300,6 +310,17 @@ public class GameManager : MonoBehaviour
         uiManager.CloseAllPanels();
 
         playerData = loadSaveSystem.Load();
+        buildingManager.SpawnBuildings(playerData.ownedBuildings);
+        boostManager.LoadBoosts(playerData.activeBoosts);
+
+        StartGame();
+    }
+
+    public void LoadGame(string profileName)
+    {
+        uiManager.CloseAllPanels();
+
+        playerData = loadSaveSystem.LoadProfile(profileName);
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
         boostManager.LoadBoosts(playerData.activeBoosts);
 
