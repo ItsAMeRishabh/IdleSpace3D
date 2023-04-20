@@ -77,6 +77,8 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        uiManager.OpenMainUI();
+
         uiManager.CloseProfileUI();
 
         UpdateIridiumSources(); //Update the iridium per second
@@ -97,7 +99,7 @@ public class GameManager : MonoBehaviour
         if (profiles.Count == 0)
         {
             Debug.Log("No saves found. Starting new game");
-            StartNewGame();
+            uiManager.OpenProfileNamePanel();
         }
         else
         {
@@ -105,9 +107,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartNewGame()
+    public void StartNewGame(string profileName)
     {
         playerData = new PlayerData();
+        playerData.profileName = profileName;
         playerData.iridium_Total = defaultValues.iridium_Total;
         playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;

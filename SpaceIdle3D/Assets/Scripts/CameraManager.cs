@@ -101,7 +101,7 @@ public class CameraManager : MonoBehaviour
 
     private void HandleMovementInput()
     {
-        if(Input.GetKey(KeyCode.W))
+        /*if(Input.GetKey(KeyCode.W))
         {
             newPosition += transform.forward * movementSpeed;
         }
@@ -125,7 +125,7 @@ public class CameraManager : MonoBehaviour
         if (Input.GetKey(KeyCode.Q))
         {
             newZoom -= zoomAmount;
-        }
+        }*/
 
         newZoom.y = Mathf.Clamp(newZoom.y, zoomLowerLimit, zoomUpperLimit);
         newZoom.z = Mathf.Clamp(newZoom.z, -zoomUpperLimit, -zoomLowerLimit);

@@ -62,13 +62,18 @@ public class UIManager : MonoBehaviour
 
     [Header("Profile Selection UI")]
     [SerializeField] private GameObject profileSelectionUI;
-    [SerializeField] private Button newProfileButton;
+    [SerializeField] private Button button_newProfile;
 
     [SerializeField] private GameObject profileButtonParent;
     [SerializeField] private GameObject profileButtonPrefab;
 
     private List<Button> button_Profiles;
     private List<TMP_Text> text_ProfileNames;
+
+    [Header("Profile Creation UI")]
+    [SerializeField] private GameObject profileCreationUI;
+    [SerializeField] private Button button_CreateProfile;
+    [SerializeField] private TMP_InputField inputField_ProfileName;
 
     private GameManager gameManager;
 
@@ -98,8 +103,11 @@ public class UIManager : MonoBehaviour
         button_GetIridium.onClick.AddListener(gameManager.GetIridiumClicked);
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
 
+        button_newProfile.onClick.AddListener(OpenProfileNamePanel);
         button_Profiles = new List<Button>();
         text_ProfileNames = new List<TMP_Text>();
+
+        button_CreateProfile.onClick.AddListener(CreateProfile);
 
         button_Troop = new List<Button>();
         text_TroopNames = new List<TMP_Text>();
@@ -116,9 +124,6 @@ public class UIManager : MonoBehaviour
         text_BoostNames = new List<TMP_Text>();
         text_BoostDurations = new List<TMP_Text>();
         text_BoostDurationRemainings = new List<TMP_Text>();
-
-        GameUI.SetActive(true);
-        buildingUI.SetActive(false);
     }
 
     public void UpdateAllUI()
@@ -366,14 +371,43 @@ public class UIManager : MonoBehaviour
 
     public void CloseAllPanels()
     {
+        CLoseProfileNamePanel();
+        CloseProfileUI();
         CloseBuildingMenu();
         CloseShop();
         CloseBoostMenu();
     }
 
+    public void OpenMainUI()
+    {
+        GameUI.SetActive(true);
+    }
+
     public void OpenProfileSelect()
     {
         profileSelectionUI.SetActive(true);
+    }
+
+    public void OpenProfileNamePanel()
+    {
+        CloseAllPanels();
+
+        profileCreationUI.SetActive(true);
+    }
+
+    public void CreateProfile()
+    {
+        string profileName = inputField_ProfileName.text;
+
+        if (profileName.Length > 0)
+        {
+            gameManager.StartNewGame(profileName);
+            CLoseProfileNamePanel();
+        }
+        else
+        {
+            Debug.LogError("Profile name empty!");
+        }
     }
 
     public void OpenBuildingMenu()
@@ -404,6 +438,11 @@ public class UIManager : MonoBehaviour
         profileSelectionUI.SetActive(false);
     }
 
+    public void CLoseProfileNamePanel()
+    {
+        profileCreationUI.SetActive(false);
+    }
+
     public void CloseShop()
     {
         CleanUpBuyBuildingUI();
@@ -422,20 +461,5 @@ public class UIManager : MonoBehaviour
     {
         boostUI.SetActive(false);
         CleanUpBoostUI();
-    }
-
-    public void GetProfileName()
-    {
-
-    }
-
-    public void PrepareProfileList()
-    {
-
-    }
-
-    public string ProfileSelected(string profileName)
-    {
-        return null;
     }
 }
