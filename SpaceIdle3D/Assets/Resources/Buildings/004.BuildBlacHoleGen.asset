@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d48f4752ffbcc14eb374de651ff1bd2, type: 3}
+  m_Name: 004.BuildBlacHoleGen
+  m_EditorClassIdentifier: 
+  building_Name: Black Hole Generator
+  building_Level: 1
+  building_IridiumBoostPerLevel: 1
+  building_BaseCost: 24000000
+  building_CostMultiplier: 1.25
+  building_UpgradeCosts:
+  - -1
+  buildingPrefabs:
+  - {fileID: 4548579041751584191, guid: d0749ca41fbce134896813ff1b64d263, type: 3}
+  levelUpUnlocks:
+  - level: 1
+    unlockedTroops:
+    - {fileID: 11400000, guid: 455c7c32b8e12cc40b6127553be00730, type: 2}

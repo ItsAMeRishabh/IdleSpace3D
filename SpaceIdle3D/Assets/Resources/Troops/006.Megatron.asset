@@ -9,11 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d23f10075fa4d7846b32c453987ae6f8, type: 3}
-  m_Name: 001
+  m_Script: {fileID: 11500000, guid: 2a0528895cb020c4283e95d2d50c2237, type: 3}
+  m_Name: 006.Megatron
   m_EditorClassIdentifier: 
-  boost_Name: BoostIPS x2
-  boost_Duration: 600
-  boost_MaxDuration: 1800
-  boost_IridiumPerClick: 1
-  boost_IridiumPerSecond: 2
+  troop_Name: Megatron
+  troop_Level: 1
+  troops_Owned: 0
+  troop_BaseCost: 155000
+  troop_BaseIridiumPerSecond: 280
+  troop_IridiumBoostPerLevel: 1
+  troop_CostMultiplier: 1.2

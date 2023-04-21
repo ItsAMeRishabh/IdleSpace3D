@@ -15,7 +15,7 @@ MonoBehaviour:
   troop_Name: Excavator
   troop_Level: 1
   troops_Owned: 0
-  troop_BaseCost: 1100
-  troop_BaseIridiumPerSecond: 25
+  troop_BaseCost: 14500
+  troop_BaseIridiumPerSecond: 58
   troop_IridiumBoostPerLevel: 1
   troop_CostMultiplier: 1.2

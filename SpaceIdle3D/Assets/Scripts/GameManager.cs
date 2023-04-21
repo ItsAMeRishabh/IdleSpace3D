@@ -166,21 +166,21 @@ public class GameManager : MonoBehaviour
 
     public void CalculateCosts()
     {
-        upgradeClick_CurrentCost = (int)(upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
+        upgradeClick_CurrentCost = (upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
 
         foreach (Building b in buildingManager.ownedBuildings)
         {
             foreach (Troop t in b.buildingData.building_OwnedTroops)
             {
-                t.troop_CurrentCost = (int)(t.troop_BaseCost * Math.Pow(t.troop_CostMultiplier, t.troops_Owned));
+                t.troop_CurrentCost = (t.troop_BaseCost * Math.Pow(t.troop_CostMultiplier, t.troops_Owned));
             }
 
-            b.buildingSO.building_CurrentUpgradeCost = (int)(b.buildingSO.building_UpgradeCosts[b.buildingData.building_Level - 1]);
+            b.buildingSO.building_CurrentUpgradeCost = (b.buildingSO.building_UpgradeCosts[b.buildingData.building_Level - 1]);
         }
 
         foreach (BuildingLocation bl in buildingManager.buildingLocations)
         {
-            bl.buildingSO.building_CurrentCost = (int)(bl.buildingSO.building_BaseCost * Mathf.Pow((float)bl.buildingSO.building_CostMultiplier, buildingManager.GetBuildingCount(bl.buildingSO.building_Name)));
+            bl.buildingSO.building_CurrentCost = (bl.buildingSO.building_BaseCost * Math.Pow(bl.buildingSO.building_CostMultiplier, buildingManager.GetBuildingCount(bl.buildingSO.building_Name)));
         }
     }
 
