@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
 
         StartTickCoroutine(); //Setup the coroutine for the tick rate
 
-        //StartSaveCoroutine(); //Setup the coroutine for the save
+        StartSaveCoroutine(); //Setup the coroutine for the save
     }
 
     private void CheckForSaves()
@@ -112,10 +112,13 @@ public class GameManager : MonoBehaviour
         playerData = new PlayerData();
         playerData.profileName = profileName;
         playerData.iridium_Total = defaultValues.iridium_Total;
-        playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
+        playerData.darkElixir_Total = defaultValues.darkElixir_Total;
+        playerData.darkElixir_PerSecond = defaultValues.darkElixir_PerSecond;
+        playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
         playerData.iridium_PerClick = defaultValues.iridium_PerClick;
         playerData.ownedBuildings = defaultValues.ownedBuildings;
+        playerData.activeBoosts = defaultValues.activeBoosts;
 
         StartGame();
     }
@@ -188,6 +191,7 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             ProcessIridiumAdded();
+            ProcessDarkElixirAdded();
             uiManager.UpdateAllUI();
             boostManager.ProcessBoostTimers();
             yield return tickWait;
@@ -212,6 +216,11 @@ public class GameManager : MonoBehaviour
             ProcessClickedIridium();
             getIridium_ButtonClicked = false;
         }
+    }
+
+    private void ProcessDarkElixirAdded()
+    {
+        playerData.darkElixir_Total += playerData.darkElixir_PerSecond / ticksPerSecond;
     }
 
     #region Iridium Processors

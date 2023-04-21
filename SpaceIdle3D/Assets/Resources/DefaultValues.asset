@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   iridium_Total: 0
   iridium_PerSecond: 0
+  darkElixir_Total: 0
+  darkElixir_PerSecond: 0.001
   iridium_PerClick: 1
   iridium_PerClickLevel: 1
   ownedBuildings: []

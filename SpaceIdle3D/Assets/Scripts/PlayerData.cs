@@ -8,6 +8,9 @@ public class PlayerData
     public double iridium_Total;
     public double iridium_PerSecond; //Recalculated on load
     public double iridium_PerSecondBoosted;
+    public double darkElixir_Total;
+    public double darkElixir_PerSecond;
+    public double darkElixir_PerSecondBoosted;
     public double iridium_PerClick; //Recalculated on load
     public double iridium_PerClickBoosted;
     public int iridium_PerClickLevel;
