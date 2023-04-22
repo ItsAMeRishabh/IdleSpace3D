@@ -185,13 +185,8 @@ public class GameManager : MonoBehaviour
 
     public void CalculateCosts()
     {
-<<<<<<< Updated upstream
         upgradeClick_CurrentCost = (upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
-=======
         holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
-
-        upgradeClick_CurrentCost = (int)(upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
->>>>>>> Stashed changes
 
         foreach (Building b in buildingManager.ownedBuildings)
         {
