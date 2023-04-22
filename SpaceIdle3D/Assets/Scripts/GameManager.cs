@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine;
 using System;
@@ -33,13 +34,19 @@ public class GameManager : MonoBehaviour
 
     private Coroutine tickCoroutine;
     private Coroutine saveCoroutine;
+    private Coroutine holdFarmCoroutine;
     private WaitForSeconds tickWait;
     private WaitForSeconds saveWait;
+    private WaitForSeconds holdFarmWait;
 
     private BuildingManager buildingManager;
     private LoadSaveSystem loadSaveSystem;
     private BoostManager boostManager;
+    private InputManager inputManager;
     private UIManager uiManager;
+
+    [HideInInspector] public bool getIridiumButtonPressedDown = false;
+    public bool canGetIridium = true;
 
     public BuildingManager BuildingManager => buildingManager;
     public LoadSaveSystem LoadSaveSystem => loadSaveSystem;
@@ -54,6 +61,17 @@ public class GameManager : MonoBehaviour
         loadSaveSystem = GetComponent<LoadSaveSystem>();
         boostManager = GetComponent<BoostManager>();
         uiManager = GetComponent<UIManager>();
+
+        inputManager = new InputManager();
+    }
+
+    private void OnEnable()
+    {
+        inputManager.Enable();
+
+        inputManager.Input.Farm.started += GetIridiumButton;
+        inputManager.Input.Farm.performed += GetIridiumButton;
+        inputManager.Input.Farm.canceled += GetIridiumButton;
     }
 
     private void Start()
@@ -117,6 +135,7 @@ public class GameManager : MonoBehaviour
         playerData.darkElixir_PerSecond = defaultValues.darkElixir_PerSecond;
         playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
         playerData.iridium_PerClick = defaultValues.iridium_PerClick;
+        playerData.iridium_PerClickRate = defaultValues.iridium_PerClickRate;
         playerData.ownedBuildings = defaultValues.ownedBuildings;
         playerData.activeBoosts = defaultValues.activeBoosts;
 
@@ -166,7 +185,13 @@ public class GameManager : MonoBehaviour
 
     public void CalculateCosts()
     {
+<<<<<<< Updated upstream
         upgradeClick_CurrentCost = (upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
+=======
+        holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
+
+        upgradeClick_CurrentCost = (int)(upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
+>>>>>>> Stashed changes
 
         foreach (Building b in buildingManager.ownedBuildings)
         {
@@ -207,14 +232,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private IEnumerator HoldFarmCoroutine()
+    {
+        yield return holdFarmWait;
+
+        canGetIridium = true;
+    }
+
     private void ProcessIridiumAdded()
     {
         ProcessIridiumPerBuilding();
 
-        if (getIridium_ButtonClicked)
+        if (getIridiumButtonPressedDown)
         {
-            ProcessClickedIridium();
-            getIridium_ButtonClicked = false;
+            if(canGetIridium)
+            {
+                canGetIridium = false;
+                if(holdFarmCoroutine != null)
+                {
+                    StopCoroutine(holdFarmCoroutine);
+                    holdFarmCoroutine = null;
+                }
+
+                ProcessClickedIridium();
+
+                holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());
+            }
         }
     }
 
@@ -238,6 +281,17 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Button Callbacks
+
+    public void GetIridiumButton(InputAction.CallbackContext context)
+    {
+        getIridiumButtonPressedDown = context.ReadValueAsButton();
+
+        if (!getIridiumButtonPressedDown)
+        {
+            canGetIridium = true;
+        }
+    }
+
     public void GetIridiumClicked()
     {
         getIridium_ButtonClicked = true;

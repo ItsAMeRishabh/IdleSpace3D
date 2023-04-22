@@ -24,7 +24,7 @@ public partial class @InputManager : IInputActionCollection2, IDisposable
     ""name"": ""InputManager"",
     ""maps"": [
         {
-            ""name"": ""Camera"",
+            ""name"": ""Input"",
             ""id"": ""f755493d-72f4-4816-9af7-018afd57bff4"",
             ""actions"": [
                 {
@@ -44,6 +44,15 @@ public partial class @InputManager : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Farm"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6375dc3-15d5-4cb2-9140-7957eb2eb803"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -90,16 +99,28 @@ public partial class @InputManager : IInputActionCollection2, IDisposable
                     ""action"": ""MoveDelta"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fd0a4d6c-0827-4ce9-b472-7a7f93e362d9"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Farm"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Camera
-        m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
-        m_Camera_Move = m_Camera.FindAction("Move", throwIfNotFound: true);
-        m_Camera_MoveDelta = m_Camera.FindAction("MoveDelta", throwIfNotFound: true);
+        // Input
+        m_Input = asset.FindActionMap("Input", throwIfNotFound: true);
+        m_Input_Move = m_Input.FindAction("Move", throwIfNotFound: true);
+        m_Input_MoveDelta = m_Input.FindAction("MoveDelta", throwIfNotFound: true);
+        m_Input_Farm = m_Input.FindAction("Farm", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -156,34 +177,39 @@ public partial class @InputManager : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Camera
-    private readonly InputActionMap m_Camera;
-    private ICameraActions m_CameraActionsCallbackInterface;
-    private readonly InputAction m_Camera_Move;
-    private readonly InputAction m_Camera_MoveDelta;
-    public struct CameraActions
+    // Input
+    private readonly InputActionMap m_Input;
+    private IInputActions m_InputActionsCallbackInterface;
+    private readonly InputAction m_Input_Move;
+    private readonly InputAction m_Input_MoveDelta;
+    private readonly InputAction m_Input_Farm;
+    public struct InputActions
     {
         private @InputManager m_Wrapper;
-        public CameraActions(@InputManager wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Camera_Move;
-        public InputAction @MoveDelta => m_Wrapper.m_Camera_MoveDelta;
-        public InputActionMap Get() { return m_Wrapper.m_Camera; }
+        public InputActions(@InputManager wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Input_Move;
+        public InputAction @MoveDelta => m_Wrapper.m_Input_MoveDelta;
+        public InputAction @Farm => m_Wrapper.m_Input_Farm;
+        public InputActionMap Get() { return m_Wrapper.m_Input; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(CameraActions set) { return set.Get(); }
-        public void SetCallbacks(ICameraActions instance)
+        public static implicit operator InputActionMap(InputActions set) { return set.Get(); }
+        public void SetCallbacks(IInputActions instance)
         {
-            if (m_Wrapper.m_CameraActionsCallbackInterface != null)
+            if (m_Wrapper.m_InputActionsCallbackInterface != null)
             {
-                @Move.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnMove;
-                @Move.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnMove;
-                @Move.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnMove;
-                @MoveDelta.started -= m_Wrapper.m_CameraActionsCallbackInterface.OnMoveDelta;
-                @MoveDelta.performed -= m_Wrapper.m_CameraActionsCallbackInterface.OnMoveDelta;
-                @MoveDelta.canceled -= m_Wrapper.m_CameraActionsCallbackInterface.OnMoveDelta;
+                @Move.started -= m_Wrapper.m_InputActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_InputActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_InputActionsCallbackInterface.OnMove;
+                @MoveDelta.started -= m_Wrapper.m_InputActionsCallbackInterface.OnMoveDelta;
+                @MoveDelta.performed -= m_Wrapper.m_InputActionsCallbackInterface.OnMoveDelta;
+                @MoveDelta.canceled -= m_Wrapper.m_InputActionsCallbackInterface.OnMoveDelta;
+                @Farm.started -= m_Wrapper.m_InputActionsCallbackInterface.OnFarm;
+                @Farm.performed -= m_Wrapper.m_InputActionsCallbackInterface.OnFarm;
+                @Farm.canceled -= m_Wrapper.m_InputActionsCallbackInterface.OnFarm;
             }
-            m_Wrapper.m_CameraActionsCallbackInterface = instance;
+            m_Wrapper.m_InputActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Move.started += instance.OnMove;
@@ -192,13 +218,17 @@ public partial class @InputManager : IInputActionCollection2, IDisposable
                 @MoveDelta.started += instance.OnMoveDelta;
                 @MoveDelta.performed += instance.OnMoveDelta;
                 @MoveDelta.canceled += instance.OnMoveDelta;
+                @Farm.started += instance.OnFarm;
+                @Farm.performed += instance.OnFarm;
+                @Farm.canceled += instance.OnFarm;
             }
         }
     }
-    public CameraActions @Camera => new CameraActions(this);
-    public interface ICameraActions
+    public InputActions @Input => new InputActions(this);
+    public interface IInputActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnMoveDelta(InputAction.CallbackContext context);
+        void OnFarm(InputAction.CallbackContext context);
     }
 }

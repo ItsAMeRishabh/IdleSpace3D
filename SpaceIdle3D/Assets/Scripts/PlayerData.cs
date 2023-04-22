@@ -12,6 +12,7 @@ public class PlayerData
     public double darkElixir_PerSecond;
     public double darkElixir_PerSecondBoosted;
     public double iridium_PerClick; //Recalculated on load
+    public double iridium_PerClickRate;
     public double iridium_PerClickBoosted;
     public int iridium_PerClickLevel;
     public List<BuildingData> ownedBuildings = new List<BuildingData>();

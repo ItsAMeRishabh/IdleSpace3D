@@ -10229,7 +10229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &829087467
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18841,6 +18841,7 @@ MonoBehaviour:
     darkElixir_PerSecond: 0
     darkElixir_PerSecondBoosted: 0
     iridium_PerClick: 1
+    iridium_PerClickRate: 0
     iridium_PerClickBoosted: 0
     iridium_PerClickLevel: 1
     ownedBuildings: []
@@ -18852,6 +18853,8 @@ MonoBehaviour:
   startFreshOnLaunch: 0
   saveInterval: 5
   autoSave: 0
+  getIridiumButtonPressedDown: 0
+  canGetIridium: 1
 --- !u!4 &1590393985
 Transform:
   m_ObjectHideFlags: 0
@@ -21904,6 +21907,7 @@ GameObject:
   - component: {fileID: 1869777341}
   - component: {fileID: 1869777340}
   - component: {fileID: 1869777342}
+  - component: {fileID: 1869777343}
   m_Layer: 5
   m_Name: GetIridium
   m_TagString: Untagged
@@ -22014,6 +22018,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1869777343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869777338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d54531977ecb194c95e2d3aa7a5d72a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Gamepad>/buttonSouth
 --- !u!1 &1880875175
 GameObject:
   m_ObjectHideFlags: 0

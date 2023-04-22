@@ -2,7 +2,7 @@
     "name": "InputManager",
     "maps": [
         {
-            "name": "Camera",
+            "name": "Input",
             "id": "f755493d-72f4-4816-9af7-018afd57bff4",
             "actions": [
                 {
@@ -22,6 +22,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Farm",
+                    "type": "Button",
+                    "id": "e6375dc3-15d5-4cb2-9140-7957eb2eb803",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -66,6 +75,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MoveDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fd0a4d6c-0827-4ce9-b472-7a7f93e362d9",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Farm",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

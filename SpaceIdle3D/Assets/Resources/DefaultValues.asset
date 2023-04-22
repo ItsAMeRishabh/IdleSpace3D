@@ -18,5 +18,6 @@ MonoBehaviour:
   darkElixir_PerSecond: 0.001
   iridium_PerClick: 1
   iridium_PerClickLevel: 1
+  iridium_PerClickRate: 2
   ownedBuildings: []
   activeBoosts: []
