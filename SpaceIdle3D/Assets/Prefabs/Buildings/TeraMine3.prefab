@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4898686823225761024}
   - component: {fileID: 7342867558615593814}
   - component: {fileID: 1162425370856940291}
-  - component: {fileID: 5012941223175562642}
   m_Layer: 0
   m_Name: polySurface200
   m_TagString: Untagged
@@ -100,20 +99,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5012941223175562642
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2098752310120135449}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5860933477775642201, guid: cd0d486da7ef4a74a9d0d6984862c360, type: 3}
 --- !u!1 &4863283037710985078
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,5 +247,4 @@ MonoBehaviour:
   buildingData:
     building_Name: BuildingName
     building_Level: 1
-    building_IridiumBoostPerLevel: 1.2
-    ownedTroops: []
+    building_OwnedTroops: []

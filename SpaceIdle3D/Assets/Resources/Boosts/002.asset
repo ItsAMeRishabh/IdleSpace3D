@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 002
   m_EditorClassIdentifier: 
   boost_Name: BoostIPC x5
-  boost_Duration: 5
-  boost_MaxDuration: 30
+  boost_Duration: 600
+  boost_MaxDuration: 1800
   boost_IridiumPerClick: 5
   boost_IridiumPerSecond: 1

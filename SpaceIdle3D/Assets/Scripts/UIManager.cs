@@ -131,10 +131,10 @@ public class UIManager : MonoBehaviour
     public void UpdateAllUI()
     {
         text_GetIridiumButton.text = "Get Iridium \n(+" + gameManager.playerData.iridium_PerClickBoosted.ToString("0") + " Iridium)";
-        text_TotalIridium.text = gameManager.playerData.iridium_Total.ToString("0") + " Iridium";
-        text_IridiumPerSecond.text = gameManager.playerData.iridium_PerSecondBoosted.ToString("0.0") + " Iridium/s";
-        text_TotalDarkElixir.text = gameManager.playerData.darkElixir_Total.ToString("0.000") + " Dark Elixir";
-        text_DarkElixirPerSecond.text = gameManager.playerData.darkElixir_PerSecond.ToString("0.000") + " DE/s";
+        text_TotalIridium.text = gameManager.playerData.iridium_Total.ToString("0");
+        text_IridiumPerSecond.text = gameManager.playerData.iridium_PerSecondBoosted.ToString("0.0") + " /s";
+        text_TotalDarkElixir.text = gameManager.playerData.darkElixir_Total.ToString("0.000");
+        text_DarkElixirPerSecond.text = gameManager.playerData.darkElixir_PerSecond.ToString("0.000") + " /s";
         text_UpgradeClickButton.text = "Upgrade Click ($" + gameManager.upgradeClick_CurrentCost.ToString("0") + ")";
 
         if (buildingUI.activeSelf)

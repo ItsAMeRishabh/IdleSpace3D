@@ -21,8 +21,8 @@ MonoBehaviour:
   - 500000000
   - -1
   buildingPrefabs:
-  - {fileID: 4629685830362300199, guid: 5156bee89d3153549ac7e7a565f649ba, type: 3}
-  - {fileID: 4629685830362300199, guid: 5156bee89d3153549ac7e7a565f649ba, type: 3}
+  - {fileID: 3488439151317718080, guid: 37746354f8c988e4088194cf61690367, type: 3}
+  - {fileID: 3488439151317718080, guid: 37746354f8c988e4088194cf61690367, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:

@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 4fc8e170ee42a2944993d81a7a9af8b6
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - TT Rounds Neue Trl Cnd
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9eb5c2c847c70774db859d30def35a97, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
