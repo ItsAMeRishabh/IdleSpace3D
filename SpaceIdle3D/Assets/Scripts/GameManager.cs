@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool autoSave = false;
 
     private bool getIridium_ButtonClicked = false;
+    private bool gameHathStarted = false;
 
     private Coroutine tickCoroutine;
     private Coroutine saveCoroutine;
@@ -151,6 +152,7 @@ public class GameManager : MonoBehaviour
 
         tickWait = new WaitForSeconds(1.0f / ticksPerSecond);
         tickCoroutine = StartCoroutine(Tick());
+        gameHathStarted = true;
     }
 
     private void StartSaveCoroutine()
@@ -354,6 +356,8 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Try Save!")]
     public void SaveGame()
     {
+        if (!gameHathStarted)
+            return;
         playerData.lastSaveTime = DateTime.Now;
         playerData.ownedBuildings = buildingManager.GetBuildingDataList();
         playerData.activeBoosts = boostManager.GetActiveBoosts();
