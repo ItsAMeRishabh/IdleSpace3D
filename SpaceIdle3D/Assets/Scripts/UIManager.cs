@@ -29,7 +29,8 @@ public class UIManager : MonoBehaviour
     private List<Button> button_Boosts;
     private List<TMP_Text> text_BoostNames;
     private List<TMP_Text> text_BoostDurations;
-    private List<Image> text_BoostDurationRemainings;
+    private List<Image> image_BoostDurationRemainings;
+    private List<TMP_Text> text_BoostDurationRemainings;
 
     [Header("Building UI")]
     [SerializeField] private GameObject buildingUI;
@@ -140,7 +141,7 @@ public class UIManager : MonoBehaviour
 
         text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerClickBoosted, FormattingTypes.IridiumPerSecond) + " Iridium)";
 
-        text_UpgradeClickButton.text = "Upgrade Click ($" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
+        text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
         if (gameManager.playerData.iridium_Total < gameManager.upgradeClick_CurrentCost)
         {
             button_UpgradeClick.interactable = false;
@@ -173,7 +174,7 @@ public class UIManager : MonoBehaviour
                 button_UpgradeBuilding.interactable = true;
             }
 
-            text_UpgradeBuildingButton.text = "Upgrade ($" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost, FormattingTypes.Cost) + ")";
+            text_UpgradeBuildingButton.text = "Upgrade (" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost, FormattingTypes.Cost) + ")";
         }
 
         for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
@@ -201,7 +202,7 @@ public class UIManager : MonoBehaviour
         {
             text_BuildingNames[i].text = gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name;
 
-            text_BuildingCosts[i].text = "$" + NumberFormatter.FormatNumber(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_CurrentCost, FormattingTypes.Cost);
+            text_BuildingCosts[i].text = "" + NumberFormatter.FormatNumber(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_CurrentCost, FormattingTypes.Cost);
             if (gameManager.playerData.iridium_Total < gameManager.BuildingManager.buildingLocations[i].buildingSO.building_CurrentCost)
             {
                 button_Buildings[i].interactable = false;
@@ -227,11 +228,13 @@ public class UIManager : MonoBehaviour
 
             if (boost != null)
             {
-                text_BoostDurationRemainings[i].fillAmount = (float) (boost.boost_TimeRemaining / gameManager.BoostManager.boostSOs[i].boost_MaxDuration);
+                image_BoostDurationRemainings[i].fillAmount = (float) (boost.boost_TimeRemaining / gameManager.BoostManager.boostSOs[i].boost_MaxDuration);
+                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(boost.boost_TimeRemaining, FormattingTypes.BoostDuration) + " Left";
             }
             else
             {
-                text_BoostDurationRemainings[i].fillAmount = 0f;
+                image_BoostDurationRemainings[i].fillAmount = 0f;
+                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(0f, FormattingTypes.BoostDuration) + " Left";
             }
         }
     }
@@ -271,7 +274,8 @@ public class UIManager : MonoBehaviour
         button_Boosts = new List<Button>();
         text_BoostNames = new List<TMP_Text>();
         text_BoostDurations = new List<TMP_Text>();
-        text_BoostDurationRemainings = new List<Image>();
+        image_BoostDurationRemainings = new List<Image>();
+        text_BoostDurationRemainings = new List<TMP_Text>();
 
         for (int i = 0; i < gameManager.BoostManager.boostSOs.Count; i++)
         {
@@ -283,7 +287,8 @@ public class UIManager : MonoBehaviour
             button_Boosts.Add(newButton.transform.GetChild(2).GetComponent<Button>());
             text_BoostNames.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
             text_BoostDurations.Add(newButton.transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>());
-            text_BoostDurationRemainings.Add(newButton.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>());
+            image_BoostDurationRemainings.Add(newButton.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>());
+            text_BoostDurationRemainings.Add(newButton.transform.GetChild(3).GetComponent<TMP_Text>());
 
             button_Boosts[i].onClick.AddListener(() => gameManager.BoostManager.AddBoost(gameManager.BoostManager.boostSOs[j]));
         }
@@ -395,6 +400,9 @@ public class UIManager : MonoBehaviour
 
         if (text_BoostDurations != null)
             text_BoostDurations.Clear();
+
+        if (image_BoostDurationRemainings != null)
+            image_BoostDurationRemainings.Clear();
 
         if (text_BoostDurationRemainings != null)
             text_BoostDurationRemainings.Clear();
