@@ -29,7 +29,7 @@ public class UIManager : MonoBehaviour
     private List<Button> button_Boosts;
     private List<TMP_Text> text_BoostNames;
     private List<TMP_Text> text_BoostDurations;
-    private List<TMP_Text> text_BoostDurationRemainings;
+    private List<Image> text_BoostDurationRemainings;
 
     [Header("Building UI")]
     [SerializeField] private GameObject buildingUI;
@@ -221,16 +221,17 @@ public class UIManager : MonoBehaviour
         {
             text_BoostNames[i].text = gameManager.BoostManager.boostSOs[i].boost_Name;
 
-            text_BoostDurations[i].text = NumberFormatter.FormatNumber(gameManager.BoostManager.boostSOs[i].boost_Duration, FormattingTypes.BoostDuration) + " Sec";
+            text_BoostDurations[i].text = "+ " + NumberFormatter.FormatNumber(gameManager.BoostManager.boostSOs[i].boost_Duration, FormattingTypes.BoostDuration);
 
             Boost boost = Array.Find(gameManager.BoostManager.activeBoosts.ToArray(), x => x.boost_Name == gameManager.BoostManager.boostSOs[i].boost_Name);
+
             if (boost != null)
             {
-                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(boost.boost_TimeRemaining, FormattingTypes.BoostDuration) + " Sec Left";
+                text_BoostDurationRemainings[i].fillAmount = (float) (boost.boost_TimeRemaining / gameManager.BoostManager.boostSOs[i].boost_MaxDuration);
             }
             else
             {
-                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(0.0d, FormattingTypes.BoostDuration) + " Sec Left";
+                text_BoostDurationRemainings[i].fillAmount = 0f;
             }
         }
     }
@@ -270,7 +271,7 @@ public class UIManager : MonoBehaviour
         button_Boosts = new List<Button>();
         text_BoostNames = new List<TMP_Text>();
         text_BoostDurations = new List<TMP_Text>();
-        text_BoostDurationRemainings = new List<TMP_Text>();
+        text_BoostDurationRemainings = new List<Image>();
 
         for (int i = 0; i < gameManager.BoostManager.boostSOs.Count; i++)
         {
@@ -279,10 +280,10 @@ public class UIManager : MonoBehaviour
             GameObject newButton = Instantiate(boostButtonPrefab, boostButtonParent.transform);
             newButton.name = gameManager.BoostManager.boostSOs[i].boost_Name;
 
-            button_Boosts.Add(newButton.GetComponent<Button>());
-            text_BoostNames.Add(newButton.transform.GetChild(0).GetComponent<TMP_Text>());
-            text_BoostDurations.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
-            text_BoostDurationRemainings.Add(newButton.transform.GetChild(2).GetComponent<TMP_Text>());
+            button_Boosts.Add(newButton.transform.GetChild(2).GetComponent<Button>());
+            text_BoostNames.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
+            text_BoostDurations.Add(newButton.transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>());
+            text_BoostDurationRemainings.Add(newButton.transform.GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>());
 
             button_Boosts[i].onClick.AddListener(() => gameManager.BoostManager.AddBoost(gameManager.BoostManager.boostSOs[j]));
         }
