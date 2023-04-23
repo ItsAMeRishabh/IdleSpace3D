@@ -375,6 +375,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseAllPanels()
     {
+        ShowMainUI();
         CLoseProfileNamePanel();
         CloseProfileUI();
         CloseBuildingMenu();
@@ -384,18 +385,20 @@ public class UIManager : MonoBehaviour
 
     public void OpenMainUI()
     {
+        ShowMainUI();
         GameUI.SetActive(true);
     }
 
     public void OpenProfileSelect()
     {
+        HideMainUI();
         profileSelectionUI.SetActive(true);
     }
 
     public void OpenProfileNamePanel()
     {
         CloseAllPanels();
-
+        HideMainUI();
         profileCreationUI.SetActive(true);
     }
 
@@ -418,13 +421,14 @@ public class UIManager : MonoBehaviour
     {
         boostUI.SetActive(false);
         buildingBuyUI.SetActive(false);
-
         buildingUI.SetActive(true);
+        HideMainUI();
         PopulateBuildingUI();
     }
 
     public void CloseBuildingMenu()
     {
+        ShowMainUI();
         buildingUI.SetActive(false);
         gameManager.BuildingManager.selectedBuilding = null;
     }
@@ -432,23 +436,26 @@ public class UIManager : MonoBehaviour
     public void OpenShop()
     {
         CloseAllPanels();
-
+        HideMainUI();
         buildingBuyUI.SetActive(true);
         PopulateBuyBuildingUI();
     }
 
     public void CloseProfileUI()
     {
+        ShowMainUI();
         profileSelectionUI.SetActive(false);
     }
 
     public void CLoseProfileNamePanel()
     {
+        ShowMainUI();
         profileCreationUI.SetActive(false);
     }
 
     public void CloseShop()
     {
+        ShowMainUI();
         CleanUpBuyBuildingUI();
         buildingBuyUI.SetActive(false);
     }
@@ -456,7 +463,7 @@ public class UIManager : MonoBehaviour
     public void OpenBoostMenu()
     {
         CloseAllPanels();
-
+        HideMainUI();
         boostUI.SetActive(true);
         PopulateBoostUI();
     }
@@ -464,6 +471,23 @@ public class UIManager : MonoBehaviour
     public void CloseBoostMenu()
     {
         boostUI.SetActive(false);
+        ShowMainUI();
         CleanUpBoostUI();
+    }
+
+    public void HideMainUI()
+    {
+        button_GetIridium.gameObject.SetActive(false);
+        button_UpgradeClick.gameObject.SetActive(false);
+        button_OpenBuyBuildings.gameObject.SetActive(false);
+        button_GetBoost.gameObject.SetActive(false);
+    }
+
+    public void ShowMainUI()
+    {
+        button_GetIridium.gameObject.SetActive(true);
+        button_UpgradeClick.gameObject.SetActive(true);
+        button_OpenBuyBuildings.gameObject.SetActive(true);
+        button_GetBoost.gameObject.SetActive(true);
     }
 }
