@@ -364,8 +364,7 @@ MonoBehaviour:
   buildingData:
     building_Name: BuildingName
     building_Level: 1
-    building_IridiumBoostPerLevel: 1.2
-    ownedTroops: []
+    building_OwnedTroops: []
 --- !u!1 &3763460572362994473
 GameObject:
   m_ObjectHideFlags: 0
@@ -556,7 +555,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4548579041751584191}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.56, y: 0, z: 1.46}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
