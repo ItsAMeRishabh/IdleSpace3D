@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     private UIManager uiManager;
 
     [HideInInspector] public bool getIridiumButtonPressedDown = false;
-    public bool canGetIridium = true;
+    [HideInInspector] public bool canGetIridium = true;
 
     public BuildingManager BuildingManager => buildingManager;
     public LoadSaveSystem LoadSaveSystem => loadSaveSystem;
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        //SaveGame();
+        if(autoSave) SaveGame();
     }
 
     private void StartGame()
