@@ -143,12 +143,12 @@ public class UIManager : MonoBehaviour
             if(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost == -1)
             {
                 text_UpgradeBuildingButton.text = "Max Level";
-                button_UpgradeBuilding.interactable = false;
+                button_UpgradeBuilding.gameObject.SetActive(false);
             }
             else
             {
                 text_UpgradeBuildingButton.text = "Upgrade ($" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost, FormattingTypes.Cost) + ")";
-                button_UpgradeBuilding.interactable = true;
+                button_UpgradeBuilding.gameObject.SetActive(true);
             }
 
             for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
