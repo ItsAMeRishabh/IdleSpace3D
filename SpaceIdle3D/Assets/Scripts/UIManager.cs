@@ -79,10 +79,6 @@ public class UIManager : MonoBehaviour
 
     private GameManager gameManager;
 
-    public GameObject BuildingUI => buildingUI;
-    public GameObject BuildingBuyUI => buildingBuyUI;
-    public GameObject BoostUI => boostUI;
-
     void Awake()
     {
         gameManager = GetComponent<GameManager>();
@@ -130,17 +126,20 @@ public class UIManager : MonoBehaviour
 
     public void UpdateAllUI()
     {
-        text_GetIridiumButton.text = "Get Iridium \n(+" + gameManager.playerData.iridium_PerClickBoosted.ToString("0") + " Iridium)";
-        text_TotalIridium.text = gameManager.playerData.iridium_Total.ToString("0");
-        text_IridiumPerSecond.text = gameManager.playerData.iridium_PerSecondBoosted.ToString("0.0") + " /s";
-        text_TotalDarkElixir.text = gameManager.playerData.darkElixir_Total.ToString("0.000");
-        text_DarkElixirPerSecond.text = gameManager.playerData.darkElixir_PerSecond.ToString("0.000") + " /s";
-        text_UpgradeClickButton.text = "Upgrade Click ($" + gameManager.upgradeClick_CurrentCost.ToString("0") + ")";
+        text_TotalIridium.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_Total, FormattingTypes.Iridium);
+        text_IridiumPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerSecondBoosted, FormattingTypes.IridiumPerSecond) + " /s";
+
+        text_TotalDarkElixir.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_Total, FormattingTypes.DarkElixer);
+        text_DarkElixirPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecond, FormattingTypes.DarkElixer);
+
+        text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerClickBoosted, FormattingTypes.IridiumPerSecond) + " Iridium)";
+        text_UpgradeClickButton.text = "Upgrade Click ($" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
 
         if (buildingUI.activeSelf)
         {
-            text_BuildingName.text = gameManager.BuildingManager.selectedBuilding.buildingData.building_Name + " (Lvl " + gameManager.BuildingManager.selectedBuilding.buildingData.building_Level.ToString("0") + ")";
-            text_BuildingIridiumPerSecond.text = (gameManager.BuildingManager.selectedBuilding.GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + " Iridium/s";
+            text_BuildingName.text = gameManager.BuildingManager.selectedBuilding.buildingData.building_Name + " (Lvl " + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_Level, FormattingTypes.Level) + ")";
+            text_BuildingIridiumPerSecond.text = NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.GetIridiumPerTick() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + " Iridium/s";
+
             if(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost == -1)
             {
                 text_UpgradeBuildingButton.text = "Max Level";
@@ -148,15 +147,16 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                text_UpgradeBuildingButton.text = "Upgrade ($" + gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost.ToString("0") + ")";
+                text_UpgradeBuildingButton.text = "Upgrade ($" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost, FormattingTypes.Cost) + ")";
                 button_UpgradeBuilding.interactable = true;
             }
+
             for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
             {
                 text_TroopNames[i].text = gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name;
-                text_TroopCosts[i].text = "$" + gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost.ToString("0.0");
-                text_TroopsOwned[i].text = gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned.ToString("0") + " owned";
-                text_TroopIPS[i].text = "+" + (gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTick() * GameManager.ticksPerSecond).ToString("0.0") + "i/s";
+                text_TroopCosts[i].text = "$" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost, FormattingTypes.Cost);
+                text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned) + " owned";
+                text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTick() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + "i/s";
             }
         }
 
@@ -165,9 +165,9 @@ public class UIManager : MonoBehaviour
             for (int i = 0; i < gameManager.BuildingManager.buildingLocations.Count; i++)
             {
                 text_BuildingNames[i].text = gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name;
-                text_BuildingCosts[i].text = "$" + gameManager.BuildingManager.buildingLocations[i].buildingSO.building_CurrentCost.ToString("0.0");
+                text_BuildingCosts[i].text = "$" + NumberFormatter.FormatNumber(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_CurrentCost, FormattingTypes.Cost);
 
-                text_BuildingsOwned[i].text = gameManager.BuildingManager.GetBuildingCount(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name).ToString("0") + " owned";
+                text_BuildingsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManager.GetBuildingCount(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name), FormattingTypes.Owned) + " owned";
             }
         }
 
@@ -177,16 +177,16 @@ public class UIManager : MonoBehaviour
             {
                 text_BoostNames[i].text = gameManager.BoostManager.boostSOs[i].boost_Name;
 
-                text_BoostDurations[i].text = gameManager.BoostManager.boostSOs[i].boost_Duration.ToString("0") + " Sec";
+                text_BoostDurations[i].text = NumberFormatter.FormatNumber(gameManager.BoostManager.boostSOs[i].boost_Duration, FormattingTypes.BoostDuration) + " Sec";
 
                 Boost boost = Array.Find(gameManager.BoostManager.activeBoosts.ToArray(), x => x.boost_Name == gameManager.BoostManager.boostSOs[i].boost_Name);
                 if (boost != null)
                 {
-                    text_BoostDurationRemainings[i].text = boost.boost_TimeRemaining.ToString("0.0") + " Sec Left";
+                    text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(boost.boost_TimeRemaining, FormattingTypes.BoostDuration) + " Sec Left";
                 }
                 else
                 {
-                    text_BoostDurationRemainings[i].text = 0.0f.ToString("0.0") + " Sec Left";
+                    text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(0.0d, FormattingTypes.BoostDuration) + " Sec Left";
                 }
             }
         }
