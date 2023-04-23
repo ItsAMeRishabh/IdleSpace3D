@@ -201,8 +201,7 @@ MonoBehaviour:
   buildingData:
     building_Name: BuildingName
     building_Level: 1
-    building_IridiumBoostPerLevel: 1.2
-    ownedTroops: []
+    building_OwnedTroops: []
 --- !u!1 &1776440936656578990
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,7 +297,7 @@ GameObject:
   m_Layer: 0
   m_Name: TeraMine2
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
