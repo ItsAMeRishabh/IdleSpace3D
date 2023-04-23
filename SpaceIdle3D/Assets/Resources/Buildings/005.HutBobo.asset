@@ -20,7 +20,7 @@ MonoBehaviour:
   building_UpgradeCosts:
   - -1
   buildingPrefabs:
-  - {fileID: 2292723580634780923, guid: 26ec342eaf0d9f44da552a36cb97e6dd, type: 3}
+  - {fileID: 5320164741235169287, guid: aa57b26d93166c84bbbba708a7d20ce1, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:
