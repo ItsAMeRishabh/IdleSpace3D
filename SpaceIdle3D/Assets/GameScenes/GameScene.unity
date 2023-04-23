@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028435, g: 0.22571525, b: 0.30692342, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028411, g: 0.22571488, b: 0.3069226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5406,11 +5406,11 @@ RectTransform:
   m_Father: {fileID: 802541678}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.00008519361}
-  m_SizeDelta: {x: 100, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 444.92358}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &919138180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5426,7 +5426,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
+    m_Top: 50
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 50
@@ -8422,7 +8422,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -17.000061, y: -348}
+  m_AnchoredPosition: {x: -17, y: -348}
   m_SizeDelta: {x: 102, y: 39}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1698048364
@@ -9413,10 +9413,10 @@ RectTransform:
   m_Father: {fileID: 1361030561}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2.3499756, y: -33.80002}
-  m_SizeDelta: {x: -106.7, y: -418.4}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: -100, y: 650}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1847991760
 CanvasRenderer:
@@ -10200,8 +10200,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2079090698}
-  - component: {fileID: 2079090700}
   - component: {fileID: 2079090699}
+  - component: {fileID: 2079090700}
   m_Layer: 5
   m_Name: TroopButtParent
   m_TagString: Untagged
@@ -10224,11 +10224,11 @@ RectTransform:
   m_Father: {fileID: 1847991756}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00004957467, y: -0.000061035156}
-  m_SizeDelta: {x: 923.77, y: 60}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 930, y: 25}
+  m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2079090699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10258,7 +10258,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 60
+    m_Top: 25
     m_Bottom: 0
   m_ChildAlignment: 1
   m_Spacing: 55
