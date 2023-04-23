@@ -380,7 +380,7 @@ public class UIManager : MonoBehaviour
 
             foreach (Button button in button_Boosts)
             {
-                Destroy(button.transform.parent.gameObject);
+                Destroy(button.gameObject);
             }
 
             button_Boosts.Clear();
