@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
+[RequireComponent(typeof(TroopManager))]
 public class Building : MonoBehaviour
 {
     public BuildingSO buildingSO;
@@ -27,7 +27,7 @@ public class Building : MonoBehaviour
         double x = 0;
         foreach (Troop troop in buildingData.building_OwnedTroops)
         {
-            x += troop.GetIridiumPerTick() * troop.troops_Owned * Mathf.Pow((float)buildingSO.building_IridiumBoostPerLevel, buildingData.building_Level - 1);
+            x += troop.GetIridiumPerTick() * Mathf.Pow((float)buildingSO.building_IridiumBoostPerLevel, buildingData.building_Level - 1);
         }
         return x;
     }

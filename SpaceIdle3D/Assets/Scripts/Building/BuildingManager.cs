@@ -215,4 +215,11 @@ public class BuildingManager : MonoBehaviour
 
         return count;
     }
+
+    public BuildingSO GetBuildingSO(string buildingName) 
+    {
+        BuildingLocation BLS = Array.Find(buildingLocations.ToArray(), x => x.buildingSO.building_Name == buildingName);
+
+        return BLS.buildingSO;
+    }
 }

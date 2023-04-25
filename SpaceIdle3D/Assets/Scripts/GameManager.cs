@@ -358,7 +358,8 @@ public class GameManager : MonoBehaviour
     {
         if (!gameHathStarted)
             return;
-        playerData.lastSaveTime = DateTime.Now;
+
+        playerData.lastSaveTime = DateTime.Now.ToUniversalTime();
         playerData.ownedBuildings = buildingManager.GetBuildingDataList();
         playerData.activeBoosts = boostManager.GetActiveBoosts();
         loadSaveSystem.Save(playerData);
@@ -389,6 +390,8 @@ public class GameManager : MonoBehaviour
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
         boostManager.LoadBoosts(playerData.activeBoosts);
 
+        //Debug.Log("Last Save Time: " + ((DateTime)playerData.lastSaveTime).ToUniversalTime().ToString("f"));
+        //Debug.Log("Time: " + (DateTime.Now.ToUniversalTime()).ToString("f"));
         StartGame();
     }
 
