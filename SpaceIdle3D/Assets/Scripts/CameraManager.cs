@@ -4,8 +4,13 @@ public class CameraManager : MonoBehaviour
 {
     public Camera mainCamera;
 
+    [Header("Movement")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float movementTime;
+    [SerializeField] private Vector3 movementLowerLimit;
+    [SerializeField] private Vector3 movementUpperLimit;
+
+    [Header("Zoom")]
     [SerializeField] private Vector3 zoomAmount;
     [SerializeField] private float zoomLowerLimit;
     [SerializeField] private float zoomUpperLimit;
@@ -25,36 +30,6 @@ public class CameraManager : MonoBehaviour
     private void Update()
     {
         HandleMouseInput();
-        HandleMovementInput();
-    }
-
-    private void HandleTouchInput() // Replace HandleMouseInput() with HandleTouchInput()
-    {
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0); // Get the first touch
-
-            if (touch.phase == UnityEngine.TouchPhase.Moved) // Check if touch is moving
-            {
-                newZoom += touch.deltaPosition.y * zoomAmount * 0.01f; // Scale touch delta by a factor to adjust zoom speed
-
-                Vector3 touchWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, mainCamera.nearClipPlane)); // Convert touch position to world position
-                touchWorldPosition.y = transform.position.y; // Set the y position to match the camera's y position
-
-                if (touch.deltaPosition.magnitude > 0.01f) // Check if touch has moved enough to be considered a drag
-                {
-                    if (touch.phase == UnityEngine.TouchPhase.Began) // Check if touch just started
-                    {
-                        dragStartPosition = touchWorldPosition;
-                    }
-                    else if (touch.phase == UnityEngine.TouchPhase.Moved) // Check if touch is still moving
-                    {
-                        dragCurrentPosition = touchWorldPosition;
-                        newPosition = transform.position + dragStartPosition - dragCurrentPosition;
-                    }
-                }
-            }
-        }
     }
 
     private void HandleMouseInput()
@@ -97,41 +72,16 @@ public class CameraManager : MonoBehaviour
                 newPosition = transform.position + dragOffset;
             }
         }
-    }
-
-    private void HandleMovementInput()
-    {
-        /*if(Input.GetKey(KeyCode.W))
-        {
-            newPosition += transform.forward * movementSpeed;
-        }
-        if(Input.GetKey(KeyCode.A))
-        {
-            newPosition += transform.right * -movementSpeed;
-        }
-        if(Input.GetKey(KeyCode.S))
-        {
-            newPosition += transform.forward * -movementSpeed;
-        }
-        if(Input.GetKey(KeyCode.D))
-        {
-            newPosition += transform.right * movementSpeed;
-        }
-
-        if(Input.GetKey(KeyCode.E))
-        {
-            newZoom += zoomAmount;
-        }
-        if (Input.GetKey(KeyCode.Q))
-        {
-            newZoom -= zoomAmount;
-        }*/
 
         newZoom.y = Mathf.Clamp(newZoom.y, zoomLowerLimit, zoomUpperLimit);
         newZoom.z = Mathf.Clamp(newZoom.z, -zoomUpperLimit, -zoomLowerLimit);
 
+        newPosition.x = Mathf.Clamp(newPosition.x, movementLowerLimit.x, movementUpperLimit.x);
+        newPosition.y = Mathf.Clamp(newPosition.y, movementLowerLimit.y, movementUpperLimit.y);
+        newPosition.z = Mathf.Clamp(newPosition.z, movementLowerLimit.z, movementUpperLimit.z);
+
         transform.position = Vector3.Lerp(transform.position, newPosition, movementTime * Time.deltaTime);
-        
+
         mainCamera.transform.localPosition = Vector3.Lerp(mainCamera.transform.localPosition, newZoom, movementTime * Time.deltaTime);
     }
 }

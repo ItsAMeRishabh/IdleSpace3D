@@ -5483,9 +5483,11 @@ MonoBehaviour:
   mainCamera: {fileID: 1109951788}
   movementSpeed: 100
   movementTime: 5
+  movementLowerLimit: {x: -220, y: 150, z: -25}
+  movementUpperLimit: {x: 30, y: 150, z: 250}
   zoomAmount: {x: 0, y: -2, z: 2}
   zoomLowerLimit: -69
-  zoomUpperLimit: 150
+  zoomUpperLimit: 200
 --- !u!4 &951805734
 Transform:
   m_ObjectHideFlags: 0
@@ -5494,7 +5496,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 951805732}
   m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
-  m_LocalPosition: {x: -93, y: 150, z: 111.9}
+  m_LocalPosition: {x: -121.721, y: 150, z: 140.60318}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6430,7 +6432,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109951787}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0, y: 30, z: -30}
+  m_LocalPosition: {x: 0, y: 100, z: -100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

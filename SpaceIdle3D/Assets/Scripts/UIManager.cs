@@ -99,7 +99,6 @@ public class UIManager : MonoBehaviour
         button_OpenBuyBuildings.onClick.AddListener(OpenShop);
         button_Back_BuyBuilding.onClick.AddListener(CloseShop);
 
-        button_GetIridium.onClick.AddListener(gameManager.GetIridiumClicked);
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
 
         button_newProfile.onClick.AddListener(OpenProfileNamePanel);

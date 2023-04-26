@@ -30,7 +30,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float saveInterval = 5f;
     [SerializeField] private bool autoSave = false;
 
-    private bool getIridium_ButtonClicked = false;
     private bool gameHathStarted = false;
 
     private Coroutine tickCoroutine;
@@ -42,6 +41,7 @@ public class GameManager : MonoBehaviour
 
     private BuildingManager buildingManager;
     private LoadSaveSystem loadSaveSystem;
+    private DataProcessor dataProcessor;
     private BoostManager boostManager;
     private InputManager inputManager;
     private UIManager uiManager;
@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
         uiManager = GetComponent<UIManager>();
 
         inputManager = new InputManager();
+        dataProcessor = new DataProcessor();
     }
 
     private void OnEnable()
@@ -81,7 +82,7 @@ public class GameManager : MonoBehaviour
 
         if (startFreshOnLaunch)
         {
-            StartGame();
+            uiManager.OpenProfileNamePanel();
         }
         else
         {
@@ -96,6 +97,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+
         uiManager.OpenMainUI();
 
         uiManager.CloseProfileUI();
@@ -289,11 +291,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GetIridiumClicked()
-    {
-        getIridium_ButtonClicked = true;
-    }
-
     public void UpgradeClickClicked()
     {
         if (playerData.iridium_Total >= upgradeClick_CurrentCost)
@@ -359,7 +356,7 @@ public class GameManager : MonoBehaviour
         if (!gameHathStarted)
             return;
 
-        playerData.lastSaveTime = DateTime.Now.ToUniversalTime();
+        playerData.lastSaveTime = DateTime.Now;
         playerData.ownedBuildings = buildingManager.GetBuildingDataList();
         playerData.activeBoosts = boostManager.GetActiveBoosts();
         loadSaveSystem.Save(playerData);
@@ -390,8 +387,6 @@ public class GameManager : MonoBehaviour
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
         boostManager.LoadBoosts(playerData.activeBoosts);
 
-        //Debug.Log("Last Save Time: " + ((DateTime)playerData.lastSaveTime).ToUniversalTime().ToString("f"));
-        //Debug.Log("Time: " + (DateTime.Now.ToUniversalTime()).ToString("f"));
         StartGame();
     }
 

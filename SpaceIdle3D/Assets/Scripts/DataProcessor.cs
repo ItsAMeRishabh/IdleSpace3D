@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class DataProcessor
 {
-    public PlayerData ProcessDownTime(GameManager gameMamager, PlayerData playerData)
+    public PlayerData WelcomeBackPlayer (GameManager gameMamager, PlayerData playerData)
     {
         DateTime saveTime = playerData.lastSaveTime;
-        DateTime currentTime = DateTime.Now.ToUniversalTime();
+        DateTime currentTime = DateTime.Now;
         int timeElapsed = (int)(currentTime - saveTime).TotalSeconds;
 
         double baseIridiumPerSecond = GetBaseIridiumPerSecond(gameMamager, playerData);
@@ -33,6 +33,6 @@ public class DataProcessor
             baseIPS += buildingIPS;
         }
 
-        return 0;
+        return baseIPS;
     }
 }
