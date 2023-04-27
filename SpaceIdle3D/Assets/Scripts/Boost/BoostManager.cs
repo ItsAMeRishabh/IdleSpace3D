@@ -26,7 +26,7 @@ public class BoostManager : MonoBehaviour
 
         this.activeBoosts = activeBoosts;
 
-        gameManager.UpdateIridiumSources();
+        gameManager.UpdateResourceSources();
     }
 
     public void ProcessBoostTimers()
@@ -38,7 +38,7 @@ public class BoostManager : MonoBehaviour
             if (activeBoosts[i].boost_TimeRemaining <= 0)
             {
                 activeBoosts.RemoveAt(i);
-                gameManager.UpdateIridiumSources();
+                gameManager.UpdateResourceSources();
             }
         }
     }
@@ -58,7 +58,19 @@ public class BoostManager : MonoBehaviour
         {
             boost = new Boost(boostSO);
             activeBoosts.Add(boost);
-            gameManager.UpdateIridiumSources();
+            gameManager.UpdateResourceSources();
         }
+    }
+
+    public BoostSO GetBoostSO(string boostName)
+    {
+        BoostSO bSO = Array.Find(boostSOs.ToArray(), x => x.boost_Name == boostName);
+
+        if(bSO == null)
+        {
+            Debug.LogError($"Boost \"{boostName}\" not found!");
+        }
+
+        return bSO;
     }
 }

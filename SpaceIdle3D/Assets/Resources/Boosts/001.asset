@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: 001
   m_EditorClassIdentifier: 
   boost_Name: BoostIPS x2
-  boost_Duration: 600
-  boost_MaxDuration: 1800
+  boost_Duration: 10
+  boost_MaxDuration: 60
   boost_IridiumPerClick: 1
   boost_IridiumPerSecond: 2
+  boost_DarkElixirPerSecond: 1

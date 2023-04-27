@@ -16,4 +16,9 @@ public class BuildingSO : ScriptableObject
     [NonSerialized] public double building_CurrentUpgradeCost = 0;
     public List<GameObject> buildingPrefabs;
     public List<LevelUpUnlocks> levelUpUnlocks;
+
+    private void OnValidate()
+    {
+        
+    }
 }

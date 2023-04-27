@@ -8,4 +8,5 @@ public class BoostSO : ScriptableObject
     public double boost_MaxDuration = 30;
     public double boost_IridiumPerClick = 1;
     public double boost_IridiumPerSecond = 1;
+    public double boost_DarkElixirPerSecond = 1;
 }

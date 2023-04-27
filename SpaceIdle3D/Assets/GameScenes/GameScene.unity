@@ -1216,6 +1216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boostSOs:
   - {fileID: 11400000, guid: 79f57e752d99d6d44a058b9e5f3f2b7f, type: 2}
+  - {fileID: 11400000, guid: 233f3f738486d144ca14cad0c28bd99b, type: 2}
   - {fileID: 11400000, guid: 308b41da5db85ba4582cf58bb0d43e7d, type: 2}
   activeBoosts: []
 --- !u!114 &202234311
@@ -1322,17 +1323,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData:
     profileName: Default
+    profileCreateTime:
+      value: 0
     lastSaveTime:
       value: 0
     iridium_Total: 0
-    iridium_PerSecond: 0
-    iridium_PerSecondBoosted: 0
+    iridium_Current: 0
     darkElixir_Total: 0
     darkElixir_PerSecond: 0
-    darkElixir_PerSecondBoosted: 0
-    iridium_PerClick: 1
     iridium_PerClickRate: 0
-    iridium_PerClickBoosted: 0
     iridium_PerClickLevel: 1
     ownedBuildings: []
     activeBoosts: []

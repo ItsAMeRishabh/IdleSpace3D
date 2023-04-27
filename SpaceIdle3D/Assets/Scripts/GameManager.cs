@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 
     public BuildingManager BuildingManager => buildingManager;
     public LoadSaveSystem LoadSaveSystem => loadSaveSystem;
+    public DataProcessor DataProcessor => dataProcessor;
     public BoostManager BoostManager => boostManager;
     public UIManager UIManager => uiManager;
 
@@ -64,7 +65,7 @@ public class GameManager : MonoBehaviour
         uiManager = GetComponent<UIManager>();
 
         inputManager = new InputManager();
-        dataProcessor = new DataProcessor();
+        dataProcessor = new DataProcessor(this);
     }
 
     private void OnEnable()
@@ -166,48 +167,6 @@ public class GameManager : MonoBehaviour
         saveCoroutine = StartCoroutine(SaveCoroutine());
     }
 
-    public void UpdateIridiumSources()
-    {
-        playerData.iridium_PerSecond = 0;
-
-        foreach (Building b in buildingManager.ownedBuildings)
-        {
-            playerData.iridium_PerSecond += b.GetIridiumPerTick() * ticksPerSecond;
-        }
-
-        playerData.iridium_PerClickBoosted = playerData.iridium_PerClick;
-        playerData.iridium_PerSecondBoosted = playerData.iridium_PerSecond;
-
-        foreach (Boost b in boostManager.activeBoosts)
-        {
-            playerData.iridium_PerClickBoosted *= b.boost_IridiumPerClick;
-            playerData.iridium_PerSecondBoosted *= b.boost_IridiumPerSecond;
-        }
-
-        playerData.iridium_PerClick = Math.Max(1, playerData.iridium_PerSecondBoosted * playerData.iridium_PerClickLevel / 100f);
-    }
-
-    public void CalculateCosts()
-    {
-        upgradeClick_CurrentCost = (upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1));
-        holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
-
-        foreach (Building b in buildingManager.ownedBuildings)
-        {
-            foreach (Troop t in b.buildingData.building_OwnedTroops)
-            {
-                t.troop_CurrentCost = (t.troop_BaseCost * Math.Pow(t.troop_CostMultiplier, t.troops_Owned));
-            }
-
-            b.buildingSO.building_CurrentUpgradeCost = (b.buildingSO.building_UpgradeCosts[b.buildingData.building_Level - 1]);
-        }
-
-        foreach (BuildingLocation bl in buildingManager.buildingLocations)
-        {
-            bl.buildingSO.building_CurrentCost = (bl.buildingSO.building_BaseCost * Math.Pow(bl.buildingSO.building_CostMultiplier, buildingManager.GetBuildingCount(bl.buildingSO.building_Name)));
-        }
-    }
-
     #endregion
 
     private IEnumerator Tick()
@@ -238,6 +197,10 @@ public class GameManager : MonoBehaviour
         canGetIridium = true;
     }
 
+    public void UpdateResourceSources()
+    {
+        dataProcessor.UpdateResourceSources(playerData);
+    }
     private void ProcessIridiumAdded()
     {
         ProcessIridiumPerBuilding();
@@ -262,7 +225,7 @@ public class GameManager : MonoBehaviour
 
     private void ProcessDarkElixirAdded()
     {
-        playerData.darkElixir_Total += playerData.darkElixir_PerSecond / ticksPerSecond;
+        playerData.darkElixir_Total += playerData.darkElixir_PerSecondBoosted / ticksPerSecond;
     }
 
     #region Iridium Processors
@@ -299,7 +262,8 @@ public class GameManager : MonoBehaviour
             upgradeClick_CurrentCost = (int)(upgradeClick_CurrentCost * upgradeClick_PriceMultiplier);
             playerData.iridium_PerClickLevel += 1;
         }
-        UpdateIridiumSources();
+
+        dataProcessor.UpdateIridiumSources(playerData);
     }
 
     public void TroopBuyClicked(int troopIndex)
@@ -318,7 +282,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        UpdateIridiumSources();
+        dataProcessor.UpdateIridiumSources(playerData);
         CalculateCosts();
     }
 
@@ -384,6 +348,9 @@ public class GameManager : MonoBehaviour
         uiManager.CloseAllPanels();
 
         playerData = loadSaveSystem.LoadProfile(profileName);
+
+        playerData = dataProcessor.WelcomeBackPlayer(playerData);
+
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
         boostManager.LoadBoosts(playerData.activeBoosts);
 

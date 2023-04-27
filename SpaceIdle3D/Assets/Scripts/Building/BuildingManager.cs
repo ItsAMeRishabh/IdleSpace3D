@@ -222,4 +222,33 @@ public class BuildingManager : MonoBehaviour
 
         return BLS.buildingSO;
     }
+
+    public TroopSO GetTroopSO(string buildingName, string troopName)
+    {
+        BuildingSO bSO = GetBuildingSO(buildingName);
+
+        if(bSO == null)
+        {
+            Debug.LogError($"Building \"{buildingName}\" not found!");
+            return null;
+        }
+
+        return GetTroopSO(bSO, troopName);
+    }
+
+    public TroopSO GetTroopSO(BuildingSO buildingSO, string troopName)
+    {
+        TroopSO tSO = null;
+
+        foreach(LevelUpUnlocks luu in buildingSO.levelUpUnlocks)
+        {
+            tSO = Array.Find(luu.unlockedTroops.ToArray(), x => x.troop_Name == troopName);
+
+            if(tSO != null)
+            {
+                return tSO;
+            }
+        }
+        return tSO;
+    }
 }
