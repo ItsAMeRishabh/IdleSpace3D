@@ -1236,12 +1236,9 @@ MonoBehaviour:
   - buildingSO: {fileID: 11400000, guid: 5d9d1b052932f344cb38ced97b9093ec, type: 2}
     buildingLocations:
     - {fileID: 669669925}
-    - {fileID: 0}
-    - {fileID: 0}
   - buildingSO: {fileID: 11400000, guid: e4971480af6f8ff4a9659383bf832624, type: 2}
     buildingLocations:
     - {fileID: 394439399}
-    - {fileID: 0}
   ownedBuildings: []
 --- !u!114 &202234312
 MonoBehaviour:
@@ -1324,13 +1321,11 @@ MonoBehaviour:
     iridium_PerClickLevel: 1
     ownedBuildings: []
     activeBoosts: []
-  upgradeClick_BaseCost: 50
-  upgradeClick_PriceMultiplier: 1.2
   upgradeClick_CurrentCost: 1000
   defaultValues: {fileID: 11400000, guid: eaa9d2821903ef64eb6465337b2e6aa0, type: 2}
-  startFreshOnLaunch: 1
+  startFreshOnLaunch: 0
   saveInterval: 5
-  autoSave: 0
+  autoSave: 1
   getIridiumButtonPressedDown: 0
   canGetIridium: 1
 --- !u!4 &202234315
