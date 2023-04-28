@@ -14,9 +14,9 @@ public class DataProcessor
     {
         CalculateNonserializedVariables(playerData);
 
-        UpdateResourceSources(playerData);
+        DistributeAllVariables(playerData);
 
-        UpdateCosts(playerData);
+        UpdateResourceSources(playerData);
 
         ResourcesGainedAfterIdle(playerData);
 
@@ -38,9 +38,9 @@ public class DataProcessor
         {
             BuildingSO currentBuildingSO = gameManager.BuildingManager.GetBuildingSO(playerData.ownedBuildings[i].building_Name);
 
-            for (int j = 0; i < playerData.ownedBuildings[i].building_OwnedTroops.Count; j++)
+            for (int j = 0; j < playerData.ownedBuildings[i].building_OwnedTroops.Count; j++)
             {
-                TroopSO currentTroop = gameManager.BuildingManager.GetTroopSO(currentBuildingSO, playerData.ownedBuildings[i].building_OwnedTroops[i].troop_Name);
+                TroopSO currentTroop = gameManager.BuildingManager.GetTroopSO(currentBuildingSO, playerData.ownedBuildings[i].building_OwnedTroops[j].troop_Name);
 
                 playerData.ownedBuildings[i].building_OwnedTroops[j].troop_BaseCost = currentTroop.troop_BaseCost;
                 playerData.ownedBuildings[i].building_OwnedTroops[j].troop_BaseIridiumPerSecond = currentTroop.troop_BaseIridiumPerSecond;
@@ -70,6 +70,12 @@ public class DataProcessor
         playerData.iridium_PerSecond = GetBaseIridiumPerSecond(playerData);
     }
 
+    public void DistributeAllVariables(PlayerData playerData)
+    {
+        gameManager.BuildingManager.SpawnBuildings(playerData.ownedBuildings);
+        gameManager.BoostManager.LoadBoosts(playerData.activeBoosts);
+    }
+
     public void UpdateResourceSources(PlayerData playerData)
     {
         UpdateIridiumSources(playerData);
@@ -95,8 +101,9 @@ public class DataProcessor
     {
         double baseIPS = 0;
 
-        foreach (BuildingData data in playerData.ownedBuildings)
+        foreach (Building building in gameManager.BuildingManager.ownedBuildings)
         {
+            BuildingData data = building.buildingData;
             double buildingIPS = 0;
 
             foreach (Troop troop in data.building_OwnedTroops)
@@ -159,21 +166,6 @@ public class DataProcessor
         }
 
         return boostedDEPS;
-    }
-
-    public void UpdateCosts(PlayerData playerData)
-    {
-
-    }
-
-    public void UpdateBuildingCosts(PlayerData playerData)
-    {
-
-    }
-
-    public void UpdateTroopCosts(PlayerData playerData)
-    {
-
     }
 
     public PlayerData ResourcesGainedAfterIdle(PlayerData playerData)
@@ -254,8 +246,12 @@ public class DataProcessor
         }
 
         Debug.Log($"{playerData.profileName} was idle for {timeElapsed} seconds");
+
         Debug.Log($"Iridium Added: {iridiumToAdd}");
+        playerData.iridium_Total += iridiumToAdd;
+
         Debug.Log($"Dark Elixir Added: {darkelixerToAdd}");
+        playerData.darkElixir_Total += darkelixerToAdd;
 
         return playerData;
     }

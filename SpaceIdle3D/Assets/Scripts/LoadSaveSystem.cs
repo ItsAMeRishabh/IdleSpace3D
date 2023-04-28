@@ -21,16 +21,18 @@ public class LoadSaveSystem : MonoBehaviour
         gameManager = GetComponent<GameManager>();
     }
 
-    public List<string> GetProfilesList()
+    public List<PlayerData> GetProfilesList()
     {
-        List<string> profilesList = new List<string>();
+        List<PlayerData> profilesList = new List<PlayerData>();
 
         if (Directory.Exists(saveDir))
         {
             string[] files = Directory.GetFiles(saveDir);
             foreach (string file in files)
             {
-                profilesList.Add(Path.GetFileNameWithoutExtension(file));
+                string jsonData = File.ReadAllText(file); 
+                PlayerData playerData = JsonUtility.FromJson<PlayerData>(jsonData);
+                profilesList.Add(playerData);
             }
         }
 

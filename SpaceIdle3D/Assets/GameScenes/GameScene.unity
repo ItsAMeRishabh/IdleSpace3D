@@ -1236,18 +1236,12 @@ MonoBehaviour:
   - buildingSO: {fileID: 11400000, guid: 5d9d1b052932f344cb38ced97b9093ec, type: 2}
     buildingLocations:
     - {fileID: 669669925}
+    - {fileID: 0}
+    - {fileID: 0}
   - buildingSO: {fileID: 11400000, guid: e4971480af6f8ff4a9659383bf832624, type: 2}
     buildingLocations:
     - {fileID: 394439399}
-  - buildingSO: {fileID: 11400000, guid: 1f105e33fecf6964ea9e069f2cd79682, type: 2}
-    buildingLocations:
-    - {fileID: 2025599870}
-  - buildingSO: {fileID: 11400000, guid: eed1ec17f99d5454e80e6170225b7b9f, type: 2}
-    buildingLocations:
-    - {fileID: 1849830027}
-  - buildingSO: {fileID: 11400000, guid: 18119a89f82b77e48b171521fc219ca3, type: 2}
-    buildingLocations:
-    - {fileID: 1519992112}
+    - {fileID: 0}
   ownedBuildings: []
 --- !u!114 &202234312
 MonoBehaviour:
@@ -1282,11 +1276,6 @@ MonoBehaviour:
   button_Back_Building: {fileID: 328235455}
   troopButtonParent: {fileID: 2079090697}
   troopButtonPrefab: {fileID: 8392431042935853529, guid: 7e8e196fbf328da45aa2b21137a0ee1d,
-    type: 3}
-  buildingBuyUI: {fileID: 389058644}
-  button_Back_BuyBuilding: {fileID: 972360082}
-  buildingButtonParent: {fileID: 1600740995}
-  buildingButtonPrefab: {fileID: 8392431042935853529, guid: ef2cf6948de940d4fb5782188497a5a2,
     type: 3}
   profileSelectionUI: {fileID: 667714423}
   button_newProfile: {fileID: 2092504064}
@@ -1339,9 +1328,9 @@ MonoBehaviour:
   upgradeClick_PriceMultiplier: 1.2
   upgradeClick_CurrentCost: 1000
   defaultValues: {fileID: 11400000, guid: eaa9d2821903ef64eb6465337b2e6aa0, type: 2}
-  startFreshOnLaunch: 0
+  startFreshOnLaunch: 1
   saveInterval: 5
-  autoSave: 1
+  autoSave: 0
   getIridiumButtonPressedDown: 0
   canGetIridium: 1
 --- !u!4 &202234315
@@ -6995,7 +6984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1448680400
 RectTransform:
   m_ObjectHideFlags: 0

@@ -51,16 +51,17 @@ public class UIManager : MonoBehaviour
 
 
     [Header("Building Buy UI")]
-    [SerializeField] private GameObject buildingBuyUI;
-    [SerializeField] private Button button_Back_BuyBuilding;
-    [SerializeField] private GameObject buildingButtonParent;
-    [SerializeField] private GameObject buildingButtonPrefab;
+    private GameObject buildingBuyUI;
+    private Button button_Back_BuyBuilding;
+    private GameObject buildingButtonParent;
+    private GameObject buildingButtonPrefab;
 
     private List<Button> button_Buildings;
     private List<TMP_Text> text_BuildingNames;
-    private List<TMP_Text> text_BuildingCosts;
     private List<TMP_Text> text_BuildingsOwned;
 
+    private List<TMP_Text> text_BuildingCosts;
+    private List<Building> levelZeroBuildings;
 
 
     [Header("Profile Selection UI")]
@@ -97,15 +98,29 @@ public class UIManager : MonoBehaviour
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
 
         button_OpenBuyBuildings.onClick.AddListener(OpenShop);
-        button_Back_BuyBuilding.onClick.AddListener(CloseShop);
+        //button_Back_BuyBuilding.onClick.AddListener(CloseShop);
 
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
 
         button_newProfile.onClick.AddListener(OpenProfileNamePanel);
-        button_Profiles = new List<Button>();
-        text_ProfileNames = new List<TMP_Text>();
 
         button_CreateProfile.onClick.AddListener(CreateProfile);
+    }
+
+    public void InitializeBuildingCosts()
+    {
+        text_BuildingCosts = new List<TMP_Text>();
+        levelZeroBuildings = new List<Building>();
+        foreach(Building building in gameManager.BuildingManager.ownedBuildings)
+        {
+            if(building.buildingData.building_Level != 0)
+            {
+                continue;
+            }
+
+            levelZeroBuildings.Add(building);
+            text_BuildingCosts.Add(building.transform.parent.GetChild(2).GetChild(1).GetComponent<TMP_Text>());
+        }
     }
 
     #region Update UI
@@ -114,15 +129,17 @@ public class UIManager : MonoBehaviour
     {
         UpdateMainUI();
 
+        UpdateBuildingCosts();
+
         if (buildingUI.activeSelf)
         {
             UpdateBuildingUI();
         }
 
-        if (buildingBuyUI.activeSelf)
+        /*if (buildingBuyUI.activeSelf)
         {
             UpdateBuildingBuyUI();
-        }
+        }*/
 
         if (boostUI.activeSelf)
         {
@@ -141,6 +158,7 @@ public class UIManager : MonoBehaviour
         text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerClickBoosted, FormattingTypes.IridiumPerSecond) + " Iridium)";
 
         text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
+
         if (gameManager.playerData.iridium_Total < gameManager.upgradeClick_CurrentCost)
         {
             button_UpgradeClick.interactable = false;
@@ -151,12 +169,23 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void UpdateBuildingCosts()
+    {
+        if(levelZeroBuildings.Count != 0)
+        {
+            for(int i=0;i<levelZeroBuildings.Count;i++)
+            {
+                text_BuildingCosts[i].text = NumberFormatter.FormatNumber(levelZeroBuildings[i].buildingSO.building_UpgradeCosts[0], FormattingTypes.Cost);
+            }
+        }
+    }
+
     private void UpdateBuildingUI()
     {
         text_BuildingName.text = gameManager.BuildingManager.selectedBuilding.buildingData.building_Name + " (Lvl " + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_Level, FormattingTypes.Level) + ")";
         text_BuildingIridiumPerSecond.text = NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.GetIridiumPerTick() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + " Iridium/s";
 
-        if (gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost == -1)
+        if (gameManager.BuildingManager.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManager.selectedBuilding.buildingData.building_Level] == -1)
         {
             button_UpgradeBuilding.gameObject.SetActive(false);
         }
@@ -164,7 +193,7 @@ public class UIManager : MonoBehaviour
         {
             button_UpgradeBuilding.gameObject.SetActive(true);
 
-            if(gameManager.playerData.iridium_Total < gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost)
+            if(gameManager.playerData.iridium_Total < gameManager.BuildingManager.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManager.selectedBuilding.buildingData.building_Level])
             {
                 button_UpgradeBuilding.interactable = false;
             }
@@ -173,7 +202,7 @@ public class UIManager : MonoBehaviour
                 button_UpgradeBuilding.interactable = true;
             }
 
-            text_UpgradeBuildingButton.text = "Upgrade (" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingSO.building_CurrentUpgradeCost, FormattingTypes.Cost) + ")";
+            text_UpgradeBuildingButton.text = "Upgrade (" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManager.selectedBuilding.buildingData.building_Level], FormattingTypes.Cost) + ")";
         }
 
         for (int i = 0; i < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
@@ -195,7 +224,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void UpdateBuildingBuyUI()
+    /*private void UpdateBuildingBuyUI()
     {
         for (int i = 0; i < gameManager.BuildingManager.buildingLocations.Count; i++)
         {
@@ -213,7 +242,7 @@ public class UIManager : MonoBehaviour
 
             text_BuildingsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManager.GetBuildingCount(gameManager.BuildingManager.buildingLocations[i].buildingSO.building_Name), FormattingTypes.Owned) + " owned";
         }
-    }
+    }*/
 
     private void UpdateBoostUI()
     {
@@ -240,7 +269,7 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    public void PopulateProfileSelectUI(List<string> profilesList)
+    public void PopulateProfileSelectUI(List<PlayerData> profilesList)
     {
         CleanUpProfileSelectUI();
 
@@ -253,7 +282,7 @@ public class UIManager : MonoBehaviour
         {
             int j = i;
             GameObject newButton = Instantiate(profileButtonPrefab, profileButtonParent.transform);
-            newButton.name = profilesList[i];
+            newButton.name = profilesList[i].profileName;
 
             Button button = newButton.GetComponent<Button>();
             TMP_Text tmp_text = newButton.GetComponentInChildren<TMP_Text>();
@@ -261,8 +290,8 @@ public class UIManager : MonoBehaviour
             button_Profiles.Add(button);
             text_ProfileNames.Add(tmp_text);
 
-            button.onClick.AddListener(() => gameManager.LoadGame(profilesList[j]));
-            tmp_text.text = profilesList[i];
+            button.onClick.AddListener(() => gameManager.LoadGame(profilesList[j].profileName));
+            tmp_text.text = profilesList[i].profileName;
         }
     }
 
@@ -476,7 +505,7 @@ public class UIManager : MonoBehaviour
         CLoseProfileNamePanel();
         CloseProfileUI();
         CloseBuildingMenu();
-        CloseShop();
+        //CloseShop();
         CloseBoostMenu();
     }
 
@@ -517,7 +546,7 @@ public class UIManager : MonoBehaviour
     public void OpenBuildingMenu()
     {
         boostUI.SetActive(false);
-        buildingBuyUI.SetActive(false);
+        //buildingBuyUI.SetActive(false);
         buildingUI.SetActive(true);
         HideMainUI();
         PopulateBuildingUI();
@@ -554,7 +583,7 @@ public class UIManager : MonoBehaviour
     {
         ShowMainUI();
         CleanUpBuyBuildingUI();
-        buildingBuyUI.SetActive(false);
+        //buildingBuyUI.SetActive(false);
     }
 
     public void OpenBoostMenu()
@@ -584,7 +613,7 @@ public class UIManager : MonoBehaviour
     {
         button_GetIridium.gameObject.SetActive(true);
         button_UpgradeClick.gameObject.SetActive(true);
-        button_OpenBuyBuildings.gameObject.SetActive(true);
+        //button_OpenBuyBuildings.gameObject.SetActive(true);
         button_GetBoost.gameObject.SetActive(true);
     }
 }

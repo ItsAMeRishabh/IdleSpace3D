@@ -18,8 +18,8 @@ public class GameManager : MonoBehaviour
 
 
     [Header("Balancing")]
-    [SerializeField] private double upgradeClick_BaseCost = 1000;
-    [SerializeField] private double upgradeClick_PriceMultiplier = 1.2;
+    private double upgradeClick_BaseCost = 1000;
+    private double upgradeClick_PriceMultiplier = 1.2;
     [HideInInspector] public double upgradeClick_CurrentCost = 1000;
 
     [Header("Default Values SO")]
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     public BoostManager BoostManager => boostManager;
     public UIManager UIManager => uiManager;
 
-    #region Utility Functions
+    #region Unity Functions
 
     private void Awake()
     {
@@ -91,10 +91,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        inputManager.Input.Farm.started -= GetIridiumButton;
+        inputManager.Input.Farm.performed -= GetIridiumButton;
+        inputManager.Input.Farm.canceled -= GetIridiumButton;
+
+        inputManager.Disable();
+    }
+
     private void OnDestroy()
     {
-        if(autoSave) SaveGame();
+        if (autoSave) SaveGame();
     }
+
+    #endregion
 
     private void StartGame()
     {
@@ -103,11 +114,13 @@ public class GameManager : MonoBehaviour
 
         uiManager.CloseProfileUI();
 
-        UpdateIridiumSources(); //Update the iridium per second
+        UpdateResourceSources(); //Update the iridium per second
 
-        CalculateCosts(); //Calculate all upgrade costs
+        UpdateCosts(); //Calculate all upgrade costs
 
-        uiManager.UpdateAllUI(); //Update all UI
+        buildingManager.InitializeNewBuildings();
+
+        uiManager.InitializeBuildingCosts();
 
         StartTickCoroutine(); //Setup the coroutine for the tick rate
 
@@ -116,7 +129,7 @@ public class GameManager : MonoBehaviour
 
     private void CheckForSaves()
     {
-        List<string> profiles = loadSaveSystem.GetProfilesList();
+        List<PlayerData> profiles = loadSaveSystem.GetProfilesList();
 
         if (profiles.Count == 0)
         {
@@ -133,6 +146,7 @@ public class GameManager : MonoBehaviour
     {
         playerData = new PlayerData();
         playerData.profileName = profileName;
+        playerData.profileCreateTime = DateTime.Now;
         playerData.iridium_Total = defaultValues.iridium_Total;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
         playerData.darkElixir_Total = defaultValues.darkElixir_Total;
@@ -167,16 +181,15 @@ public class GameManager : MonoBehaviour
         saveCoroutine = StartCoroutine(SaveCoroutine());
     }
 
-    #endregion
+
 
     private IEnumerator Tick()
     {
         while (true)
         {
-            ProcessIridiumAdded();
-            ProcessDarkElixirAdded();
-            uiManager.UpdateAllUI();
+            ProcessResourcesAdded();
             boostManager.ProcessBoostTimers();
+            uiManager.UpdateAllUI();
             yield return tickWait;
         }
     }
@@ -197,30 +210,28 @@ public class GameManager : MonoBehaviour
         canGetIridium = true;
     }
 
+    public void UpdateCosts()
+    {
+        upgradeClick_CurrentCost = upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1);
+
+        buildingManager.UpdateCosts();
+    }
+
     public void UpdateResourceSources()
     {
         dataProcessor.UpdateResourceSources(playerData);
     }
+    private void ProcessResourcesAdded()
+    {
+        ProcessIridiumAdded();
+        ProcessDarkElixirAdded();
+    }
+
     private void ProcessIridiumAdded()
     {
         ProcessIridiumPerBuilding();
 
-        if (getIridiumButtonPressedDown)
-        {
-            if(canGetIridium)
-            {
-                canGetIridium = false;
-                if(holdFarmCoroutine != null)
-                {
-                    StopCoroutine(holdFarmCoroutine);
-                    holdFarmCoroutine = null;
-                }
-
-                ProcessClickedIridium();
-
-                holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());
-            }
-        }
+        ProcessClickedIridium();
     }
 
     private void ProcessDarkElixirAdded()
@@ -232,7 +243,23 @@ public class GameManager : MonoBehaviour
 
     private void ProcessClickedIridium()
     {
-        playerData.iridium_Total += playerData.iridium_PerClickBoosted;
+        if (getIridiumButtonPressedDown)
+        {
+            if (canGetIridium)
+            {
+                canGetIridium = false;
+                if (holdFarmCoroutine != null)
+                {
+                    StopCoroutine(holdFarmCoroutine);
+                    holdFarmCoroutine = null;
+                }
+
+                playerData.iridium_Total += playerData.iridium_PerClickBoosted;
+
+                holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
+                holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());
+            }
+        }
     }
 
     private void ProcessIridiumPerBuilding()
@@ -263,7 +290,7 @@ public class GameManager : MonoBehaviour
             playerData.iridium_PerClickLevel += 1;
         }
 
-        dataProcessor.UpdateIridiumSources(playerData);
+        UpdateResourceSources();
     }
 
     public void TroopBuyClicked(int troopIndex)
@@ -282,16 +309,17 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        dataProcessor.UpdateIridiumSources(playerData);
-        CalculateCosts();
+        UpdateResourceSources();
+        UpdateCosts();
     }
 
 
     public void BuyBuildingClicked(BuildingSO buildingSO)
     {
-        if (playerData.iridium_Total >= buildingSO.building_CurrentCost)
+        double buildingPrice = buildingSO.building_UpgradeCosts[0];
+
+        if (playerData.iridium_Total >= buildingPrice)
         {
-            double buildingPrice = buildingSO.building_CurrentCost;
             bool buildingPlacementSuccessful = buildingManager.PlaceBuilding(buildingSO);
 
             if (buildingPlacementSuccessful)
@@ -302,12 +330,7 @@ public class GameManager : MonoBehaviour
     }
     public void ClickedOnBuilding(Building building)
     {
-        if (building == null) return;
-
-        if (building == buildingManager.selectedBuilding) return;
-
-        buildingManager.selectedBuilding = building;
-        uiManager.OpenBuildingMenu();
+        buildingManager.ClickedOnBuilding(building);
     }
 
     #endregion
@@ -351,8 +374,7 @@ public class GameManager : MonoBehaviour
 
         playerData = dataProcessor.WelcomeBackPlayer(playerData);
 
-        buildingManager.SpawnBuildings(playerData.ownedBuildings);
-        boostManager.LoadBoosts(playerData.activeBoosts);
+        UpdateCosts();
 
         StartGame();
     }

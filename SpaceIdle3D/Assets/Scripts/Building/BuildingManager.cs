@@ -20,6 +20,44 @@ public class BuildingManager : MonoBehaviour
         gameManager = GetComponent<GameManager>();
     }
 
+    public void ClickedOnBuilding(Building building)
+    {
+        if (building == null) return;
+
+        if (building == selectedBuilding) return;
+
+        if (building.buildingData.building_Level == 0)
+        {
+            bool upgradeSuccessful = UpgradeBuilding(building);
+
+            if (upgradeSuccessful)
+            {
+                gameManager.UIManager.OpenBuildingMenu();
+            }
+        }
+        else
+        {
+            selectedBuilding = building;
+            gameManager.UIManager.OpenBuildingMenu();
+        }
+    }
+
+    public void InitializeNewBuildings()
+    {
+        foreach (BuildingLocation bLo in buildingLocations)
+        {
+            BuildingSO currentBSO = bLo.buildingSO;
+
+            foreach (Transform spawnPoint in bLo.buildingLocations)
+            {
+                if (!buildingLocationsDict.ContainsKey(spawnPoint))
+                {
+                    PlaceBuilding(currentBSO);
+                }
+            }
+        }
+    }
+
     public List<BuildingData> GetBuildingDataList()
     {
         List<BuildingData> buildingDatas = new List<BuildingData>();
@@ -30,6 +68,24 @@ public class BuildingManager : MonoBehaviour
         }
 
         return buildingDatas;
+    }
+
+    public void UpdateCosts()
+    {
+        foreach (BuildingLocation location in buildingLocations)
+        {
+            BuildingSO currentBuidling = location.buildingSO;
+
+            currentBuidling.building_UpgradeCosts[0] = currentBuidling.building_BaseCost * Math.Pow(currentBuidling.building_CostMultiplier, GetBuildingCount(currentBuidling.building_Name));
+        }
+
+        foreach (Building building in ownedBuildings)
+        {
+            for(int i = 0; i< building.buildingData.building_OwnedTroops.Count; i++)
+            {
+                building.buildingData.building_OwnedTroops[i].troop_CurrentCost = building.buildingData.building_OwnedTroops[i].troop_BaseCost * Math.Pow(building.buildingData.building_OwnedTroops[i].troop_CostMultiplier, building.buildingData.building_OwnedTroops[i].troops_Owned);
+            }
+        }
     }
 
     public void SpawnBuildings(List<BuildingData> buildingDatas)
@@ -72,7 +128,7 @@ public class BuildingManager : MonoBehaviour
         {
             if (!buildingLocationsDict.ContainsKey(t))
             {
-                GameObject obj = Instantiate(buildingSO.buildingPrefabs[buildingSO.building_Level - 1], t);
+                GameObject obj = Instantiate(buildingSO.buildingPrefabs[buildingSO.building_Level], t);
                 Building building = obj.GetComponentInChildren<Building>();
 
                 building.buildingSO = buildingSO;
@@ -102,7 +158,7 @@ public class BuildingManager : MonoBehaviour
                 gameManager.UIManager.PopulateBuildingUI();
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
-                gameManager.CalculateCosts();
+                gameManager.UpdateCosts();
                 return true;
             }
         }
@@ -125,7 +181,7 @@ public class BuildingManager : MonoBehaviour
         {
             if (!buildingLocationsDict.ContainsKey(t))
             {
-                GameObject obj = Instantiate(buildingSO.buildingPrefabs[buildingData.building_Level - 1], t);
+                GameObject obj = Instantiate(buildingSO.buildingPrefabs[buildingData.building_Level], t);
                 Building building = obj.GetComponentInChildren<Building>();
 
                 building.buildingSO = buildingSO;
@@ -161,7 +217,7 @@ public class BuildingManager : MonoBehaviour
                 gameManager.UIManager.PopulateBuildingUI();
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
-                gameManager.CalculateCosts();
+                gameManager.UpdateCosts();
                 return building;
             }
         }
@@ -169,36 +225,44 @@ public class BuildingManager : MonoBehaviour
         return null;
     }
 
-    public void UpgradeBuilding(Building building)
+    public bool UpgradeBuilding(Building building)
     {
         BuildingSO buildingSO = building.buildingSO;
 
         if (buildingSO == null)
         {
             Debug.LogError("BuildingSO not found for " + building.buildingData.building_Name);
-            return;
+            return false;
         }
 
         if (building.buildingData.building_Level == buildingSO.buildingPrefabs.Count)
         {
             Debug.LogError("Building is already at max level");
-            return;
+            return false;
         }
 
-        if (gameManager.playerData.iridium_Total >= building.buildingSO.building_CurrentUpgradeCost)
+        if (gameManager.playerData.iridium_Total >= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level])
         {
-            gameManager.playerData.iridium_Total -= building.buildingSO.building_CurrentUpgradeCost;
+            gameManager.playerData.iridium_Total -= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level];
             Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
 
             ownedBuildings.Remove(building);
             buildingLocationsDict.Remove(buildingTransform);
             BuildingData buildingData = building.buildingData;
             buildingData.building_Level++;
-            selectedBuilding = PlaceBuilding(buildingSO, buildingData);
-            gameManager.UpdateIridiumSources();
-            gameManager.CalculateCosts();
             Destroy(building.transform.parent.gameObject);
+            selectedBuilding = PlaceBuilding(buildingSO, buildingData);
+            gameManager.UpdateResourceSources();
+            gameManager.UpdateCosts();
+            gameManager.UIManager.InitializeBuildingCosts();
+            return true;
         }
+        else
+        {
+            Debug.Log("Not enough iridium to buy building!");
+            return false;
+        }
+
     }
 
     public int GetBuildingCount(string buildingName)
@@ -207,7 +271,7 @@ public class BuildingManager : MonoBehaviour
 
         foreach (Building building in ownedBuildings)
         {
-            if (building.buildingData.building_Name.Equals(buildingName))
+            if (building.buildingData.building_Name.Equals(buildingName) && building.buildingData.building_Level > 0)
             {
                 count++;
             }
@@ -216,7 +280,7 @@ public class BuildingManager : MonoBehaviour
         return count;
     }
 
-    public BuildingSO GetBuildingSO(string buildingName) 
+    public BuildingSO GetBuildingSO(string buildingName)
     {
         BuildingLocation BLS = Array.Find(buildingLocations.ToArray(), x => x.buildingSO.building_Name == buildingName);
 
@@ -227,7 +291,7 @@ public class BuildingManager : MonoBehaviour
     {
         BuildingSO bSO = GetBuildingSO(buildingName);
 
-        if(bSO == null)
+        if (bSO == null)
         {
             Debug.LogError($"Building \"{buildingName}\" not found!");
             return null;
@@ -240,11 +304,11 @@ public class BuildingManager : MonoBehaviour
     {
         TroopSO tSO = null;
 
-        foreach(LevelUpUnlocks luu in buildingSO.levelUpUnlocks)
+        foreach (LevelUpUnlocks luu in buildingSO.levelUpUnlocks)
         {
             tSO = Array.Find(luu.unlockedTroops.ToArray(), x => x.troop_Name == troopName);
 
-            if(tSO != null)
+            if (tSO != null)
             {
                 return tSO;
             }
