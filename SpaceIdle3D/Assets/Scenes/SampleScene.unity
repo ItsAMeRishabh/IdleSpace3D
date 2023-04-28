@@ -2604,7 +2604,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2667,8 +2667,7 @@ MonoBehaviour:
   buildingData:
     building_Name: BuildingName
     building_Level: 1
-    building_IridiumBoostPerLevel: 1.2
-    ownedTroops: []
+    building_OwnedTroops: []
 --- !u!60 &1478343468
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2766,7 +2765,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2829,8 +2828,7 @@ MonoBehaviour:
   buildingData:
     building_Name: BuildingName
     building_Level: 1
-    building_IridiumBoostPerLevel: 1.2
-    ownedTroops: []
+    building_OwnedTroops: []
 --- !u!60 &1502901600
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -3969,19 +3967,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData:
     profileName: 
+    lastSaveTime:
+      value: 0
     iridium_Total: 0
     iridium_PerSecond: 0
+    iridium_PerSecondBoosted: 0
+    darkElixir_Total: 0
+    darkElixir_PerSecond: 0
+    darkElixir_PerSecondBoosted: 0
     iridium_PerClick: 0
+    iridium_PerClickRate: 0
+    iridium_PerClickBoosted: 0
     iridium_PerClickLevel: 0
     ownedBuildings: []
-  selectedBuilding: {fileID: 0}
+    activeBoosts: []
   upgradeClick_BaseCost: 50
   upgradeClick_PriceMultiplier: 1.2
-  iridium_PerSecondBoostMultiplier: 2
-  iridium_PerSecondBoostDuration: 10
-  defaultValues: {fileID: 0}
-  saveInterval: 5
   upgradeClick_CurrentCost: 1000
+  defaultValues: {fileID: 0}
+  startFreshOnLaunch: 0
+  saveInterval: 5
+  autoSave: 0
+  getIridiumButtonPressedDown: 0
+  canGetIridium: 1
 --- !u!4 &2044636300
 Transform:
   m_ObjectHideFlags: 0
@@ -4022,6 +4030,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9329528a6382b7240bbce523db092b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boostSOs: []
+  activeBoosts: []
 --- !u!114 &2044636303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4034,6 +4044,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d239a70676ede8478a85aba0d8edea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedBuilding: {fileID: 0}
   buildingLocations: []
   ownedBuildings: []
 --- !u!114 &2044636304
@@ -4051,13 +4062,20 @@ MonoBehaviour:
   GameUI: {fileID: 0}
   text_TotalIridium: {fileID: 0}
   text_IridiumPerSecond: {fileID: 0}
+  text_TotalDarkElixir: {fileID: 0}
+  text_DarkElixirPerSecond: {fileID: 0}
   button_GetIridium: {fileID: 0}
-  button_BoostIridiumProduction: {fileID: 0}
+  button_GetBoost: {fileID: 0}
   button_UpgradeClick: {fileID: 0}
   button_OpenBuyBuildings: {fileID: 0}
+  boostUI: {fileID: 0}
+  button_Back_Boost: {fileID: 0}
+  boostButtonParent: {fileID: 0}
+  boostButtonPrefab: {fileID: 0}
   buildingUI: {fileID: 0}
   text_BuildingName: {fileID: 0}
   text_BuildingIridiumPerSecond: {fileID: 0}
+  button_UpgradeBuilding: {fileID: 0}
   button_Back_Building: {fileID: 0}
   troopButtonParent: {fileID: 0}
   troopButtonPrefab: {fileID: 0}
@@ -4066,9 +4084,12 @@ MonoBehaviour:
   buildingButtonParent: {fileID: 0}
   buildingButtonPrefab: {fileID: 0}
   profileSelectionUI: {fileID: 0}
-  newProfileButton: {fileID: 0}
+  button_newProfile: {fileID: 0}
   profileButtonParent: {fileID: 0}
   profileButtonPrefab: {fileID: 0}
+  profileCreationUI: {fileID: 0}
+  button_CreateProfile: {fileID: 0}
+  inputField_ProfileName: {fileID: 0}
 --- !u!1 &2061715143
 GameObject:
   m_ObjectHideFlags: 0
