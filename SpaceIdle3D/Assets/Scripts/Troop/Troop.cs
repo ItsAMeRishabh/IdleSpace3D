@@ -41,4 +41,10 @@ public class Troop
         double x = troop_BaseIridiumPerSecond * troops_Owned * troop_IridiumMultiplier * (1.0f / GameManager.ticksPerSecond);
         return x;
     }
+
+    public double GetIridiumPerTickPerTroop()
+    {
+        double x = troop_BaseIridiumPerSecond * troop_IridiumMultiplier * (1.0f / GameManager.ticksPerSecond);
+        return x;
+    }
 }

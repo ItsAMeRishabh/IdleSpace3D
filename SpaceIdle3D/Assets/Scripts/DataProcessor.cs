@@ -171,6 +171,8 @@ public class DataProcessor
     public PlayerData ResourcesGainedAfterIdle(PlayerData playerData)
     {
         int timeElapsed = (int)(DateTime.Now - (DateTime)playerData.lastSaveTime).TotalSeconds;
+        timeElapsed = (int) Math.Min(timeElapsed, playerData.maxIdleTime);
+
         double baseIPS = GetBaseIridiumPerSecond(playerData);
 
         int timeToProcess = timeElapsed;

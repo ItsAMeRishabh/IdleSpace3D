@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [CreateAssetMenu(menuName = "SpaceIdle3D/DefaultValues", fileName = "DefaultValues")]
 public class DefaultValues : ScriptableObject
 {
+    public double maxIdleTime = 3600;
     public double iridium_Total = 0;
     public double iridium_PerSecond = 0;
     public double darkElixir_Total = 0;

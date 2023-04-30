@@ -1,9 +1,16 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(TroopManager))]
 public class Building : MonoBehaviour
 {
+    private float clickTimeout = 0.2f;
+    private WaitForSeconds clickWait;
+    private Coroutine clickTimeoutCoroutine;
+    private bool clickExplired = false;
+    private bool clickedOnMe = false;
+
     public BuildingSO buildingSO;
     public BuildingData buildingData;
 
@@ -11,33 +18,34 @@ public class Building : MonoBehaviour
     private TroopManager troopManager;
 
     public TroopManager TroopManager => troopManager;
-
-    private bool startedTouch = false;
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        clickWait = new WaitForSeconds(clickTimeout);
     }
 
     void OnMouseDown()
     {
         if (!DetectClickOnUI.IsPointerOverUIElement())
         {
-            startedTouch = true;
-            gameManager.ClickedOnBuilding(this);
+            if(clickTimeoutCoroutine != null)
+            {
+                StopCoroutine(clickTimeoutCoroutine);
+                clickTimeoutCoroutine = null;
+            }
+
+            clickTimeoutCoroutine = StartCoroutine(ClickTimeoutCoroutine());
+            clickedOnMe = true;
         }
     }
 
     private void OnMouseUp()
     {
-        /*if(startedTouch && !DetectClickOnUI.IsPointerOverUIElement())
+        if(!clickExplired && clickedOnMe)
         {
-            startedTouch = false;
             gameManager.ClickedOnBuilding(this);
         }
-        else
-        {
-            startedTouch = false;
-        }*/
+        clickedOnMe = false;
     }
 
     public double GetIridiumPerTick()
@@ -48,5 +56,14 @@ public class Building : MonoBehaviour
             x += troop.GetIridiumPerTick() * Math.Pow(buildingSO.building_IridiumBoostPerLevel, buildingData.building_Level - 1);
         }
         return x;
+    }
+
+    private IEnumerator ClickTimeoutCoroutine()
+    {
+        clickExplired = false;
+
+        yield return clickWait;
+
+        clickExplired = true;
     }
 }

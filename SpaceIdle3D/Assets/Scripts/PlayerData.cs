@@ -8,6 +8,7 @@ public class PlayerData
 
     public JsonDateTime profileCreateTime;
     public JsonDateTime lastSaveTime;
+    public double maxIdleTime;
 
     public double iridium_Total;
     public double iridium_Current;

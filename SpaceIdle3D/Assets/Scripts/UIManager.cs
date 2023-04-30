@@ -79,6 +79,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button button_CreateProfile;
     [SerializeField] private TMP_InputField inputField_ProfileName;
 
+    [Header("Stocks UI")]
+    [SerializeField] private GameObject stocksUI;
+    [SerializeField] private TMP_Text text_CurrentPrice;
+    [SerializeField] private Button button_Buy;
+    [SerializeField] private Button button_Prev;
+    [SerializeField] private Button button_MegaPrev;
+    [SerializeField] private Button button_Next;
+    [SerializeField] private Button button_MegaNext;
+    [SerializeField] private TMP_Text text_TotalPrice;
+    [SerializeField] private Button button_StocksBack;
+
     private GameManager gameManager;
 
     void Awake()
@@ -111,9 +122,9 @@ public class UIManager : MonoBehaviour
     {
         text_BuildingCosts = new List<TMP_Text>();
         levelZeroBuildings = new List<Building>();
-        foreach(Building building in gameManager.BuildingManager.ownedBuildings)
+        foreach (Building building in gameManager.BuildingManager.ownedBuildings)
         {
-            if(building.buildingData.building_Level != 0)
+            if (building.buildingData.building_Level != 0)
             {
                 continue;
             }
@@ -171,9 +182,9 @@ public class UIManager : MonoBehaviour
 
     private void UpdateBuildingCosts()
     {
-        if(levelZeroBuildings.Count != 0)
+        if (levelZeroBuildings.Count != 0)
         {
-            for(int i=0;i<levelZeroBuildings.Count;i++)
+            for (int i = 0; i < levelZeroBuildings.Count; i++)
             {
                 text_BuildingCosts[i].text = NumberFormatter.FormatNumber(levelZeroBuildings[i].buildingSO.building_UpgradeCosts[0], FormattingTypes.Cost);
             }
@@ -193,7 +204,7 @@ public class UIManager : MonoBehaviour
         {
             button_UpgradeBuilding.gameObject.SetActive(true);
 
-            if(gameManager.playerData.iridium_Total < gameManager.BuildingManager.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManager.selectedBuilding.buildingData.building_Level])
+            if (gameManager.playerData.iridium_Total < gameManager.BuildingManager.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManager.selectedBuilding.buildingData.building_Level])
             {
                 button_UpgradeBuilding.interactable = false;
             }
@@ -210,7 +221,7 @@ public class UIManager : MonoBehaviour
             text_TroopNames[i].text = gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name;
 
             text_TroopCosts[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost, FormattingTypes.Cost);
-            if(gameManager.playerData.iridium_Total < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost)
+            if (gameManager.playerData.iridium_Total < gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost)
             {
                 button_Troop[i].interactable = false;
             }
@@ -220,7 +231,7 @@ public class UIManager : MonoBehaviour
             }
 
             text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned) + " owned";
-            text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTick() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + "i/s";
+            text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManager.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTickPerTroop() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + "i/s";
         }
     }
 
@@ -256,7 +267,7 @@ public class UIManager : MonoBehaviour
 
             if (boost != null)
             {
-                image_BoostDurationRemainings[i].fillAmount = (float) (boost.boost_TimeRemaining / gameManager.BoostManager.boostSOs[i].boost_MaxDuration);
+                image_BoostDurationRemainings[i].fillAmount = (float)(boost.boost_TimeRemaining / gameManager.BoostManager.boostSOs[i].boost_MaxDuration);
                 text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(boost.boost_TimeRemaining, FormattingTypes.BoostDuration) + " Left";
             }
             else

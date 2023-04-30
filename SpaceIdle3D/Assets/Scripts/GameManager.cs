@@ -6,8 +6,10 @@ using System;
 
 [RequireComponent(typeof(UIManager))]
 [RequireComponent(typeof(BoostManager))]
+[RequireComponent(typeof(StockManager))]
 [RequireComponent(typeof(LoadSaveSystem))]
 [RequireComponent(typeof(BuildingManager))]
+[RequireComponent(typeof(EnemyShipManager))]
 public class GameManager : MonoBehaviour
 {
     [Header("Tick Rate")]
@@ -39,9 +41,11 @@ public class GameManager : MonoBehaviour
     private WaitForSeconds saveWait;
     private WaitForSeconds holdFarmWait;
 
+    private EnemyShipManager enemyShipManager;
     private BuildingManager buildingManager;
     private LoadSaveSystem loadSaveSystem;
     private DataProcessor dataProcessor;
+    private StockManager stockManager;
     private BoostManager boostManager;
     private InputManager inputManager;
     private UIManager uiManager;
@@ -49,9 +53,11 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool getIridiumButtonPressedDown = false;
     [HideInInspector] public bool canGetIridium = true;
 
+    public EnemyShipManager EnemyShipManager => enemyShipManager;
     public BuildingManager BuildingManager => buildingManager;
     public LoadSaveSystem LoadSaveSystem => loadSaveSystem;
     public DataProcessor DataProcessor => dataProcessor;
+    public StockManager StockManager => stockManager;
     public BoostManager BoostManager => boostManager;
     public UIManager UIManager => uiManager;
 
@@ -59,9 +65,11 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        enemyShipManager = GetComponent<EnemyShipManager>();
         buildingManager = GetComponent<BuildingManager>();
         loadSaveSystem = GetComponent<LoadSaveSystem>();
         boostManager = GetComponent<BoostManager>();
+        stockManager = GetComponent<StockManager>();
         uiManager = GetComponent<UIManager>();
 
         inputManager = new InputManager();
@@ -122,6 +130,8 @@ public class GameManager : MonoBehaviour
 
         uiManager.InitializeBuildingCosts();
 
+        enemyShipManager.InitializeEnemySpawner();
+
         StartTickCoroutine(); //Setup the coroutine for the tick rate
 
         StartSaveCoroutine(); //Setup the coroutine for the save
@@ -147,6 +157,7 @@ public class GameManager : MonoBehaviour
         playerData = new PlayerData();
         playerData.profileName = profileName;
         playerData.profileCreateTime = DateTime.Now;
+        playerData.maxIdleTime = defaultValues.maxIdleTime;
         playerData.iridium_Total = defaultValues.iridium_Total;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
         playerData.darkElixir_Total = defaultValues.darkElixir_Total;

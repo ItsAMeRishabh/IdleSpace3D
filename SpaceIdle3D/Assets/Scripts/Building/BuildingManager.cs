@@ -28,12 +28,8 @@ public class BuildingManager : MonoBehaviour
 
         if (building.buildingData.building_Level == 0)
         {
-            bool upgradeSuccessful = UpgradeBuilding(building);
-
-            if (upgradeSuccessful)
-            {
-                gameManager.UIManager.OpenBuildingMenu();
-            }
+            UpgradeBuilding(building);
+            selectedBuilding = null;
         }
         else
         {
