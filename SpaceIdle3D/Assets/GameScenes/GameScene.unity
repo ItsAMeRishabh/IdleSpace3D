@@ -1655,6 +1655,7 @@ MonoBehaviour:
   text_DarkElixirPerSecond: {fileID: 401120457}
   button_GetIridium: {fileID: 2125508363}
   button_GetBoost: {fileID: 1698048364}
+  button_StocksMenu: {fileID: 165443525}
   button_UpgradeClick: {fileID: 444879276}
   button_OpenBuyBuildings: {fileID: 1448680401}
   boostUI: {fileID: 1766514376}
@@ -1680,7 +1681,8 @@ MonoBehaviour:
   inputField_ProfileName: {fileID: 234915083}
   stocksUI: {fileID: 1656831457}
   text_CurrentPrice: {fileID: 592128338}
-  button_Buy: {fileID: 1887898950}
+  text_AmountToBuy: {fileID: 2134337770}
+  button_BuyStocks: {fileID: 1887898950}
   button_Prev: {fileID: 405648397}
   button_MegaPrev: {fileID: 553374698}
   button_Next: {fileID: 2078639117}
@@ -1788,6 +1790,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stockName: Primoline
   stockBaseValue: 10
+  stockCurrentValue: 0
   stockVariance: {x: 0.5, y: 2}
   stockRefreshTime: 10
   stockMinimumBuy: 10
@@ -1795,6 +1798,11 @@ MonoBehaviour:
   megaNextStep: 100
   previousStep: 10
   megaPreviousStep: 100
+  stockOwned: 0
+  amountToBuy: 0
+  totalPrice: 0
+  totalPricePlusNext: 0
+  totalPricePlusMegaNext: 0
 --- !u!1 &231246897
 GameObject:
   m_ObjectHideFlags: 0
