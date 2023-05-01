@@ -237,9 +237,9 @@ public class BuildingManager : MonoBehaviour
             return false;
         }
 
-        if (gameManager.playerData.iridium_Total >= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level])
+        if (gameManager.playerData.iridium_Current >= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level])
         {
-            gameManager.playerData.iridium_Total -= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level];
+            gameManager.playerData.iridium_Current -= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level];
             Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
 
             ownedBuildings.Remove(building);

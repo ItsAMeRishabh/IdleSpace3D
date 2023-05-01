@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
 
         if (startFreshOnLaunch)
         {
-            uiManager.OpenProfileNamePanel();
+            uiManager.OpenProfileCreatePanel();
         }
         else
         {
@@ -117,6 +117,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        stockManager.InitializeStocks();
 
         uiManager.OpenMainUI();
 
@@ -144,7 +145,7 @@ public class GameManager : MonoBehaviour
         if (profiles.Count == 0)
         {
             Debug.Log("No saves found. Starting new game");
-            uiManager.OpenProfileNamePanel();
+            uiManager.OpenProfileCreatePanel();
         }
         else
         {
@@ -159,6 +160,7 @@ public class GameManager : MonoBehaviour
         playerData.profileCreateTime = DateTime.Now;
         playerData.maxIdleTime = defaultValues.maxIdleTime;
         playerData.iridium_Total = defaultValues.iridium_Total;
+        playerData.iridium_Current = defaultValues.iridium_Current;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
         playerData.darkElixir_Total = defaultValues.darkElixir_Total;
         playerData.darkElixir_PerSecond = defaultValues.darkElixir_PerSecond;
@@ -266,6 +268,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 playerData.iridium_Total += playerData.iridium_PerClickBoosted;
+                playerData.iridium_Current += playerData.iridium_PerClickBoosted;
 
                 holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
                 holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());
@@ -276,6 +279,7 @@ public class GameManager : MonoBehaviour
     private void ProcessIridiumPerBuilding()
     {
         playerData.iridium_Total += playerData.iridium_PerSecondBoosted / ticksPerSecond;
+        playerData.iridium_Current += playerData.iridium_PerSecondBoosted / ticksPerSecond;
     }
 
     #endregion
@@ -294,9 +298,9 @@ public class GameManager : MonoBehaviour
 
     public void UpgradeClickClicked()
     {
-        if (playerData.iridium_Total >= upgradeClick_CurrentCost)
+        if (playerData.iridium_Current >= upgradeClick_CurrentCost)
         {
-            playerData.iridium_Total -= upgradeClick_CurrentCost;
+            playerData.iridium_Current -= upgradeClick_CurrentCost;
             upgradeClick_CurrentCost = (int)(upgradeClick_CurrentCost * upgradeClick_PriceMultiplier);
             playerData.iridium_PerClickLevel += 1;
         }
@@ -312,9 +316,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (playerData.iridium_Total >= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
+            if (playerData.iridium_Current >= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
             {
-                playerData.iridium_Total -= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;
+                playerData.iridium_Current -= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;
                 buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troops_Owned += 1;
                 buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost = (int)(buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost * buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CostMultiplier);
             }
@@ -329,13 +333,13 @@ public class GameManager : MonoBehaviour
     {
         double buildingPrice = buildingSO.building_UpgradeCosts[0];
 
-        if (playerData.iridium_Total >= buildingPrice)
+        if (playerData.iridium_Current >= buildingPrice)
         {
             bool buildingPlacementSuccessful = buildingManager.PlaceBuilding(buildingSO);
 
             if (buildingPlacementSuccessful)
             {
-                playerData.iridium_Total -= buildingPrice;
+                playerData.iridium_Current -= buildingPrice;
             }
         }
     }
@@ -393,6 +397,7 @@ public class GameManager : MonoBehaviour
     void ResetGame()
     {
         playerData.iridium_Total = defaultValues.iridium_Total;
+        playerData.iridium_Current = defaultValues.iridium_Current;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
         playerData.iridium_PerClick = defaultValues.iridium_PerClick;
         playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;

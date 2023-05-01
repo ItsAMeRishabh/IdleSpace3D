@@ -250,6 +250,8 @@ public class DataProcessor
         Debug.Log($"{playerData.profileName} was idle for {timeElapsed} seconds");
 
         Debug.Log($"Iridium Added: {iridiumToAdd}");
+
+        playerData.iridium_Current += iridiumToAdd;
         playerData.iridium_Total += iridiumToAdd;
 
         Debug.Log($"Dark Elixir Added: {darkelixerToAdd}");

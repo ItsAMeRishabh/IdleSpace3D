@@ -9,6 +9,7 @@ public enum FormattingTypes
     IridiumPerSecond,
     BoostDuration,
     DarkElixer,
+    Stocks,
     Level,
     Owned,
     Cost
@@ -22,6 +23,7 @@ public class NumberFormatter
         { FormattingTypes.IridiumPerSecond, "0.0"},
         { FormattingTypes.BoostDuration, "0.0"},
         { FormattingTypes.DarkElixer, "0.000"},
+        { FormattingTypes.Stocks, "0.00"},
         { FormattingTypes.Level, "0"},
         { FormattingTypes.Owned, "0"},
         { FormattingTypes.Cost, "0"}
