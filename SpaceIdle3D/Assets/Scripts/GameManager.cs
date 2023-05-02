@@ -139,13 +139,13 @@ public class GameManager : MonoBehaviour
 
     private void StartAllManagers()
     {
-        uiManager.StartGame();
-
         stockManager.StartGame();
 
         buildingManager.StartGame();
 
         enemyShipManager.StartGame();
+
+        uiManager.StartGame();
     }
 
     public void StartNewGame(string profileName)

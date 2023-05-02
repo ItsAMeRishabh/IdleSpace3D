@@ -32,6 +32,7 @@ public class Stock
         stockRefreshTime = so.stockRefreshTime;
 
         stockMinimumBuy = so.stockMinimumBuy;
+        amountToBuy = so.stockMinimumBuy;
         nextStep = so.nextStep;
         megaNextStep = so.megaNextStep;
         previousStep = so.previousStep;

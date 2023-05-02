@@ -496,8 +496,8 @@ public class UIManager : MonoBehaviour
         text_StockName.text = localSM.stocks[gameManager.StockManagerRef.selectedStockIndex].stockName;
         text_StockNextRefresh.text = NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - DateTime.Now).TotalSeconds, FormattingTypes.Time);
 
-        button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy >= localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
-        button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy >= localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
+        button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
+        button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
 
         button_BuyStocks.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice;
 
