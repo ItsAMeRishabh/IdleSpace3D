@@ -9,11 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d23f10075fa4d7846b32c453987ae6f8, type: 3}
-  m_Name: 001.5
+  m_Script: {fileID: 11500000, guid: 860ef1ae0c22bca4181916399abca988, type: 3}
+  m_Name: 001
   m_EditorClassIdentifier: 
-  boost_Name: Name
-  boost_Duration: 10
-  boost_MaxDuration: 30
-  boost_IridiumPerClick: 1
-  boost_IridiumPerSecond: 1
+  stockName: Primoline
+  stockBaseValue: 10
+  stockVariance: {x: 0.5, y: 2}
+  stockRefreshTime: 30
+  stockMinimumBuy: 10
+  nextStep: 10
+  megaNextStep: 100
+  previousStep: 10
+  megaPreviousStep: 100

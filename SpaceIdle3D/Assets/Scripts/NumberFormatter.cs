@@ -9,9 +9,11 @@ public enum FormattingTypes
     IridiumPerSecond,
     BoostDuration,
     DarkElixer,
+    Stocks,
     Level,
     Owned,
-    Cost
+    Cost,
+    Time
 }
 
 public class NumberFormatter
@@ -22,9 +24,11 @@ public class NumberFormatter
         { FormattingTypes.IridiumPerSecond, "0.0"},
         { FormattingTypes.BoostDuration, "0.0"},
         { FormattingTypes.DarkElixer, "0.000"},
+        { FormattingTypes.Stocks, "0.00"},
         { FormattingTypes.Level, "0"},
         { FormattingTypes.Owned, "0"},
-        { FormattingTypes.Cost, "0"}
+        { FormattingTypes.Cost, "0"},
+        { FormattingTypes.Time, "0"}
     };
 
     public static string FormatNumber(double number, FormattingTypes format)
@@ -34,6 +38,13 @@ public class NumberFormatter
             TimeSpan time = TimeSpan.FromSeconds(number);
 
             return string.Format("{0:D2}m:{1:D2}s", time.Minutes, time.Seconds);
+        }
+
+        if(format == FormattingTypes.Time)
+        {
+            TimeSpan time = TimeSpan.FromSeconds(number);
+
+            return string.Format("{0:0}:{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
         }
 
         if (number < 1000f)

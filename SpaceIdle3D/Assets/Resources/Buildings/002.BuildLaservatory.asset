@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: 002.BuildLaservatory
   m_EditorClassIdentifier: 
   building_Name: Laservatory
-  building_Level: 1
+  building_Level: 0
   building_IridiumBoostPerLevel: 1
   building_BaseCost: 1800
   building_CostMultiplier: 1.25
   building_UpgradeCosts:
+  - 1800
   - 1300000
   - -1
   buildingPrefabs:
+  - {fileID: 1377956029180070585, guid: 8c92ba371b66b1b42802265d3673e8d1, type: 3}
   - {fileID: 7198814451194074426, guid: 65e799e54afe3c34899a2efa86007b02, type: 3}
   - {fileID: 7909858798974601793, guid: 34ffaf1b1b0c745438ed01b34492ee8b, type: 3}
   levelUpUnlocks:

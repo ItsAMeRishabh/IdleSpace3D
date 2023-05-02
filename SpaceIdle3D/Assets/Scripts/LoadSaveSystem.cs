@@ -7,6 +7,12 @@ using System.IO;
 public class LoadSaveSystem : MonoBehaviour
 {
     [SerializeField] private string folderName = "Saves";
+
+    [Header("Save Configuration")]
+    public bool startFreshOnLaunch = false;
+    public float saveInterval = 5f;
+    public bool autoSave = false;
+
     private string saveDir;
 
     private GameManager gameManager;
@@ -21,16 +27,18 @@ public class LoadSaveSystem : MonoBehaviour
         gameManager = GetComponent<GameManager>();
     }
 
-    public List<string> GetProfilesList()
+    public List<PlayerData> GetProfilesList()
     {
-        List<string> profilesList = new List<string>();
+        List<PlayerData> profilesList = new List<PlayerData>();
 
         if (Directory.Exists(saveDir))
         {
             string[] files = Directory.GetFiles(saveDir);
             foreach (string file in files)
             {
-                profilesList.Add(Path.GetFileNameWithoutExtension(file));
+                string jsonData = File.ReadAllText(file); 
+                PlayerData playerData = JsonUtility.FromJson<PlayerData>(jsonData);
+                profilesList.Add(playerData);
             }
         }
 
