@@ -124,7 +124,7 @@ public class DataProcessor
     {
         double boostedIPS = playerData.iridium_PerSecond;
 
-        foreach(Boost boost in gameManager.BoostManagerRef.activeBoosts)
+        foreach (Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
             boostedIPS *= boost.boost_IridiumPerSecond;
         }
@@ -143,7 +143,7 @@ public class DataProcessor
     {
         double boostedIPC = playerData.iridium_PerClick;
 
-        foreach(Boost boost in gameManager.BoostManagerRef.activeBoosts)
+        foreach (Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
             boostedIPC *= boost.boost_IridiumPerClick;
         }
@@ -160,7 +160,7 @@ public class DataProcessor
     {
         double boostedDEPS = playerData.darkElixir_PerSecond;
 
-        foreach(Boost boost in gameManager.BoostManagerRef.activeBoosts)
+        foreach (Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
             boostedDEPS *= boost.boost_DarkElixirPerSecond;
         }
@@ -171,7 +171,7 @@ public class DataProcessor
     public PlayerData ResourcesGainedAfterIdle(PlayerData playerData)
     {
         int timeElapsed = (int)(DateTime.Now - (DateTime)playerData.lastSaveTime).TotalSeconds;
-        timeElapsed = (int) Math.Min(timeElapsed, playerData.maxIdleTime);
+        timeElapsed = (int)Math.Min(timeElapsed, playerData.maxIdleTime);
 
         double baseIPS = GetBaseIridiumPerSecond(playerData);
 

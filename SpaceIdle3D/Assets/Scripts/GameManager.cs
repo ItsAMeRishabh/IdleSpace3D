@@ -180,6 +180,20 @@ public class GameManager : MonoBehaviour
         gameHathStarted = true;
     }
 
+    private IEnumerator Tick()
+    {
+        while (true)
+        {
+            ProcessResourcesAdded();
+
+            boostManager.ProcessBoostTimers();
+            stockManager.TickCheckRefreshStockPrices();
+            uiManager.UpdateAllUI();
+            
+            yield return tickWait;
+        }
+    }
+
     private void StartSaveCoroutine()
     {
         if (saveCoroutine != null)
@@ -187,18 +201,6 @@ public class GameManager : MonoBehaviour
 
         saveWait = new WaitForSeconds(loadSaveSystem.saveInterval);
         saveCoroutine = StartCoroutine(SaveCoroutine());
-    }
-
-    private IEnumerator Tick()
-    {
-        while (true)
-        {
-            ProcessResourcesAdded();
-            boostManager.ProcessBoostTimers();
-            stockManager.TickCheckRefreshStockPrices();
-            uiManager.UpdateAllUI();
-            yield return tickWait;
-        }
     }
 
     private IEnumerator SaveCoroutine()
