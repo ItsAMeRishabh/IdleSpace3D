@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(TroopManager))]
+
 public class Building : MonoBehaviour
 {
     private float clickTimeout = 0.2f;
@@ -15,10 +15,8 @@ public class Building : MonoBehaviour
     public BuildingData buildingData;
 
     private GameManager gameManager;
-    private TroopManager troopManager;
 
-    public TroopManager TroopManager => troopManager;
-    void Start()
+    public void Initialize()
     {
         gameManager = FindObjectOfType<GameManager>();
         clickWait = new WaitForSeconds(clickTimeout);

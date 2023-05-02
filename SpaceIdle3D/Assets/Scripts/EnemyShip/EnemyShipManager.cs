@@ -9,6 +9,7 @@ public class EnemyShipManager : MonoBehaviour
     [SerializeField] private Vector2 spawnDelayRange;
     [SerializeField] private float shipHeight;
     [SerializeField] private float shipDistance;
+    [SerializeField] private float selfDestroyDelay;
 
     [Header("Ship Fall Settings")]
     [SerializeField] private float shipFallSpeed;
@@ -23,13 +24,23 @@ public class EnemyShipManager : MonoBehaviour
     [SerializeField] private Vector2 cosmiumRewardRange;
 
     private GameManager gameManager;
-    public void InitializeEnemySpawner()
+
+    private void Awake()
     {
         gameManager = GetComponent<GameManager>();
-
-        //float spawnDelay = Random.Range(spawnDelayRange.x, spawnDelayRange.y);
     }
 
+    public void StartGame()
+    {
+        StartSpawnTimer();
+    }
+
+    public void StartSpawnTimer()
+    {
+        float spawnDelay = Random.Range(spawnDelayRange.x, spawnDelayRange.y);
+
+        StartCoroutine(SpawnCoroutine(spawnDelay));
+    }
     private IEnumerator SpawnCoroutine(float spawnDelay)
     {
         yield return new WaitForSeconds(spawnDelay);
@@ -73,6 +84,7 @@ public class EnemyShipManager : MonoBehaviour
         ship.enemyShipManager = this;
         ship.speed = shipSpeed;
         ship.fallSpeed = shipFallSpeed;
+        ship.selfDestroyDelay = selfDestroyDelay;
 
         ship.iridiumReward = gameManager.playerData.iridium_PerSecond * iridiumReward;
         ship.darkElixirReward = darkElixirReward;
@@ -81,10 +93,19 @@ public class EnemyShipManager : MonoBehaviour
         ship.xTorqueLimit = xTorqueLimit;
         ship.yTorqueLimit = yTorqueLimit;
         ship.zTorqueLimit = zTorqueLimit;
+
+        StartSpawnTimer();
     }
 
     public void ShipDestroyed(double iridiumReward, double darkElixirReward, double cosmiumReward)
     {
+        gameManager.playerData.iridium_Current += iridiumReward;
+        gameManager.playerData.iridium_Total += iridiumReward;
 
+        gameManager.playerData.darkElixir_Current += darkElixirReward;
+        gameManager.playerData.darkElixir_Total += darkElixirReward;
+
+        gameManager.playerData.cosmium_Total += cosmiumReward;
+        gameManager.playerData.cosmium_Current += cosmiumReward;
     }
 }

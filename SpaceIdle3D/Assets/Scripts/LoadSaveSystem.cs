@@ -7,6 +7,12 @@ using System.IO;
 public class LoadSaveSystem : MonoBehaviour
 {
     [SerializeField] private string folderName = "Saves";
+
+    [Header("Save Configuration")]
+    public bool startFreshOnLaunch = false;
+    public float saveInterval = 5f;
+    public bool autoSave = false;
+
     private string saveDir;
 
     private GameManager gameManager;

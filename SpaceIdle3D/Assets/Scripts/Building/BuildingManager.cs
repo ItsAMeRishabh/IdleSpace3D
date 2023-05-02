@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,9 +14,14 @@ public class BuildingManager : MonoBehaviour
     private Dictionary<Transform, Building> buildingLocationsDict = new Dictionary<Transform, Building>();
     private GameManager gameManager;
 
-    private void Start()
+    public void Awake()
     {
         gameManager = GetComponent<GameManager>();
+    }
+
+    public void StartGame()
+    {
+        InitializeNewBuildings();
     }
 
     public void ClickedOnBuilding(Building building)
@@ -34,7 +38,7 @@ public class BuildingManager : MonoBehaviour
         else
         {
             selectedBuilding = building;
-            gameManager.UIManager.OpenBuildingMenu();
+            gameManager.UIManagerRef.OpenBuildingMenu();
         }
     }
 
@@ -150,10 +154,12 @@ public class BuildingManager : MonoBehaviour
                         }
                     }
                 }
+                building.Initialize();
 
-                gameManager.UIManager.PopulateBuildingUI();
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
+
+                gameManager.UIManagerRef.PopulateBuildingUI();
                 gameManager.UpdateCosts();
                 return true;
             }
@@ -209,10 +215,12 @@ public class BuildingManager : MonoBehaviour
                         }
                     }
                 }
+                building.Initialize();
 
-                gameManager.UIManager.PopulateBuildingUI();
                 ownedBuildings.Add(building);
                 buildingLocationsDict.Add(t, building);
+
+                gameManager.UIManagerRef.PopulateBuildingUI();
                 gameManager.UpdateCosts();
                 return building;
             }
@@ -250,7 +258,7 @@ public class BuildingManager : MonoBehaviour
             selectedBuilding = PlaceBuilding(buildingSO, buildingData);
             gameManager.UpdateResourceSources();
             gameManager.UpdateCosts();
-            gameManager.UIManager.InitializeBuildingCosts();
+            gameManager.UIManagerRef.UpdateLevelZeroBuildingList();
             return true;
         }
         else

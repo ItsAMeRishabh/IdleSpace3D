@@ -27,11 +27,6 @@ public class GameManager : MonoBehaviour
     [Header("Default Values SO")]
     [SerializeField] private DefaultValues defaultValues;
 
-    [Header("Save Configuration")]
-    [SerializeField] private bool startFreshOnLaunch = false;
-    [SerializeField] private float saveInterval = 5f;
-    [SerializeField] private bool autoSave = false;
-
     private bool gameHathStarted = false;
 
     private Coroutine tickCoroutine;
@@ -53,13 +48,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool getIridiumButtonPressedDown = false;
     [HideInInspector] public bool canGetIridium = true;
 
-    public EnemyShipManager EnemyShipManager => enemyShipManager;
-    public BuildingManager BuildingManager => buildingManager;
-    public LoadSaveSystem LoadSaveSystem => loadSaveSystem;
-    public DataProcessor DataProcessor => dataProcessor;
-    public StockManager StockManager => stockManager;
-    public BoostManager BoostManager => boostManager;
-    public UIManager UIManager => uiManager;
+    public EnemyShipManager EnemyShipManagerRef => enemyShipManager;
+    public BuildingManager BuildingManagerRef => buildingManager;
+    public LoadSaveSystem LoadSaveSystemRef => loadSaveSystem;
+    public DataProcessor DataProcessorRef => dataProcessor;
+    public StockManager StockManagerRef => stockManager;
+    public BoostManager BoostManagerRef => boostManager;
+    public UIManager UIManagerRef => uiManager;
 
     #region Unity Functions
 
@@ -87,11 +82,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        uiManager.InitializeUI();
-
-        if (startFreshOnLaunch)
+        if (loadSaveSystem.startFreshOnLaunch)
         {
-            uiManager.OpenProfileCreatePanel();
+            StartNewGame("Default");
         }
         else
         {
@@ -106,37 +99,11 @@ public class GameManager : MonoBehaviour
         inputManager.Input.Farm.canceled -= GetIridiumButton;
 
         inputManager.Disable();
-    }
 
-    private void OnDestroy()
-    {
-        if (autoSave) SaveGame();
+        if (loadSaveSystem.autoSave) SaveGame();
     }
 
     #endregion
-
-    private void StartGame()
-    {
-        stockManager.InitializeStocks();
-
-        uiManager.OpenMainUI();
-
-        uiManager.CloseProfileUI();
-
-        UpdateResourceSources(); //Update the iridium per second
-
-        UpdateCosts(); //Calculate all upgrade costs
-
-        buildingManager.InitializeNewBuildings();
-
-        uiManager.InitializeBuildingCosts();
-
-        enemyShipManager.InitializeEnemySpawner();
-
-        StartTickCoroutine(); //Setup the coroutine for the tick rate
-
-        StartSaveCoroutine(); //Setup the coroutine for the save
-    }
 
     private void CheckForSaves()
     {
@@ -151,6 +118,34 @@ public class GameManager : MonoBehaviour
         {
             uiManager.PopulateProfileSelectUI(profiles);
         }
+    }
+
+    private void StartGame()
+    {
+        StartAllManagers();
+
+        uiManager.OpenMainUI();
+
+        uiManager.CloseProfileUI();
+
+        UpdateResourceSources(); //Update the iridium per second
+
+        UpdateCosts(); //Calculate all upgrade costs
+
+        StartTickCoroutine(); //Setup the coroutine for the tick rate
+
+        StartSaveCoroutine(); //Setup the coroutine for the save
+    }
+
+    private void StartAllManagers()
+    {
+        uiManager.StartGame();
+
+        stockManager.StartGame();
+
+        buildingManager.StartGame();
+
+        enemyShipManager.StartGame();
     }
 
     public void StartNewGame(string profileName)
@@ -190,11 +185,9 @@ public class GameManager : MonoBehaviour
         if (saveCoroutine != null)
             StopCoroutine(saveCoroutine);
 
-        saveWait = new WaitForSeconds(saveInterval);
+        saveWait = new WaitForSeconds(loadSaveSystem.saveInterval);
         saveCoroutine = StartCoroutine(SaveCoroutine());
     }
-
-
 
     private IEnumerator Tick()
     {
@@ -202,6 +195,7 @@ public class GameManager : MonoBehaviour
         {
             ProcessResourcesAdded();
             boostManager.ProcessBoostTimers();
+            stockManager.TickCheckRefreshStockPrices();
             uiManager.UpdateAllUI();
             yield return tickWait;
         }
@@ -212,7 +206,7 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return saveWait;
-            if (autoSave) SaveGame();
+            if (loadSaveSystem.autoSave) SaveGame();
         }
     }
 
@@ -234,6 +228,7 @@ public class GameManager : MonoBehaviour
     {
         dataProcessor.UpdateResourceSources(playerData);
     }
+
     private void ProcessResourcesAdded()
     {
         ProcessIridiumAdded();

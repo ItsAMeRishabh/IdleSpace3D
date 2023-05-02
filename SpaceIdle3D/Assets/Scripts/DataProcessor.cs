@@ -36,11 +36,11 @@ public class DataProcessor
     {
         for (int i = 0; i < playerData.ownedBuildings.Count; i++)
         {
-            BuildingSO currentBuildingSO = gameManager.BuildingManager.GetBuildingSO(playerData.ownedBuildings[i].building_Name);
+            BuildingSO currentBuildingSO = gameManager.BuildingManagerRef.GetBuildingSO(playerData.ownedBuildings[i].building_Name);
 
             for (int j = 0; j < playerData.ownedBuildings[i].building_OwnedTroops.Count; j++)
             {
-                TroopSO currentTroop = gameManager.BuildingManager.GetTroopSO(currentBuildingSO, playerData.ownedBuildings[i].building_OwnedTroops[j].troop_Name);
+                TroopSO currentTroop = gameManager.BuildingManagerRef.GetTroopSO(currentBuildingSO, playerData.ownedBuildings[i].building_OwnedTroops[j].troop_Name);
 
                 playerData.ownedBuildings[i].building_OwnedTroops[j].troop_BaseCost = currentTroop.troop_BaseCost;
                 playerData.ownedBuildings[i].building_OwnedTroops[j].troop_BaseIridiumPerSecond = currentTroop.troop_BaseIridiumPerSecond;
@@ -57,7 +57,7 @@ public class DataProcessor
     {
         for (int i = 0; i < playerData.activeBoosts.Count; i++)
         {
-            BoostSO currentBoostSO = gameManager.BoostManager.GetBoostSO(playerData.activeBoosts[i].boost_Name);
+            BoostSO currentBoostSO = gameManager.BoostManagerRef.GetBoostSO(playerData.activeBoosts[i].boost_Name);
 
             playerData.activeBoosts[i].boost_IridiumPerClick = currentBoostSO.boost_IridiumPerClick;
             playerData.activeBoosts[i].boost_IridiumPerSecond = currentBoostSO.boost_IridiumPerSecond;
@@ -72,8 +72,8 @@ public class DataProcessor
 
     public void DistributeAllVariables(PlayerData playerData)
     {
-        gameManager.BuildingManager.SpawnBuildings(playerData.ownedBuildings);
-        gameManager.BoostManager.LoadBoosts(playerData.activeBoosts);
+        gameManager.BuildingManagerRef.SpawnBuildings(playerData.ownedBuildings);
+        gameManager.BoostManagerRef.LoadBoosts(playerData.activeBoosts);
     }
 
     public void UpdateResourceSources(PlayerData playerData)
@@ -101,7 +101,7 @@ public class DataProcessor
     {
         double baseIPS = 0;
 
-        foreach (Building building in gameManager.BuildingManager.ownedBuildings)
+        foreach (Building building in gameManager.BuildingManagerRef.ownedBuildings)
         {
             BuildingData data = building.buildingData;
             double buildingIPS = 0;
@@ -111,7 +111,7 @@ public class DataProcessor
                 buildingIPS += troop.GetIridiumPerTick() * GameManager.ticksPerSecond;
             }
 
-            BuildingSO bSO = gameManager.BuildingManager.GetBuildingSO(data.building_Name);
+            BuildingSO bSO = gameManager.BuildingManagerRef.GetBuildingSO(data.building_Name);
             buildingIPS *= Mathf.Pow((float)bSO.building_IridiumBoostPerLevel, data.building_Level - 1);
 
             baseIPS += buildingIPS;
@@ -124,7 +124,7 @@ public class DataProcessor
     {
         double boostedIPS = playerData.iridium_PerSecond;
 
-        foreach(Boost boost in gameManager.BoostManager.activeBoosts)
+        foreach(Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
             boostedIPS *= boost.boost_IridiumPerSecond;
         }
@@ -143,7 +143,7 @@ public class DataProcessor
     {
         double boostedIPC = playerData.iridium_PerClick;
 
-        foreach(Boost boost in gameManager.BoostManager.activeBoosts)
+        foreach(Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
             boostedIPC *= boost.boost_IridiumPerClick;
         }
@@ -160,7 +160,7 @@ public class DataProcessor
     {
         double boostedDEPS = playerData.darkElixir_PerSecond;
 
-        foreach(Boost boost in gameManager.BoostManager.activeBoosts)
+        foreach(Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
             boostedDEPS *= boost.boost_DarkElixirPerSecond;
         }

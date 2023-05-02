@@ -11,19 +11,22 @@ public class EnemyShip : MonoBehaviour
     [HideInInspector] public double darkElixirReward;
     [HideInInspector] public double cosmiumReward;
 
+    [HideInInspector] public float selfDestroyDelay;
     [HideInInspector] public float speed;
     [HideInInspector] public float fallSpeed;
     [HideInInspector] public Vector2 xTorqueLimit;
     [HideInInspector] public Vector2 yTorqueLimit;
     [HideInInspector] public Vector2 zTorqueLimit;
 
+    private bool hitByPlayer = false;
     private Vector3 gravity;
     private Rigidbody rb;
 
+    private Coroutine selfDestroyCoroutine;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        selfDestroyCoroutine = StartCoroutine(SelfDestroyCoroutine(selfDestroyDelay));
         rb.velocity = transform.forward * speed;
         gravity = Vector3.zero;
     }
@@ -46,15 +49,20 @@ public class EnemyShip : MonoBehaviour
 
     private void StartFall()
     {
-        float x = Random.Range(xTorqueLimit.x, xTorqueLimit.y);
-        float y = Random.Range(yTorqueLimit.x, yTorqueLimit.y);
-        float z = Random.Range(zTorqueLimit.x, zTorqueLimit.y);
+        if (!hitByPlayer)
+        {
+            float x = Random.Range(xTorqueLimit.x, xTorqueLimit.y);
+            float y = Random.Range(yTorqueLimit.x, yTorqueLimit.y);
+            float z = Random.Range(zTorqueLimit.x, zTorqueLimit.y);
 
-        Vector3 randomTorque = new Vector3(x, y, z);
+            Vector3 randomTorque = new Vector3(x, y, z);
 
-        rb.AddTorque(randomTorque, ForceMode.Impulse);
+            rb.AddTorque(randomTorque, ForceMode.Impulse);
 
-        gravity = fallSpeed * Vector3.down;
+            gravity = fallSpeed * Vector3.down;
+
+            hitByPlayer = true;
+        }
     }
 
     private void ShipDestroyed()
@@ -66,6 +74,19 @@ public class EnemyShip : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        ShipDestroyed();
+        if (hitByPlayer)
+            ShipDestroyed();
+    }
+
+    private void OnDestroy()
+    {
+        StopCoroutine(selfDestroyCoroutine);
+    }
+
+    private IEnumerator SelfDestroyCoroutine(float timer)
+    {
+        yield return new WaitForSeconds(timer);
+
+        Destroy(this.gameObject);
     }
 }
