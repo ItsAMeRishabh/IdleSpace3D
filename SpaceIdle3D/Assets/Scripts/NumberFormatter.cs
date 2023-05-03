@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public enum FormattingTypes
 {
@@ -33,14 +31,14 @@ public class NumberFormatter
 
     public static string FormatNumber(double number, FormattingTypes format)
     {
-        if(format == FormattingTypes.BoostDuration)
+        if (format == FormattingTypes.BoostDuration)
         {
             TimeSpan time = TimeSpan.FromSeconds(number);
 
             return string.Format("{0:D2}m:{1:D2}s", time.Minutes, time.Seconds);
         }
 
-        if(format == FormattingTypes.Time)
+        if (format == FormattingTypes.Time)
         {
             TimeSpan time = TimeSpan.FromSeconds(number);
 

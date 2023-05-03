@@ -11,9 +11,11 @@ public class StockManager : MonoBehaviour
 
     public int selectedStockIndex;
 
+    public bool sellMode = false;
+    private DateTime localNow;
     private GameManager gameManager;
 
-    private void Awake()
+    public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
     }
@@ -21,6 +23,8 @@ public class StockManager : MonoBehaviour
     public void StartGame()
     {
         List<Stock> playerStocks = gameManager.playerData.ownedStocks;
+        localNow = DateTime.Now;
+
         foreach (Stock stock in playerStocks)
         {
             StockSO sSO = GetStockSO(stock.stockName);
@@ -43,18 +47,28 @@ public class StockManager : MonoBehaviour
         }
 
         selectedStockIndex = 0;
+
         CheckRefreshStockPrices();
+        CheckStockExpiry();
+        RefreshPrices();
     }
 
     public void CheckRefreshStockPrices()
     {
         for (int i = 0; i < stocks.Count; i++)
         {
-            if (DateTime.Now > ((DateTime)stocks[i].nextRefreshTime))
+            if (stocks[i].nextRefreshTime.value == 0)
+            {
+                RefreshStockValue(i);
+                stocks[i].nextRefreshTime = (localNow.AddSeconds(stocks[i].stockRefreshTime));
+
+                continue;
+            }
+            if (localNow > ((DateTime)stocks[i].nextRefreshTime))
             {
                 DateTime toBeNextRefresh = ((DateTime)stocks[i].nextRefreshTime).AddSeconds(stocks[i].stockRefreshTime);
 
-                while (DateTime.Now < toBeNextRefresh)
+                while (localNow > toBeNextRefresh)
                 {
                     toBeNextRefresh = toBeNextRefresh.AddSeconds(stocks[i].stockRefreshTime);
                 }
@@ -65,15 +79,58 @@ public class StockManager : MonoBehaviour
         }
     }
 
+    public void CheckStockExpiry()
+    {
+        for (int i = 0; i < stocks.Count; i++)
+        {
+            if (stocks[i].nextExpireTime.value == 0)
+            {
+                ExpireStock(i);
+                stocks[i].nextExpireTime = (localNow.AddSeconds(stocks[i].stockExpireTime));
+                continue;
+            }
+            if (localNow > ((DateTime)stocks[i].nextExpireTime))
+            {
+                DateTime toBeNextExpired = ((DateTime)stocks[i].nextExpireTime).AddSeconds(stocks[i].stockExpireTime);
+
+                while (localNow > toBeNextExpired)
+                {
+                    toBeNextExpired = toBeNextExpired.AddSeconds(stocks[i].stockExpireTime);
+                }
+
+                ExpireStock(i);
+                stocks[i].nextRefreshTime = toBeNextExpired;
+            }
+        }
+    }
+
+    public void TickStockRefresh()
+    {
+        localNow = DateTime.Now;
+        TickCheckRefreshStockPrices();
+        TickCheckStockExpiry();
+    }
 
     public void TickCheckRefreshStockPrices()
     {
         for (int i = 0; i < stocks.Count; i++)
         {
-            if (DateTime.Now > ((DateTime)stocks[i].nextRefreshTime))
+            if (localNow > ((DateTime)stocks[i].nextRefreshTime))
             {
                 RefreshStockValue(i);
-                stocks[i].nextRefreshTime = DateTime.Now.AddSeconds(stocks[i].stockRefreshTime);
+                stocks[i].nextRefreshTime = localNow.AddSeconds(stocks[i].stockRefreshTime);
+            }
+        }
+    }
+
+    public void TickCheckStockExpiry()
+    {
+        for (int i = 0; i < stocks.Count; i++)
+        {
+            if (localNow > ((DateTime)stocks[i].nextExpireTime))
+            {
+                ExpireStock(i);
+                stocks[i].nextExpireTime = localNow.AddSeconds(stocks[i].stockExpireTime);
             }
         }
     }
@@ -87,6 +144,13 @@ public class StockManager : MonoBehaviour
         RefreshPrices();
     }
 
+    [ContextMenu("Expire Stock Price")]
+    public void ExpireStock(int index = 0)
+    {
+        stocks[index].stockOwned = 0;
+        stocks[index].purchasedThisCycle = false;
+    }
+
     public void RefreshPrices()
     {
         for (int i = 0; i < stocks.Count; i++)
@@ -97,12 +161,31 @@ public class StockManager : MonoBehaviour
         }
     }
 
+    public void NextStock()
+    {
+        selectedStockIndex++;
+
+        if (selectedStockIndex >= stocks.Count)
+            selectedStockIndex = 0;
+    }
+
+    public void PreviousStock()
+    {
+        selectedStockIndex--;
+
+        if (selectedStockIndex < 0)
+        {
+            selectedStockIndex = stocks.Count - 1;
+        }
+    }
+
     public void BuyStocks()
     {
         if (gameManager.playerData.iridium_Current >= stocks[selectedStockIndex].totalPrice)
         {
             stocks[selectedStockIndex].stockOwned += stocks[selectedStockIndex].amountToBuy;
             gameManager.playerData.iridium_Current -= stocks[selectedStockIndex].totalPrice;
+            stocks[selectedStockIndex].purchasedThisCycle = true;
         }
         else
         {
@@ -110,7 +193,20 @@ public class StockManager : MonoBehaviour
         }
     }
 
-    public void NextButton()
+    public void SellStocks()
+    {
+        if (stocks[selectedStockIndex].amountToBuy >= stocks[selectedStockIndex].stockOwned)
+        {
+            stocks[selectedStockIndex].stockOwned -= stocks[selectedStockIndex].amountToBuy;
+            gameManager.playerData.iridium_Current += stocks[selectedStockIndex].totalPrice;
+        }
+        else
+        {
+            Debug.LogError($"Not Enough {stocks[selectedStockIndex].amountToBuy} stocks to sell!");
+        }
+    }
+
+    public void NextAmountBuy()
     {
         if (gameManager.playerData.iridium_Current >= stocks[selectedStockIndex].totalPricePlusNext)
         {
@@ -124,7 +220,7 @@ public class StockManager : MonoBehaviour
         }
     }
 
-    public void MegaNextButton()
+    public void MegaNextAmountBuy()
     {
         if (gameManager.playerData.iridium_Current >= stocks[selectedStockIndex].totalPricePlusMegaNext)
         {
@@ -138,18 +234,23 @@ public class StockManager : MonoBehaviour
         }
     }
 
-    public void PreviousButton()
+    public void PreviousAmountBuy()
     {
         stocks[selectedStockIndex].amountToBuy -= stocks[selectedStockIndex].previousStep;
         stocks[selectedStockIndex].amountToBuy = Math.Clamp(stocks[selectedStockIndex].amountToBuy, stocks[selectedStockIndex].stockMinimumBuy, long.MaxValue);
         RefreshPrices();
     }
 
-    public void MegaPreviousButton()
+    public void MegaPreviousAmountBuy()
     {
         stocks[selectedStockIndex].amountToBuy -= stocks[selectedStockIndex].megaPreviousStep;
         stocks[selectedStockIndex].amountToBuy = Math.Clamp(stocks[selectedStockIndex].amountToBuy, stocks[selectedStockIndex].stockMinimumBuy, long.MaxValue);
         RefreshPrices();
+    }
+
+    public List<Stock> GetStocks()
+    {
+        return stocks;
     }
 
     public StockSO GetStockSO(string sName)

@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button button_GetIridium;
     [SerializeField] private Button button_GetBoost;
     [SerializeField] private Button button_StocksMenu;
+    [SerializeField] private Button button_SellStocksMenu;
     [SerializeField] private Button button_UpgradeClick;
 
     private TMP_Text text_GetIridiumButton;
@@ -75,10 +76,15 @@ public class UIManager : MonoBehaviour
     [Header("Stocks UI")]
     [SerializeField] private GameObject stocksUI;
     [SerializeField] private TMP_Text text_StockName;
+    [SerializeField] private TMP_Text text_StockNextExpire;
+    [SerializeField] private Button nextStock;
+    [SerializeField] private Button prevStock;
+    [SerializeField] private TMP_Text text_StockOwned;
     [SerializeField] private TMP_Text text_StockNextRefresh;
     [SerializeField] private TMP_Text text_CurrentPrice;
     [SerializeField] private TMP_Text text_AmountToBuy;
     [SerializeField] private Button button_BuyStocks;
+    private TMP_Text text_BuyStocksButton;
     [SerializeField] private Button button_Prev;
     [SerializeField] private Button button_MegaPrev;
     [SerializeField] private Button button_Next;
@@ -88,9 +94,26 @@ public class UIManager : MonoBehaviour
 
     private GameManager gameManager;
 
-    private void Awake()
+    public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
+
+        InitializeAllUI();
+    }
+
+    public void InitializeAllUI()
+    {
+        InitializeMainUI();
+
+        InitializeBuildingUI();
+
+        InitializeBoostUI();
+
+        InitializeStocksUI();
+
+        InitializeProfileSelectUI();
+
+        InitializeProfileCreateUI();
     }
 
     public void StartGame()
@@ -115,12 +138,11 @@ public class UIManager : MonoBehaviour
 
     public void CloseAllPanels()
     {
+        CloseMainUI();
         CloseBoostMenu();
         CloseBuildingMenu();
         CloseProfileUI();
         CloseProfileCreatePanel();
-
-        OpenMainUI();
     }
 
     #region Always On UI
@@ -181,16 +203,21 @@ public class UIManager : MonoBehaviour
 
     #region Main UI
 
-    public void OpenMainUI()
+    public void InitializeMainUI()
     {
         text_GetIridiumButton = button_GetIridium.GetComponentInChildren<TMP_Text>();
         text_UpgradeClickButton = button_UpgradeClick.GetComponentInChildren<TMP_Text>();
         text_UpgradeBuildingButton = button_UpgradeBuilding.GetComponentInChildren<TMP_Text>();
 
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
-        button_StocksMenu.onClick.AddListener(OpenStocksMenu);
+        button_StocksMenu.onClick.AddListener(() => OpenStocksMenu(false));
+        button_SellStocksMenu.onClick.AddListener(() => OpenStocksMenu(true));
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
+    }
 
+    public void OpenMainUI()
+    {
+        Debug.Log("Yo");
         mainUI.SetActive(true);
     }
 
@@ -208,27 +235,25 @@ public class UIManager : MonoBehaviour
     public void CloseMainUI()
     {
         mainUI.SetActive(false);
-
-        button_GetBoost.onClick.RemoveAllListeners();
-        button_StocksMenu.onClick.RemoveAllListeners();
-        button_UpgradeClick.onClick.RemoveAllListeners();
     }
 
     #endregion
 
     #region Building UI
 
+    public void InitializeBuildingUI()
+    {
+        button_Back_Building.onClick.AddListener(CloseBuildingMenu);
+    }
+
     public void OpenBuildingMenu()
     {
         Building localSelectedBuilding = gameManager.BuildingManagerRef.selectedBuilding;
 
         CloseAllPanels();
-        CloseMainUI();
 
         gameManager.BuildingManagerRef.selectedBuilding = localSelectedBuilding;
-        button_Back_Building.onClick.AddListener(CloseBuildingMenu);
         PopulateBuildingUI();
-
         buildingUI.SetActive(true);
     }
 
@@ -351,7 +376,6 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         buildingUI.SetActive(false);
-        button_Back_Building.onClick.RemoveAllListeners();
         gameManager.BuildingManagerRef.selectedBuilding = null;
     }
 
@@ -359,14 +383,16 @@ public class UIManager : MonoBehaviour
 
     #region Boost UI
 
+    public void InitializeBoostUI()
+    {
+        button_Back_Boost.onClick.AddListener(CloseBoostMenu);
+    }
+
     public void OpenBoostMenu()
     {
         CloseAllPanels();
-        CloseMainUI();
 
-        button_Back_Boost.onClick.AddListener(CloseBoostMenu);
         PopulateBoostUI();
-
         boostUI.SetActive(true);
     }
 
@@ -459,30 +485,51 @@ public class UIManager : MonoBehaviour
     {
         OpenMainUI();
 
-        button_Back_Boost.onClick.RemoveAllListeners();
         boostUI.SetActive(false);
         CleanUpBoostUI();
     }
 
     #endregion
 
-    #region StocksUI
+    #region Stocks UI
 
-    public void OpenStocksMenu()
+    public void InitializeStocksUI()
     {
-        CloseAllPanels();
-        CloseMainUI();
+        nextStock.onClick.AddListener(gameManager.StockManagerRef.NextStock);
+        prevStock.onClick.AddListener(gameManager.StockManagerRef.PreviousStock);
 
+        button_Prev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountBuy);
+        button_MegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountBuy);
 
-        button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
-
-        button_Prev.onClick.AddListener(gameManager.StockManagerRef.PreviousButton);
-        button_MegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousButton);
-
-        button_Next.onClick.AddListener(gameManager.StockManagerRef.NextButton);
-        button_MegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextButton);
+        button_Next.onClick.AddListener(gameManager.StockManagerRef.NextAmountBuy);
+        button_MegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountBuy);
 
         button_StocksBack.onClick.AddListener(CloseStocksMenu);
+
+        text_BuyStocksButton = button_BuyStocks.GetComponentInChildren<TMP_Text>();
+    }
+
+    public void OpenStocksMenu(bool sellMode)
+    {
+        CloseAllPanels();
+
+        gameManager.StockManagerRef.sellMode = sellMode;
+
+        for (int i = 0; i < gameManager.StockManagerRef.stocks.Count; i++)
+        {
+            gameManager.StockManagerRef.stocks[i].amountToBuy = gameManager.StockManagerRef.stocks[i].stockMinimumBuy;
+        }
+
+        button_BuyStocks.onClick.RemoveAllListeners();
+
+        if (sellMode)
+        {
+            button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.SellStocks);
+        }
+        else
+        {
+            button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
+        }
 
         stocksUI.SetActive(true);
     }
@@ -492,17 +539,36 @@ public class UIManager : MonoBehaviour
         if (!stocksUI.activeSelf) return;
 
         StockManager localSM = gameManager.StockManagerRef;
+        DateTime localNow = DateTime.Now;
 
-        text_StockName.text = localSM.stocks[gameManager.StockManagerRef.selectedStockIndex].stockName;
-        text_StockNextRefresh.text = NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - DateTime.Now).TotalSeconds, FormattingTypes.Time);
+        text_StockName.text = localSM.stocks[localSM.selectedStockIndex].stockName;
+        text_StockNextExpire.text = "Expires in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.Time);
+
+        text_StockOwned.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockOwned, FormattingTypes.Iridium) + " Owned";
+
+        text_StockNextRefresh.text = "Refreshes in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.Time);
+
+        if (localSM.sellMode)
+        {
+            text_BuyStocksButton.text = "Sell";
+
+            button_Next.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].nextStep);
+            button_MegaNext.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].megaNextStep);
+
+            button_BuyStocks.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= localSM.stocks[localSM.selectedStockIndex].amountToBuy;
+        }
+        else
+        {
+            text_BuyStocksButton.text = "Buy";
+
+            button_Next.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
+            button_MegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;
+
+            button_BuyStocks.interactable = ((gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice) && !localSM.stocks[localSM.selectedStockIndex].purchasedThisCycle);
+        }
 
         button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
         button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
-
-        button_BuyStocks.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice;
-
-        button_Next.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
-        button_MegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;
 
         text_CurrentPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].stockCurrentValue, FormattingTypes.Stocks);
         text_AmountToBuy.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].amountToBuy, FormattingTypes.Iridium);
@@ -513,16 +579,6 @@ public class UIManager : MonoBehaviour
     {
         OpenMainUI();
 
-        button_BuyStocks.onClick.RemoveAllListeners();
-
-        button_Prev.onClick.RemoveAllListeners();
-        button_MegaPrev.onClick.RemoveAllListeners();
-
-        button_Next.onClick.RemoveAllListeners();
-        button_MegaNext.onClick.RemoveAllListeners();
-
-        button_StocksBack.onClick.RemoveAllListeners();
-
         stocksUI.SetActive(false);
     }
 
@@ -530,10 +586,14 @@ public class UIManager : MonoBehaviour
 
     #region Profile Select UI
 
+    public void InitializeProfileSelectUI()
+    {
+        button_newProfile.onClick.AddListener(OpenProfileCreatePanel);
+    }
+
     public void OpenProfileSelect()
     {
         profileSelectionUI.SetActive(true);
-        button_newProfile.onClick.AddListener(OpenProfileCreatePanel);
     }
 
     public void PopulateProfileSelectUI(List<PlayerData> profilesList)
@@ -587,7 +647,6 @@ public class UIManager : MonoBehaviour
 
     public void CloseProfileUI()
     {
-        button_newProfile.onClick.RemoveAllListeners();
         profileSelectionUI.SetActive(false);
     }
 
@@ -595,13 +654,16 @@ public class UIManager : MonoBehaviour
 
     #region Profile Create UI
 
+    public void InitializeProfileCreateUI()
+    {
+        button_CreateProfile.onClick.AddListener(CreateProfile);
+    }
+
     public void OpenProfileCreatePanel()
     {
-        CloseAllPanels();
-        CloseMainUI();
+        CloseProfileUI();
 
         profileCreationUI.SetActive(true);
-        button_CreateProfile.onClick.AddListener(CreateProfile);
     }
 
     public void CreateProfile()
@@ -622,7 +684,7 @@ public class UIManager : MonoBehaviour
     public void CloseProfileCreatePanel()
     {
         OpenMainUI();
-        button_CreateProfile.onClick.RemoveAllListeners();
+
         profileCreationUI.SetActive(false);
     }
 
