@@ -25,7 +25,7 @@ public class EnemyShipManager : MonoBehaviour
 
     private GameManager gameManager;
 
-    private void Awake()
+    public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
     }

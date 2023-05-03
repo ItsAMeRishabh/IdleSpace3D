@@ -9,6 +9,7 @@ public class StockSO : ScriptableObject
     public double stockBaseValue = 10;
     public Vector2 stockVariance = new Vector2(0.5f, 2f);
     public double stockRefreshTime = 3600.0;
+    public double stockExpireTime = 86400.0;
 
     public long stockMinimumBuy = 10;
     public long nextStep = 10;

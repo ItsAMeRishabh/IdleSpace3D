@@ -14,7 +14,7 @@ public class BuildingManager : MonoBehaviour
     private Dictionary<Transform, Building> buildingLocationsDict = new Dictionary<Transform, Building>();
     private GameManager gameManager;
 
-    public void Awake()
+    public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
     }

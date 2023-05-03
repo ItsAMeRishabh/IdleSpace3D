@@ -17,7 +17,7 @@ public class LoadSaveSystem : MonoBehaviour
 
     private GameManager gameManager;
 
-    void Awake()
+    public void WakeUp()
     {
         saveDir = Application.persistentDataPath + "/" + folderName + "/";
         if (!Directory.Exists(saveDir))
@@ -36,7 +36,7 @@ public class LoadSaveSystem : MonoBehaviour
             string[] files = Directory.GetFiles(saveDir);
             foreach (string file in files)
             {
-                string jsonData = File.ReadAllText(file); 
+                string jsonData = File.ReadAllText(file);
                 PlayerData playerData = JsonUtility.FromJson<PlayerData>(jsonData);
                 profilesList.Add(playerData);
             }
@@ -75,5 +75,20 @@ public class LoadSaveSystem : MonoBehaviour
         string jsonData = File.ReadAllText(saveDir + string.Concat(gameManager.playerData.profileName, ".json"));
         PlayerData playerData = JsonUtility.FromJson<PlayerData>(jsonData);
         return playerData;
+    }
+
+    [ContextMenu("Delete All Saves")]
+    public void DeleteAllSaves()
+    {
+        saveDir = Application.persistentDataPath + "/" + folderName + "/";
+
+        if (Directory.Exists(saveDir))
+        {
+            string[] files = Directory.GetFiles(saveDir);
+            foreach (string file in files)
+            {
+                File.Delete(file);
+            }
+        }
     }
 }

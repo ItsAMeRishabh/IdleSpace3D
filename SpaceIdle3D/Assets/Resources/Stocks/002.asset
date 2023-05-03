@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 860ef1ae0c22bca4181916399abca988, type: 3}
-  m_Name: 001
+  m_Name: 002
   m_EditorClassIdentifier: 
-  stockName: Primoline
-  stockBaseValue: 10
-  stockVariance: {x: 0.5, y: 2}
+  stockName: Stonks
+  stockBaseValue: 25
+  stockVariance: {x: 0.8, y: 1.5}
   stockRefreshTime: 120
-  stockExpireTime: 300
-  stockMinimumBuy: 10
-  nextStep: 10
+  stockExpireTime: 600
+  stockMinimumBuy: 25
+  nextStep: 25
   megaNextStep: 100
-  previousStep: 10
+  previousStep: 25
   megaPreviousStep: 100

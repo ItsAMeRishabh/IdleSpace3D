@@ -9,7 +9,7 @@ public class BoostManager : MonoBehaviour
     public List<Boost> activeBoosts = new List<Boost>();
     private GameManager gameManager;
 
-    public void Awake()
+    public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
     }

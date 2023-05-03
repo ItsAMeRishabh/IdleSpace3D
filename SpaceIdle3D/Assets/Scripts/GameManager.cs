@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour
 
         inputManager = new InputManager();
         dataProcessor = new DataProcessor(this);
+
+        WakeAllManagers();
     }
 
     private void OnEnable()
@@ -104,6 +106,16 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public void WakeAllManagers()
+    {
+        enemyShipManager.WakeUp();
+        buildingManager.WakeUp();
+        loadSaveSystem.WakeUp();
+        boostManager.WakeUp();
+        stockManager.WakeUp();
+        uiManager.WakeUp();
+    }
 
     private void CheckForSaves()
     {
@@ -187,7 +199,7 @@ public class GameManager : MonoBehaviour
             ProcessResourcesAdded();
 
             boostManager.ProcessBoostTimers();
-            stockManager.TickCheckRefreshStockPrices();
+            stockManager.TickStockRefresh();
             uiManager.UpdateAllUI();
             
             yield return tickWait;
@@ -358,6 +370,8 @@ public class GameManager : MonoBehaviour
         playerData.lastSaveTime = DateTime.Now;
         playerData.ownedBuildings = buildingManager.GetBuildingDataList();
         playerData.activeBoosts = boostManager.GetActiveBoosts();
+        playerData.ownedStocks = stockManager.GetStocks();
+
         loadSaveSystem.Save(playerData);
     }
 
@@ -369,8 +383,6 @@ public class GameManager : MonoBehaviour
     [ContextMenu("Try Load!")]
     public void LoadGame()
     {
-        uiManager.CloseAllPanels();
-
         playerData = loadSaveSystem.Load();
         buildingManager.SpawnBuildings(playerData.ownedBuildings);
         boostManager.LoadBoosts(playerData.activeBoosts);
@@ -380,8 +392,6 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame(string profileName)
     {
-        uiManager.CloseAllPanels();
-
         playerData = loadSaveSystem.LoadProfile(profileName);
 
         playerData = dataProcessor.WelcomeBackPlayer(playerData);

@@ -75,6 +75,10 @@ public class UIManager : MonoBehaviour
     [Header("Stocks UI")]
     [SerializeField] private GameObject stocksUI;
     [SerializeField] private TMP_Text text_StockName;
+    [SerializeField] private TMP_Text text_StockNextExpire;
+    [SerializeField] private Button nextStock;
+    [SerializeField] private Button prevStock;
+    [SerializeField] private TMP_Text text_StockOwned;
     [SerializeField] private TMP_Text text_StockNextRefresh;
     [SerializeField] private TMP_Text text_CurrentPrice;
     [SerializeField] private TMP_Text text_AmountToBuy;
@@ -88,9 +92,26 @@ public class UIManager : MonoBehaviour
 
     private GameManager gameManager;
 
-    private void Awake()
+    public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
+
+        InitializeAllUI();
+    }
+
+    public void InitializeAllUI()
+    {
+        InitializeMainUI();
+
+        InitializeBuildingUI();
+
+        InitializeBoostUI();
+
+        InitializeStocksUI();
+
+        InitializeProfileSelectUI();
+
+        InitializeProfileCreateUI();
     }
 
     public void StartGame()
@@ -115,12 +136,11 @@ public class UIManager : MonoBehaviour
 
     public void CloseAllPanels()
     {
+        CloseMainUI();
         CloseBoostMenu();
         CloseBuildingMenu();
         CloseProfileUI();
         CloseProfileCreatePanel();
-
-        OpenMainUI();
     }
 
     #region Always On UI
@@ -181,16 +201,24 @@ public class UIManager : MonoBehaviour
 
     #region Main UI
 
-    public void OpenMainUI()
+    public void InitializeMainUI()
     {
         text_GetIridiumButton = button_GetIridium.GetComponentInChildren<TMP_Text>();
         text_UpgradeClickButton = button_UpgradeClick.GetComponentInChildren<TMP_Text>();
         text_UpgradeBuildingButton = button_UpgradeBuilding.GetComponentInChildren<TMP_Text>();
 
+        button_GetBoost.onClick.RemoveAllListeners();
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
-        button_StocksMenu.onClick.AddListener(OpenStocksMenu);
-        button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
 
+        button_StocksMenu.onClick.RemoveAllListeners();
+        button_StocksMenu.onClick.AddListener(OpenStocksMenu);
+
+        button_UpgradeClick.onClick.RemoveAllListeners();
+        button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
+    }
+
+    public void OpenMainUI()
+    {
         mainUI.SetActive(true);
     }
 
@@ -208,27 +236,25 @@ public class UIManager : MonoBehaviour
     public void CloseMainUI()
     {
         mainUI.SetActive(false);
-
-        button_GetBoost.onClick.RemoveAllListeners();
-        button_StocksMenu.onClick.RemoveAllListeners();
-        button_UpgradeClick.onClick.RemoveAllListeners();
     }
 
     #endregion
 
     #region Building UI
 
+    public void InitializeBuildingUI()
+    {
+        button_Back_Building.onClick.AddListener(CloseBuildingMenu);
+    }
+
     public void OpenBuildingMenu()
     {
         Building localSelectedBuilding = gameManager.BuildingManagerRef.selectedBuilding;
 
         CloseAllPanels();
-        CloseMainUI();
 
         gameManager.BuildingManagerRef.selectedBuilding = localSelectedBuilding;
-        button_Back_Building.onClick.AddListener(CloseBuildingMenu);
         PopulateBuildingUI();
-
         buildingUI.SetActive(true);
     }
 
@@ -351,7 +377,6 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         buildingUI.SetActive(false);
-        button_Back_Building.onClick.RemoveAllListeners();
         gameManager.BuildingManagerRef.selectedBuilding = null;
     }
 
@@ -359,14 +384,16 @@ public class UIManager : MonoBehaviour
 
     #region Boost UI
 
+    public void InitializeBoostUI()
+    {
+        button_Back_Boost.onClick.AddListener(CloseBoostMenu);
+    }
+
     public void OpenBoostMenu()
     {
         CloseAllPanels();
-        CloseMainUI();
 
-        button_Back_Boost.onClick.AddListener(CloseBoostMenu);
         PopulateBoostUI();
-
         boostUI.SetActive(true);
     }
 
@@ -459,30 +486,33 @@ public class UIManager : MonoBehaviour
     {
         OpenMainUI();
 
-        button_Back_Boost.onClick.RemoveAllListeners();
         boostUI.SetActive(false);
         CleanUpBoostUI();
     }
 
     #endregion
 
-    #region StocksUI
+    #region Stocks UI
+
+    public void InitializeStocksUI()
+    {
+        nextStock.onClick.AddListener(gameManager.StockManagerRef.NextStock);
+        prevStock.onClick.AddListener(gameManager.StockManagerRef.PreviousStock);
+
+        button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
+
+        button_Prev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountBuy);
+        button_MegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountBuy);
+
+        button_Next.onClick.AddListener(gameManager.StockManagerRef.NextAmountBuy);
+        button_MegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountBuy);
+
+        button_StocksBack.onClick.AddListener(CloseStocksMenu);
+    }
 
     public void OpenStocksMenu()
     {
         CloseAllPanels();
-        CloseMainUI();
-
-
-        button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
-
-        button_Prev.onClick.AddListener(gameManager.StockManagerRef.PreviousButton);
-        button_MegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousButton);
-
-        button_Next.onClick.AddListener(gameManager.StockManagerRef.NextButton);
-        button_MegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextButton);
-
-        button_StocksBack.onClick.AddListener(CloseStocksMenu);
 
         stocksUI.SetActive(true);
     }
@@ -492,9 +522,14 @@ public class UIManager : MonoBehaviour
         if (!stocksUI.activeSelf) return;
 
         StockManager localSM = gameManager.StockManagerRef;
+        DateTime localNow = DateTime.Now;
 
-        text_StockName.text = localSM.stocks[gameManager.StockManagerRef.selectedStockIndex].stockName;
-        text_StockNextRefresh.text = NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - DateTime.Now).TotalSeconds, FormattingTypes.Time);
+        text_StockName.text = localSM.stocks[localSM.selectedStockIndex].stockName;
+        text_StockNextExpire.text = "Expires in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.Time);
+
+        text_StockOwned.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockOwned, FormattingTypes.Iridium) + " Owned";
+
+        text_StockNextRefresh.text = "Refreshes in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.Time);
 
         button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
         button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
@@ -513,16 +548,6 @@ public class UIManager : MonoBehaviour
     {
         OpenMainUI();
 
-        button_BuyStocks.onClick.RemoveAllListeners();
-
-        button_Prev.onClick.RemoveAllListeners();
-        button_MegaPrev.onClick.RemoveAllListeners();
-
-        button_Next.onClick.RemoveAllListeners();
-        button_MegaNext.onClick.RemoveAllListeners();
-
-        button_StocksBack.onClick.RemoveAllListeners();
-
         stocksUI.SetActive(false);
     }
 
@@ -530,10 +555,14 @@ public class UIManager : MonoBehaviour
 
     #region Profile Select UI
 
+    public void InitializeProfileSelectUI()
+    {
+        button_newProfile.onClick.AddListener(OpenProfileCreatePanel);
+    }
+
     public void OpenProfileSelect()
     {
         profileSelectionUI.SetActive(true);
-        button_newProfile.onClick.AddListener(OpenProfileCreatePanel);
     }
 
     public void PopulateProfileSelectUI(List<PlayerData> profilesList)
@@ -587,7 +616,6 @@ public class UIManager : MonoBehaviour
 
     public void CloseProfileUI()
     {
-        button_newProfile.onClick.RemoveAllListeners();
         profileSelectionUI.SetActive(false);
     }
 
@@ -595,13 +623,16 @@ public class UIManager : MonoBehaviour
 
     #region Profile Create UI
 
+    public void InitializeProfileCreateUI()
+    {
+        button_CreateProfile.onClick.AddListener(CreateProfile);
+    }
+
     public void OpenProfileCreatePanel()
     {
         CloseAllPanels();
-        CloseMainUI();
 
         profileCreationUI.SetActive(true);
-        button_CreateProfile.onClick.AddListener(CreateProfile);
     }
 
     public void CreateProfile()
@@ -622,7 +653,7 @@ public class UIManager : MonoBehaviour
     public void CloseProfileCreatePanel()
     {
         OpenMainUI();
-        button_CreateProfile.onClick.RemoveAllListeners();
+
         profileCreationUI.SetActive(false);
     }
 
