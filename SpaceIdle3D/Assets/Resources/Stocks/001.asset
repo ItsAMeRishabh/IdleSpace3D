@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 001
   m_EditorClassIdentifier: 
   stockName: Primoline
-  stockBaseValue: 10000
+  stockBaseValue: 10
   stockVariance: {x: 0.5, y: 2}
   stockRefreshTime: 120
   stockExpireTime: 300
