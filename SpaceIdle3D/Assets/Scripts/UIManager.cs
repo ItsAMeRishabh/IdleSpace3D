@@ -172,7 +172,7 @@ public class UIManager : MonoBehaviour
     public void UpdateAlwaysOnUI()
     {
         text_TotalIridium.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_Current, FormattingTypes.Iridium);
-        text_IridiumPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerSecondBoosted, FormattingTypes.IridiumPerSecond) + " /s";
+        text_IridiumPerSecond.text = NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerSecond * gameManager.playerData.iridium_PerSecondBoost), FormattingTypes.IridiumPerSecond) + " /s";
 
         text_TotalDarkElixir.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_Total, FormattingTypes.DarkElixer);
         text_DarkElixirPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecond, FormattingTypes.DarkElixer);
@@ -225,7 +225,7 @@ public class UIManager : MonoBehaviour
     {
         if (!mainUI.activeSelf) return;
 
-        text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerClickBoosted, FormattingTypes.IridiumPerSecond) + " Iridium)";
+        text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerClick * gameManager.playerData.iridium_PerClickBoost), FormattingTypes.IridiumPerSecond) + " Iridium)";
 
         text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
 

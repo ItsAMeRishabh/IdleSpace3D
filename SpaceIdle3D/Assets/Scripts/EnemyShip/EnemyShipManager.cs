@@ -86,7 +86,7 @@ public class EnemyShipManager : MonoBehaviour
         ship.fallSpeed = shipFallSpeed;
         ship.selfDestroyDelay = selfDestroyDelay;
 
-        ship.iridiumReward = gameManager.playerData.iridium_PerSecond * iridiumReward;
+        ship.iridiumReward = (gameManager.playerData.iridium_PerSecond * gameManager.playerData.iridium_PerSecondBoost) * iridiumReward;
         ship.darkElixirReward = darkElixirReward;
         ship.cosmiumReward = cosmiumReward;
 

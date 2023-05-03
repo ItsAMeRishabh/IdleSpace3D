@@ -13,17 +13,17 @@ public class PlayerData
     public double iridium_Total;
     public double iridium_Current;
     [NonSerialized] public double iridium_PerSecond;
-    [NonSerialized] public double iridium_PerSecondBoosted;
+    [NonSerialized] public double iridium_PerSecondBoost;
 
     public double iridium_PerClickRate;
     public int iridium_PerClickLevel;
     [NonSerialized] public double iridium_PerClick;
-    [NonSerialized] public double iridium_PerClickBoosted;
+    [NonSerialized] public double iridium_PerClickBoost;
 
     public double darkElixir_Total;
     public double darkElixir_Current;
     public double darkElixir_PerSecond;
-    [NonSerialized] public double darkElixir_PerSecondBoosted;
+    [NonSerialized] public double darkElixir_PerSecondBoost;
 
     public double cosmium_Total;
     public double cosmium_Current;

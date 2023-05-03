@@ -258,7 +258,7 @@ public class GameManager : MonoBehaviour
 
     private void ProcessDarkElixirAdded()
     {
-        playerData.darkElixir_Total += playerData.darkElixir_PerSecondBoosted / ticksPerSecond;
+        playerData.darkElixir_Total += (playerData.darkElixir_PerSecond * playerData.darkElixir_PerSecondBoost) / ticksPerSecond;
     }
 
     #region Iridium Processors
@@ -276,8 +276,8 @@ public class GameManager : MonoBehaviour
                     holdFarmCoroutine = null;
                 }
 
-                playerData.iridium_Total += playerData.iridium_PerClickBoosted;
-                playerData.iridium_Current += playerData.iridium_PerClickBoosted;
+                playerData.iridium_Total += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost);
+                playerData.iridium_Current += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost);
 
                 holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
                 holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());
@@ -287,8 +287,8 @@ public class GameManager : MonoBehaviour
 
     private void ProcessIridiumPerBuilding()
     {
-        playerData.iridium_Total += playerData.iridium_PerSecondBoosted / ticksPerSecond;
-        playerData.iridium_Current += playerData.iridium_PerSecondBoosted / ticksPerSecond;
+        playerData.iridium_Total += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
+        playerData.iridium_Current += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
     }
 
     #endregion

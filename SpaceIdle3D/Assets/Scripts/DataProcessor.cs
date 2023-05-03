@@ -85,16 +85,16 @@ public class DataProcessor
     public void UpdateIridiumSources(PlayerData playerData)
     {
         playerData.iridium_PerSecond = GetBaseIridiumPerSecond(playerData);
-        playerData.iridium_PerSecondBoosted = GetBoostedIridiumPerSecond(playerData);
+        playerData.iridium_PerSecondBoost = GetIridiumPerSecondBoost(playerData);
 
         playerData.iridium_PerClick = GetBaseIridiumPerClick(playerData);
-        playerData.iridium_PerClickBoosted = GetBoostedIridiumPerClick(playerData);
+        playerData.iridium_PerClickBoost = GetIridiumPerClickBoost(playerData);
     }
 
     public void UpdateDarkElixirSources(PlayerData playerData)
     {
         playerData.darkElixir_PerSecond = GetBaseDarkElixirPerSecond(playerData);
-        playerData.darkElixir_PerSecondBoosted = GetBoostedDarkElixirPerSecond(playerData);
+        playerData.darkElixir_PerSecondBoost = GetDarkElixirPerSecondBoost(playerData);
     }
 
     public double GetBaseIridiumPerSecond(PlayerData playerData)
@@ -120,35 +120,35 @@ public class DataProcessor
         return baseIPS;
     }
 
-    public double GetBoostedIridiumPerSecond(PlayerData playerData)
+    public double GetIridiumPerSecondBoost(PlayerData playerData)
     {
-        double boostedIPS = playerData.iridium_PerSecond;
+        double IPS_Boost = 1;
 
         foreach (Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
-            boostedIPS *= boost.boost_IridiumPerSecond;
+            IPS_Boost *= boost.boost_IridiumPerSecond;
         }
 
-        return boostedIPS;
+        return IPS_Boost;
     }
 
     public double GetBaseIridiumPerClick(PlayerData playerData)
     {
-        double baseIPC = Math.Max(1, playerData.iridium_PerSecondBoosted * playerData.iridium_PerClickLevel / 100f);
+        double baseIPC = Math.Max(1, (playerData.darkElixir_PerSecond * playerData.iridium_PerSecondBoost) * playerData.iridium_PerClickLevel / 100f);
 
         return baseIPC;
     }
 
-    public double GetBoostedIridiumPerClick(PlayerData playerData)
+    public double GetIridiumPerClickBoost(PlayerData playerData)
     {
-        double boostedIPC = playerData.iridium_PerClick;
+        double IPC_Boost = 1;
 
         foreach (Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
-            boostedIPC *= boost.boost_IridiumPerClick;
+            IPC_Boost *= boost.boost_IridiumPerClick;
         }
 
-        return boostedIPC;
+        return IPC_Boost;
     }
 
     public double GetBaseDarkElixirPerSecond(PlayerData playerData)
@@ -156,16 +156,16 @@ public class DataProcessor
         return playerData.darkElixir_PerSecond;
     }
 
-    public double GetBoostedDarkElixirPerSecond(PlayerData playerData)
+    public double GetDarkElixirPerSecondBoost(PlayerData playerData)
     {
-        double boostedDEPS = playerData.darkElixir_PerSecond;
+        double DEPS_Boost = 1;
 
         foreach (Boost boost in gameManager.BoostManagerRef.activeBoosts)
         {
-            boostedDEPS *= boost.boost_DarkElixirPerSecond;
+            DEPS_Boost *= boost.boost_DarkElixirPerSecond;
         }
 
-        return boostedDEPS;
+        return DEPS_Boost;
     }
 
     public PlayerData ResourcesGainedAfterIdle(PlayerData playerData)
