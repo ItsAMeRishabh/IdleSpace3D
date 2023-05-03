@@ -18,6 +18,7 @@ public class Stock
     [NonSerialized] public long megaPreviousStep;
 
     public long stockOwned;
+    public bool purchasedThisCycle;
     [NonSerialized] public long amountToBuy;
     public JsonDateTime nextRefreshTime;
     public JsonDateTime nextExpireTime;
@@ -59,6 +60,7 @@ public class Stock
         megaPreviousStep = so.megaPreviousStep;
 
         stockOwned = s.stockOwned;
+        purchasedThisCycle = s.purchasedThisCycle;
         nextRefreshTime = s.nextRefreshTime;
         nextExpireTime = s.nextExpireTime;
     }

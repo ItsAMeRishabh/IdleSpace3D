@@ -89,6 +89,7 @@ public class LoadSaveSystem : MonoBehaviour
             {
                 File.Delete(file);
             }
+            Debug.Log($"Deleted {files.Length} save files");
         }
     }
 }

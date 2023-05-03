@@ -50,6 +50,7 @@ public class StockManager : MonoBehaviour
 
         CheckRefreshStockPrices();
         CheckStockExpiry();
+        RefreshPrices();
     }
 
     public void CheckRefreshStockPrices()
@@ -147,6 +148,7 @@ public class StockManager : MonoBehaviour
     public void ExpireStock(int index = 0)
     {
         stocks[index].stockOwned = 0;
+        stocks[index].purchasedThisCycle = false;
     }
 
     public void RefreshPrices()
@@ -183,6 +185,7 @@ public class StockManager : MonoBehaviour
         {
             stocks[selectedStockIndex].stockOwned += stocks[selectedStockIndex].amountToBuy;
             gameManager.playerData.iridium_Current -= stocks[selectedStockIndex].totalPrice;
+            stocks[selectedStockIndex].purchasedThisCycle = true;
         }
         else
         {
@@ -192,7 +195,7 @@ public class StockManager : MonoBehaviour
 
     public void SellStocks()
     {
-        if (stocks[selectedStockIndex].totalPrice >= stocks[selectedStockIndex].amountToBuy)
+        if (stocks[selectedStockIndex].amountToBuy >= stocks[selectedStockIndex].stockOwned)
         {
             stocks[selectedStockIndex].stockOwned -= stocks[selectedStockIndex].amountToBuy;
             gameManager.playerData.iridium_Current += stocks[selectedStockIndex].totalPrice;

@@ -217,6 +217,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenMainUI()
     {
+        Debug.Log("Yo");
         mainUI.SetActive(true);
     }
 
@@ -513,9 +514,15 @@ public class UIManager : MonoBehaviour
         CloseAllPanels();
 
         gameManager.StockManagerRef.sellMode = sellMode;
+
+        for (int i = 0; i < gameManager.StockManagerRef.stocks.Count; i++)
+        {
+            gameManager.StockManagerRef.stocks[i].amountToBuy = gameManager.StockManagerRef.stocks[i].stockMinimumBuy;
+        }
+
         button_BuyStocks.onClick.RemoveAllListeners();
 
-        if(sellMode)
+        if (sellMode)
         {
             button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.SellStocks);
         }
@@ -541,26 +548,27 @@ public class UIManager : MonoBehaviour
 
         text_StockNextRefresh.text = "Refreshes in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.Time);
 
-        button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
-        button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
-
-        if(localSM.sellMode)
+        if (localSM.sellMode)
         {
-            button_BuyStocks.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= localSM.stocks[localSM.selectedStockIndex].amountToBuy;
+            text_BuyStocksButton.text = "Sell";
 
             button_Next.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].nextStep);
             button_MegaNext.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].megaNextStep);
 
-            text_BuyStocksButton.text = "Sell";
+            button_BuyStocks.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= localSM.stocks[localSM.selectedStockIndex].amountToBuy;
         }
         else
         {
-            button_BuyStocks.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice;
             text_BuyStocksButton.text = "Buy";
+
+            button_Next.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
+            button_MegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;
+
+            button_BuyStocks.interactable = ((gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice) && !localSM.stocks[localSM.selectedStockIndex].purchasedThisCycle);
         }
 
-        button_Next.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
-        button_MegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;
+        button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
+        button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
 
         text_CurrentPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].stockCurrentValue, FormattingTypes.Stocks);
         text_AmountToBuy.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].amountToBuy, FormattingTypes.Iridium);
@@ -653,7 +661,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenProfileCreatePanel()
     {
-        CloseAllPanels();
+        CloseProfileUI();
 
         profileCreationUI.SetActive(true);
     }
