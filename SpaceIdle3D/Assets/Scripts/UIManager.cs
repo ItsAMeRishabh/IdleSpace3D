@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button button_GetIridium;
     [SerializeField] private Button button_GetBoost;
     [SerializeField] private Button button_StocksMenu;
+    [SerializeField] private Button button_SellStocksMenu;
     [SerializeField] private Button button_UpgradeClick;
 
     private TMP_Text text_GetIridiumButton;
@@ -83,6 +84,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text text_CurrentPrice;
     [SerializeField] private TMP_Text text_AmountToBuy;
     [SerializeField] private Button button_BuyStocks;
+    private TMP_Text text_BuyStocksButton;
     [SerializeField] private Button button_Prev;
     [SerializeField] private Button button_MegaPrev;
     [SerializeField] private Button button_Next;
@@ -207,13 +209,9 @@ public class UIManager : MonoBehaviour
         text_UpgradeClickButton = button_UpgradeClick.GetComponentInChildren<TMP_Text>();
         text_UpgradeBuildingButton = button_UpgradeBuilding.GetComponentInChildren<TMP_Text>();
 
-        button_GetBoost.onClick.RemoveAllListeners();
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
-
-        button_StocksMenu.onClick.RemoveAllListeners();
-        button_StocksMenu.onClick.AddListener(OpenStocksMenu);
-
-        button_UpgradeClick.onClick.RemoveAllListeners();
+        button_StocksMenu.onClick.AddListener(() => OpenStocksMenu(false));
+        button_SellStocksMenu.onClick.AddListener(() => OpenStocksMenu(true));
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
     }
 
@@ -499,8 +497,6 @@ public class UIManager : MonoBehaviour
         nextStock.onClick.AddListener(gameManager.StockManagerRef.NextStock);
         prevStock.onClick.AddListener(gameManager.StockManagerRef.PreviousStock);
 
-        button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
-
         button_Prev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountBuy);
         button_MegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountBuy);
 
@@ -508,11 +504,25 @@ public class UIManager : MonoBehaviour
         button_MegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountBuy);
 
         button_StocksBack.onClick.AddListener(CloseStocksMenu);
+
+        text_BuyStocksButton = button_BuyStocks.GetComponentInChildren<TMP_Text>();
     }
 
-    public void OpenStocksMenu()
+    public void OpenStocksMenu(bool sellMode)
     {
         CloseAllPanels();
+
+        gameManager.StockManagerRef.sellMode = sellMode;
+        button_BuyStocks.onClick.RemoveAllListeners();
+
+        if(sellMode)
+        {
+            button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.SellStocks);
+        }
+        else
+        {
+            button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
+        }
 
         stocksUI.SetActive(true);
     }
@@ -534,7 +544,20 @@ public class UIManager : MonoBehaviour
         button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
         button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
 
-        button_BuyStocks.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice;
+        if(localSM.sellMode)
+        {
+            button_BuyStocks.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= localSM.stocks[localSM.selectedStockIndex].amountToBuy;
+
+            button_Next.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].nextStep);
+            button_MegaNext.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].megaNextStep);
+
+            text_BuyStocksButton.text = "Sell";
+        }
+        else
+        {
+            button_BuyStocks.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice;
+            text_BuyStocksButton.text = "Buy";
+        }
 
         button_Next.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
         button_MegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;

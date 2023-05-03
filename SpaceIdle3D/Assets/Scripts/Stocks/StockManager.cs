@@ -11,6 +11,7 @@ public class StockManager : MonoBehaviour
 
     public int selectedStockIndex;
 
+    public bool sellMode = false;
     private DateTime localNow;
     private GameManager gameManager;
 
@@ -186,6 +187,19 @@ public class StockManager : MonoBehaviour
         else
         {
             Debug.LogError($"Not Enough to buy {stocks[selectedStockIndex].amountToBuy} stocks!");
+        }
+    }
+
+    public void SellStocks()
+    {
+        if (stocks[selectedStockIndex].totalPrice >= stocks[selectedStockIndex].amountToBuy)
+        {
+            stocks[selectedStockIndex].stockOwned -= stocks[selectedStockIndex].amountToBuy;
+            gameManager.playerData.iridium_Current += stocks[selectedStockIndex].totalPrice;
+        }
+        else
+        {
+            Debug.LogError($"Not Enough {stocks[selectedStockIndex].amountToBuy} stocks to sell!");
         }
     }
 
