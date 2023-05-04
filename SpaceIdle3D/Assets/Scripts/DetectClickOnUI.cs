@@ -4,13 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DetectClickOnUI : MonoBehaviour
-// ... And many more available!
 {
     public static bool IsPointerOverUIElement()
     {
         return IsPointerOverUIElement(GetEventSystemRaycastResults());
     }
-    ///Returns 'true' if we touched or hovering on Unity UI element.
     public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
     {
         for (int index = 0; index < eventSystemRaysastResults.Count; index++)
@@ -21,7 +19,6 @@ public class DetectClickOnUI : MonoBehaviour
         }
         return false;
     }
-    ///Gets all event systen raycast results of current mouse or touch position.
     static List<RaycastResult> GetEventSystemRaycastResults()
     {
         PointerEventData eventData = new PointerEventData(EventSystem.current);

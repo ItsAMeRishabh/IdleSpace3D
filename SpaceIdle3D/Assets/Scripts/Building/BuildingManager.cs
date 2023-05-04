@@ -281,6 +281,7 @@ public class BuildingManager : MonoBehaviour
             BuildingData buildingData = building.buildingData;
             buildingData.building_Level++;
             Destroy(building.transform.parent.gameObject);
+            
             selectedBuilding = PlaceBuilding(buildingSO, buildingData);
             gameManager.UpdateResourceSources();
             gameManager.UpdateCosts();

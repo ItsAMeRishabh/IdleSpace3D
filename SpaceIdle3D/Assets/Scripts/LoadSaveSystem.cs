@@ -53,6 +53,15 @@ public class LoadSaveSystem : MonoBehaviour
         return playerData;
     }
 
+    public void Save()
+    {
+        string jsonData = JsonUtility.ToJson(gameManager.playerData, true);
+        File.WriteAllText(saveDir + string.Concat(gameManager.playerData.profileName, ".json"), jsonData);
+
+        GUIUtility.systemCopyBuffer = saveDir + string.Concat(gameManager.playerData.profileName, ".json");
+    }
+
+    [ContextMenu("Save Game")]
     public void Save(PlayerData playerData)
     {
         string jsonData = JsonUtility.ToJson(playerData, true);
@@ -61,14 +70,6 @@ public class LoadSaveSystem : MonoBehaviour
         GUIUtility.systemCopyBuffer = saveDir + string.Concat(playerData.profileName, ".json");
     }
 
-    //[ContextMenu("Save Game")]
-    public void Save()
-    {
-        string jsonData = JsonUtility.ToJson(gameManager.playerData, true);
-        File.WriteAllText(saveDir + string.Concat(gameManager.playerData.profileName, ".json"), jsonData);
-
-        GUIUtility.systemCopyBuffer = saveDir + string.Concat(gameManager.playerData.profileName, ".json");
-    }
 
     [ContextMenu("Load Game")]
     public PlayerData Load()

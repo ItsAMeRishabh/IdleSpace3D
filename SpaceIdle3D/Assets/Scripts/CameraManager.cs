@@ -23,6 +23,7 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 lastCameraPosition;
     private BuildingManager buildingManager;
+
     private void Start()
     {
         buildingManager = FindObjectOfType<BuildingManager>();

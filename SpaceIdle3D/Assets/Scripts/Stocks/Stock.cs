@@ -20,6 +20,7 @@ public class Stock
     public long stockOwned;
     public bool purchasedThisCycle;
     [NonSerialized] public long amountToBuy;
+    public double lastBuyPrice;
     public JsonDateTime nextRefreshTime;
     public JsonDateTime nextExpireTime;
 

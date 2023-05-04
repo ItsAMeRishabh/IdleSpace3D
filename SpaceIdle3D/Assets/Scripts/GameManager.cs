@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
         playerData.iridium_PerClick = defaultValues.iridium_PerClick;
         playerData.iridium_PerClickRate = defaultValues.iridium_PerClickRate;
 
-        if(loadSaveSystem.autoSave) SaveGame();
+        if (loadSaveSystem.autoSave) SaveGame();
 
         StartGame();
     }
@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviour
             boostManager.ProcessBoostTimers();
             stockManager.TickStockRefresh();
             uiManager.UpdateAllUI();
-            
+
             yield return tickWait;
         }
     }
@@ -400,7 +400,7 @@ public class GameManager : MonoBehaviour
     {
         double baseDEPS = defaultValues.darkElixir_PerSecond;
 
-        foreach(Building building in buildingManager.ownedBuildings)
+        foreach (Building building in buildingManager.ownedBuildings)
         {
             baseDEPS += building.GetDarkElixirPerTick();
         }
@@ -428,7 +428,7 @@ public class GameManager : MonoBehaviour
         long timeElapsed = (long)(DateTime.Now - (DateTime)playerData.lastSaveTime).TotalSeconds;
         timeElapsed = (long)Math.Min(timeElapsed, playerData.maxIdleTime);
 
-        if(timeElapsed <= 5)
+        if (timeElapsed <= 5)
         {
             return;
         }
@@ -522,8 +522,6 @@ public class GameManager : MonoBehaviour
         playerData.darkElixir_Total += darkelixerToAdd;
     }
 
-    #region Save, Load and Reset
-
     [ContextMenu("Try Save!")]
     public void SaveGame()
     {
@@ -538,25 +536,10 @@ public class GameManager : MonoBehaviour
         loadSaveSystem.Save(playerData);
     }
 
-    public PlayerData GetSaveData()
-    {
-        return playerData;
-    }
-
-    [ContextMenu("Try Load!")]
-    public void LoadGame()
-    {
-        playerData = loadSaveSystem.Load();
-
-        StartGame();
-    }
-
     public void LoadGame(string profileName)
     {
         playerData = loadSaveSystem.LoadProfile(profileName);
 
         StartGame();
     }
-
-    #endregion
 }

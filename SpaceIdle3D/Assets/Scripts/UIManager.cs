@@ -245,7 +245,7 @@ public class UIManager : MonoBehaviour
 
         button_UpgradeClick.interactable = gameManager.playerData.iridium_Current > gameManager.upgradeClick_CurrentCost;
 
-        if(gameManager.BoostManagerRef.iridium_LowestTime == null)
+        if (gameManager.BoostManagerRef.iridium_LowestTime == null)
         {
             iridiumBoost_QuickInfo.SetActive(false);
         }
@@ -734,98 +734,6 @@ public class UIManager : MonoBehaviour
 
         profileCreationUI.SetActive(false);
     }
-
-    #endregion
-
-    #region Deprecated Code
-
-    /*[Header("Building Buy UI")]
-    private GameObject buildingBuyUI;
-    private Button button_Back_BuyBuilding;
-    private GameObject buildingButtonParent;
-    private GameObject buildingButtonPrefab;
-
-    private List<Button> button_Buildings;
-    private List<TMP_Text> text_BuildingNames;
-    private List<TMP_Text> text_BuildingsOwned;*/
-
-    /*public void CloseAllPanels()
-    {
-        ShowMainUI();
-        CLoseProfileNamePanel();
-        CloseProfileUI();
-        CloseBuildingMenu();
-        CloseShop();
-        CloseBoostMenu();
-    }*/
-
-    /*public void PopulateBuyBuildingUI()
-    {
-        CleanUpBuyBuildingUI();
-
-        button_Buildings = new List<Button>();
-        text_BuildingNames = new List<TMP_Text>();
-        text_BuildingCosts = new List<TMP_Text>();
-        text_BuildingsOwned = new List<TMP_Text>();
-
-        BuildingLocation[] buildings = gameManager.BuildingManager.buildingLocations.ToArray();
-
-        for (int i = 0; i < buildings.Length; i++)
-        {
-            int j = i;
-
-            GameObject newButton = Instantiate(buildingButtonPrefab, buildingButtonParent.transform);
-            newButton.name = buildings[i].buildingSO.building_Name + " Button";
-            button_Buildings.Add(newButton.GetComponent<Button>());
-            text_BuildingNames.Add(newButton.transform.GetChild(0).GetComponent<TMP_Text>());
-            text_BuildingCosts.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
-            text_BuildingsOwned.Add(newButton.transform.GetChild(2).GetComponent<TMP_Text>());
-
-            button_Buildings[i].onClick.AddListener(() => gameManager.BuyBuildingClicked(buildings[j].buildingSO));
-        }
-    }*/
-
-    /*public void CleanUpBuyBuildingUI()
-    {
-        if (button_Buildings != null)
-        {
-            foreach (Button button in button_Buildings)
-            {
-                button.onClick.RemoveAllListeners();
-            }
-
-            foreach (Button button in button_Buildings)
-            {
-                Destroy(button.gameObject);
-            }
-
-            button_Buildings.Clear();
-        }
-
-        if (text_BuildingNames != null)
-            text_BuildingNames.Clear();
-
-        if (text_BuildingCosts != null)
-            text_BuildingCosts.Clear();
-
-        if (text_BuildingsOwned != null)
-            text_BuildingsOwned.Clear();
-    }*/
-
-    /*public void OpenShop()
-    {
-        CloseAllPanels();
-        HideMainUI();
-        buildingBuyUI.SetActive(true);
-        PopulateBuyBuildingUI();
-    }*/
-
-    /*public void CloseShop()
-    {
-        ShowMainUI();
-        CleanUpBuyBuildingUI();
-        buildingBuyUI.SetActive(false);
-    }*/
 
     #endregion
 }

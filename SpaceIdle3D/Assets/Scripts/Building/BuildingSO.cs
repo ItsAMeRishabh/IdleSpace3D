@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.VFX;
 
 [CreateAssetMenu(menuName = "SpaceIdle3D/Building", fileName = "Building")]
