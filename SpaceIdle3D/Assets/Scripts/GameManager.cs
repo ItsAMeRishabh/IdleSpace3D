@@ -276,8 +276,8 @@ public class GameManager : MonoBehaviour
                     holdFarmCoroutine = null;
                 }
 
-                playerData.iridium_Total += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost);
-                playerData.iridium_Current += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost);
+                playerData.iridium_Total += (playerData.iridium_PerClick * playerData.iridium_PerClickBoost);
+                playerData.iridium_Current += (playerData.iridium_PerClick * playerData.iridium_PerClickBoost);
 
                 holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
                 holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());

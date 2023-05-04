@@ -217,7 +217,6 @@ public class UIManager : MonoBehaviour
 
     public void OpenMainUI()
     {
-        Debug.Log("Yo");
         mainUI.SetActive(true);
     }
 

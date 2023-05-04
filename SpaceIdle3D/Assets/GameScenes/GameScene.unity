@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028411, g: 0.22571488, b: 0.3069226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028435, g: 0.22571525, b: 0.30692342, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1709,9 +1709,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   folderName: Saves
-  startFreshOnLaunch: 0
+  startFreshOnLaunch: 1
   saveInterval: 5
-  autoSave: 1
+  autoSave: 0
 --- !u!114 &202234314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6911,11 +6911,11 @@ MonoBehaviour:
   mainCamera: {fileID: 1109951788}
   movementSpeed: 100
   movementTime: 5
-  movementLowerLimit: {x: -220, y: 150, z: -25}
-  movementUpperLimit: {x: 30, y: 150, z: 250}
-  zoomAmount: {x: 0, y: -2, z: 2}
-  zoomLowerLimit: -69
-  zoomUpperLimit: 200
+  movementLowerLimit: {x: -500, y: 10, z: -500}
+  movementUpperLimit: {x: 500, y: 10, z: 500}
+  zoomAmount: {x: 0, y: -20, z: 20}
+  zoomLowerLimit: 300
+  zoomUpperLimit: 500
 --- !u!4 &951805734
 Transform:
   m_ObjectHideFlags: 0
@@ -6924,7 +6924,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 951805732}
   m_LocalRotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
-  m_LocalPosition: {x: -121.721, y: 150, z: 140.60318}
+  m_LocalPosition: {x: 18, y: 10, z: 2.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8054,14 +8054,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109951787}
-  m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 0, y: 100, z: -100}
+  m_LocalRotation: {x: 0.39474386, y: 0, z: 0, w: 0.91879123}
+  m_LocalPosition: {x: 0, y: 500, z: -500}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 951805734}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 40, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 46.5, y: 0, z: 0}
 --- !u!1 &1117799707
 GameObject:
   m_ObjectHideFlags: 0
@@ -10051,7 +10051,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1622873263
 RectTransform:
   m_ObjectHideFlags: 0
