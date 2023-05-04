@@ -21,58 +21,70 @@ public class CameraManager : MonoBehaviour
     private Vector3 dragStartPosition;
     private Vector3 dragCurrentPosition;
 
+    private Vector3 lastCameraPosition;
+    private BuildingManager buildingManager;
     private void Start()
     {
+        buildingManager = FindObjectOfType<BuildingManager>();
         newPosition = transform.position;
         newZoom = mainCamera.transform.localPosition;
     }
 
     private void Update()
     {
-        HandleMouseInput();
+        if (buildingManager.selectedBuilding != null)
+        {
+            newPosition = buildingManager.selectedBuilding.transform.position;
+        }
+        else
+        {
+            HandleMouseInput();
+        }
+
+        LerpCamera();
     }
 
     private void HandleMouseInput()
     {
-        if(Input.mouseScrollDelta.y != 0)
+        if (Input.mouseScrollDelta.y != 0)
         {
             newZoom += Input.mouseScrollDelta.y * zoomAmount;
         }
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
 
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            float entry;
-
-            if(plane.Raycast(ray, out entry) && !DetectClickOnUI.IsPointerOverUIElement())
+            if (plane.Raycast(ray, out float entry) && !DetectClickOnUI.IsPointerOverUIElement())
             {
                 dragStartPosition = ray.GetPoint(entry);
             }
         }
 
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             Plane plane = new Plane(Vector3.up, Vector3.zero);
 
             Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-            float entry;
 
-            if (plane.Raycast(ray, out entry) && !DetectClickOnUI.IsPointerOverUIElement())
+            if (plane.Raycast(ray, out float entry) && !DetectClickOnUI.IsPointerOverUIElement())
             {
                 dragCurrentPosition = ray.GetPoint(entry);
 
-                // Calculate the difference between the current drag position and the initial drag position
                 Vector3 dragOffset = dragStartPosition - dragCurrentPosition;
 
                 // Update the camera's position by adding the drag offset to the initial position
                 newPosition = transform.position + dragOffset;
+                lastCameraPosition = newPosition;
             }
         }
+    }
 
+    private void LerpCamera()
+    {
         newZoom.y = Mathf.Clamp(newZoom.y, zoomLowerLimit, zoomUpperLimit);
         newZoom.z = Mathf.Clamp(newZoom.z, -zoomUpperLimit, -zoomLowerLimit);
 

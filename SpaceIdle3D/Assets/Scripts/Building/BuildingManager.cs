@@ -21,6 +21,7 @@ public class BuildingManager : MonoBehaviour
 
     public void StartGame()
     {
+        CalculateNonSerializedTroop();
         InitializeNewBuildings();
     }
 
@@ -56,6 +57,31 @@ public class BuildingManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void CalculateNonSerializedTroop()
+    {
+        List<BuildingData> ownedBuildingDatas = gameManager.playerData.ownedBuildings;
+
+        for (int i = 0; i < ownedBuildingDatas.Count; i++)
+        {
+            BuildingSO currentBuildingSO = gameManager.BuildingManagerRef.GetBuildingSO(ownedBuildingDatas[i].building_Name);
+
+            for (int j = 0; j < ownedBuildingDatas[i].building_OwnedTroops.Count; j++)
+            {
+                TroopSO currentTroop = gameManager.BuildingManagerRef.GetTroopSO(currentBuildingSO, ownedBuildingDatas[i].building_OwnedTroops[j].troop_Name);
+
+                ownedBuildingDatas[i].building_OwnedTroops[j].troop_BaseCost = currentTroop.troop_BaseCost;
+                ownedBuildingDatas[i].building_OwnedTroops[j].troop_BaseIridiumPerSecond = currentTroop.troop_BaseIridiumPerSecond;
+                ownedBuildingDatas[i].building_OwnedTroops[j].troop_IridiumBoostPerLevel = currentTroop.troop_IridiumBoostPerLevel;
+                ownedBuildingDatas[i].building_OwnedTroops[j].troop_CostMultiplier = currentTroop.troop_CostMultiplier;
+
+                ownedBuildingDatas[i].building_OwnedTroops[j].troop_IridiumMultiplier = 1 * Math.Pow(ownedBuildingDatas[i].building_OwnedTroops[j].troop_IridiumBoostPerLevel, ownedBuildingDatas[i].building_OwnedTroops[j].troop_Level - 1);
+                ownedBuildingDatas[i].building_OwnedTroops[j].troop_CurrentCost = currentTroop.troop_BaseCost * Math.Pow(ownedBuildingDatas[i].building_OwnedTroops[j].troop_CostMultiplier, ownedBuildingDatas[i].building_OwnedTroops[j].troops_Owned);
+            }
+        }
+
+        SpawnBuildings(ownedBuildingDatas);
     }
 
     public List<BuildingData> GetBuildingDataList()
@@ -318,5 +344,40 @@ public class BuildingManager : MonoBehaviour
             }
         }
         return tSO;
+    }
+
+    public void TroopBuyClicked(int troopIndex)
+    {
+        if (selectedBuilding == null)
+        {
+            Debug.LogError("No building selected, cannot buy troop.");
+        }
+        else
+        {
+            if (gameManager.playerData.iridium_Current >= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
+            {
+                gameManager.playerData.iridium_Current -= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;
+                selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troops_Owned += 1;
+                selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost = (int)(selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost * selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CostMultiplier);
+            }
+        }
+
+        gameManager.UpdateResourceSources();
+        gameManager.UpdateCosts();
+    }
+
+    public void BuildingBuyClicked(BuildingSO buildingSO)
+    {
+        double buildingPrice = buildingSO.building_UpgradeCosts[0];
+
+        if (gameManager.playerData.iridium_Current >= buildingPrice)
+        {
+            bool buildingPlacementSuccessful = PlaceBuilding(buildingSO);
+
+            if (buildingPlacementSuccessful)
+            {
+                gameManager.playerData.iridium_Current -= buildingPrice;
+            }
+        }
     }
 }

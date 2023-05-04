@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
     private EnemyShipManager enemyShipManager;
     private BuildingManager buildingManager;
     private LoadSaveSystem loadSaveSystem;
-    private DataProcessor dataProcessor;
     private StockManager stockManager;
     private BoostManager boostManager;
     private InputManager inputManager;
@@ -51,7 +50,6 @@ public class GameManager : MonoBehaviour
     public EnemyShipManager EnemyShipManagerRef => enemyShipManager;
     public BuildingManager BuildingManagerRef => buildingManager;
     public LoadSaveSystem LoadSaveSystemRef => loadSaveSystem;
-    public DataProcessor DataProcessorRef => dataProcessor;
     public StockManager StockManagerRef => stockManager;
     public BoostManager BoostManagerRef => boostManager;
     public UIManager UIManagerRef => uiManager;
@@ -68,7 +66,6 @@ public class GameManager : MonoBehaviour
         uiManager = GetComponent<UIManager>();
 
         inputManager = new InputManager();
-        dataProcessor = new DataProcessor(this);
 
         WakeAllManagers();
     }
@@ -86,10 +83,12 @@ public class GameManager : MonoBehaviour
     {
         if (loadSaveSystem.startFreshOnLaunch)
         {
+            loadSaveSystem.autoSave = false;
             StartNewGame("Default");
         }
         else
         {
+            loadSaveSystem.autoSave = true;
             CheckForSaves();
         }
     }
@@ -134,11 +133,11 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        gameHathStarted = true;
+
         StartAllManagers();
 
-        uiManager.OpenMainUI();
-
-        uiManager.CloseProfileUI();
+        ResourcesGainedAfterIdle();
 
         UpdateResourceSources(); //Update the iridium per second
 
@@ -151,6 +150,8 @@ public class GameManager : MonoBehaviour
 
     private void StartAllManagers()
     {
+        boostManager.StartGame();
+
         stockManager.StartGame();
 
         buildingManager.StartGame();
@@ -162,6 +163,8 @@ public class GameManager : MonoBehaviour
 
     public void StartNewGame(string profileName)
     {
+        gameHathStarted = true;
+
         playerData = new PlayerData();
         playerData.profileName = profileName;
         playerData.profileCreateTime = DateTime.Now;
@@ -174,8 +177,8 @@ public class GameManager : MonoBehaviour
         playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
         playerData.iridium_PerClick = defaultValues.iridium_PerClick;
         playerData.iridium_PerClickRate = defaultValues.iridium_PerClickRate;
-        playerData.ownedBuildings = defaultValues.ownedBuildings;
-        playerData.activeBoosts = defaultValues.activeBoosts;
+
+        if(loadSaveSystem.autoSave) SaveGame();
 
         StartGame();
     }
@@ -189,7 +192,6 @@ public class GameManager : MonoBehaviour
 
         tickWait = new WaitForSeconds(1.0f / ticksPerSecond);
         tickCoroutine = StartCoroutine(Tick());
-        gameHathStarted = true;
     }
 
     private IEnumerator Tick()
@@ -240,7 +242,23 @@ public class GameManager : MonoBehaviour
 
     public void UpdateResourceSources()
     {
-        dataProcessor.UpdateResourceSources(playerData);
+        UpdateIridiumSources();
+        UpdateDarkElixirSources();
+    }
+
+    public void UpdateIridiumSources()
+    {
+        playerData.iridium_PerSecond = GetBaseIridiumPerSecond();
+        playerData.iridium_PerSecondBoost = GetIridiumPerSecondBoost();
+
+        playerData.iridium_PerClick = GetBaseIridiumPerClick();
+        playerData.iridium_PerClickBoost = GetIridiumPerClickBoost();
+    }
+
+    public void UpdateDarkElixirSources()
+    {
+        playerData.darkElixir_PerSecond = GetBaseDarkElixirPerSecond();
+        playerData.darkElixir_PerSecondBoost = GetDarkElixirPerSecondBoost();
     }
 
     private void ProcessResourcesAdded()
@@ -258,7 +276,7 @@ public class GameManager : MonoBehaviour
 
     private void ProcessDarkElixirAdded()
     {
-        playerData.darkElixir_Total += playerData.darkElixir_PerSecondBoosted / ticksPerSecond;
+        playerData.darkElixir_Total += (playerData.darkElixir_PerSecond * playerData.darkElixir_PerSecondBoost) / ticksPerSecond;
     }
 
     #region Iridium Processors
@@ -276,8 +294,8 @@ public class GameManager : MonoBehaviour
                     holdFarmCoroutine = null;
                 }
 
-                playerData.iridium_Total += playerData.iridium_PerClickBoosted;
-                playerData.iridium_Current += playerData.iridium_PerClickBoosted;
+                playerData.iridium_Total += (playerData.iridium_PerClick * playerData.iridium_PerClickBoost);
+                playerData.iridium_Current += (playerData.iridium_PerClick * playerData.iridium_PerClickBoost);
 
                 holdFarmWait = new WaitForSeconds(1 / (float)playerData.iridium_PerClickRate);
                 holdFarmCoroutine = StartCoroutine(HoldFarmCoroutine());
@@ -287,8 +305,8 @@ public class GameManager : MonoBehaviour
 
     private void ProcessIridiumPerBuilding()
     {
-        playerData.iridium_Total += playerData.iridium_PerSecondBoosted / ticksPerSecond;
-        playerData.iridium_Current += playerData.iridium_PerSecondBoosted / ticksPerSecond;
+        playerData.iridium_Total += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
+        playerData.iridium_Current += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
     }
 
     #endregion
@@ -319,45 +337,190 @@ public class GameManager : MonoBehaviour
 
     public void TroopBuyClicked(int troopIndex)
     {
-        if (buildingManager.selectedBuilding == null)
-        {
-            Debug.LogError("No building selected, cannot buy troop.");
-        }
-        else
-        {
-            if (playerData.iridium_Current >= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
-            {
-                playerData.iridium_Current -= buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;
-                buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troops_Owned += 1;
-                buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost = (int)(buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost * buildingManager.selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CostMultiplier);
-            }
-        }
-
-        UpdateResourceSources();
-        UpdateCosts();
+        buildingManager.TroopBuyClicked(troopIndex);
     }
 
 
     public void BuyBuildingClicked(BuildingSO buildingSO)
     {
-        double buildingPrice = buildingSO.building_UpgradeCosts[0];
-
-        if (playerData.iridium_Current >= buildingPrice)
-        {
-            bool buildingPlacementSuccessful = buildingManager.PlaceBuilding(buildingSO);
-
-            if (buildingPlacementSuccessful)
-            {
-                playerData.iridium_Current -= buildingPrice;
-            }
-        }
+        buildingManager.BuildingBuyClicked(buildingSO);
     }
+
     public void ClickedOnBuilding(Building building)
     {
         buildingManager.ClickedOnBuilding(building);
     }
 
     #endregion
+
+    public double GetBaseIridiumPerSecond()
+    {
+        double baseIPS = 0;
+
+        foreach (Building building in buildingManager.ownedBuildings)
+        {
+            baseIPS += (building.GetIridiumPerTick() * ticksPerSecond);
+        }
+
+        return baseIPS;
+    }
+
+    public double GetIridiumPerSecondBoost()
+    {
+        double IPS_Boost = 1;
+
+        foreach (Boost boost in boostManager.activeBoosts)
+        {
+            IPS_Boost *= boost.boost_IridiumPerSecond;
+        }
+
+        return IPS_Boost;
+    }
+
+    public double GetBaseIridiumPerClick()
+    {
+        double baseIPC = Math.Max(1, (playerData.darkElixir_PerSecond * playerData.iridium_PerSecondBoost) * playerData.iridium_PerClickLevel / 100f);
+
+        return baseIPC;
+    }
+
+    public double GetIridiumPerClickBoost()
+    {
+        double IPC_Boost = 1;
+
+        foreach (Boost boost in boostManager.activeBoosts)
+        {
+            IPC_Boost *= boost.boost_IridiumPerClick;
+        }
+
+        return IPC_Boost;
+    }
+
+    public double GetBaseDarkElixirPerSecond()
+    {
+        double baseDEPS = defaultValues.darkElixir_PerSecond;
+
+        foreach(Building building in buildingManager.ownedBuildings)
+        {
+            baseDEPS += building.GetDarkElixirPerTick();
+        }
+
+        return baseDEPS;
+    }
+
+    public double GetDarkElixirPerSecondBoost()
+    {
+        double DEPS_Boost = 1;
+
+        foreach (Boost boost in boostManager.activeBoosts)
+        {
+            DEPS_Boost *= boost.boost_DarkElixirPerSecond;
+        }
+
+        return DEPS_Boost;
+    }
+
+    public void ResourcesGainedAfterIdle()
+    {
+        if (loadSaveSystem.startFreshOnLaunch)
+            return;
+
+        long timeElapsed = (long)(DateTime.Now - (DateTime)playerData.lastSaveTime).TotalSeconds;
+        timeElapsed = (long)Math.Min(timeElapsed, playerData.maxIdleTime);
+
+        if(timeElapsed <= 5)
+        {
+            return;
+        }
+
+        double baseIPS = GetBaseIridiumPerSecond();
+        double baseDEPS = GetBaseDarkElixirPerSecond();
+        List<Boost> localBoostList = boostManager.GetActiveBoosts();
+
+        long timeToProcess = timeElapsed;
+
+        double iridiumToAdd = 0;
+        double darkelixerToAdd = 0;
+
+        while (timeToProcess > 0)
+        {
+            double boostedIPS = baseIPS;
+            double boostedDEPS = baseDEPS;
+
+            Boost lowestTimeBoost = null;
+
+            for (int i = 0; i < localBoostList.Count; i++)
+            {
+                if (lowestTimeBoost == null)
+                {
+                    lowestTimeBoost = localBoostList[i];
+                }
+                else
+                {
+                    if (localBoostList[i].boost_TimeRemaining < lowestTimeBoost.boost_TimeRemaining)
+                    {
+                        lowestTimeBoost = localBoostList[i];
+                    }
+                }
+
+                boostedIPS *= localBoostList[i].boost_IridiumPerSecond;
+                boostedDEPS *= localBoostList[i].boost_DarkElixirPerSecond;
+            }
+
+            if (lowestTimeBoost != null)
+            {
+                if (timeToProcess > lowestTimeBoost.boost_TimeRemaining)
+                {
+                    iridiumToAdd += boostedIPS * lowestTimeBoost.boost_TimeRemaining;
+                    darkelixerToAdd += boostedDEPS * lowestTimeBoost.boost_TimeRemaining;
+
+                    Debug.Log($"{lowestTimeBoost.boost_Name} lasted for {lowestTimeBoost.boost_TimeRemaining} seconds");
+                    timeToProcess -= (int)lowestTimeBoost.boost_TimeRemaining;
+
+                    for (int i = 0; i < localBoostList.Count; i++)
+                    {
+                        localBoostList[i].boost_TimeRemaining -= lowestTimeBoost.boost_TimeRemaining;
+                    }
+
+                    localBoostList.Remove(lowestTimeBoost);
+
+                    lowestTimeBoost = null;
+                }
+                else
+                {
+                    for (int i = 0; i < localBoostList.Count; i++)
+                    {
+                        localBoostList[i].boost_TimeRemaining -= timeToProcess;
+                        Debug.Log($"Used up {timeToProcess} seconds of boost: {localBoostList[i].boost_Name}");
+                    }
+
+                    iridiumToAdd += boostedIPS * timeToProcess;
+                    darkelixerToAdd += boostedDEPS * timeToProcess;
+
+                    timeToProcess = 0;
+                }
+            }
+            else
+            {
+                Debug.Log("No boosts active!");
+                iridiumToAdd += boostedIPS * timeToProcess;
+                darkelixerToAdd += boostedDEPS * timeToProcess;
+                timeToProcess = 0;
+            }
+        }
+
+        boostManager.LoadBoosts(localBoostList);
+
+        Debug.Log($"{playerData.profileName} was idle for {timeElapsed} seconds");
+
+        Debug.Log($"Iridium Added: {iridiumToAdd}");
+
+        playerData.iridium_Current += iridiumToAdd;
+        playerData.iridium_Total += iridiumToAdd;
+
+        Debug.Log($"Dark Elixir Added: {darkelixerToAdd}");
+        playerData.darkElixir_Total += darkelixerToAdd;
+    }
 
     #region Save, Load and Reset
 
@@ -384,8 +547,6 @@ public class GameManager : MonoBehaviour
     public void LoadGame()
     {
         playerData = loadSaveSystem.Load();
-        buildingManager.SpawnBuildings(playerData.ownedBuildings);
-        boostManager.LoadBoosts(playerData.activeBoosts);
 
         StartGame();
     }
@@ -394,23 +555,8 @@ public class GameManager : MonoBehaviour
     {
         playerData = loadSaveSystem.LoadProfile(profileName);
 
-        playerData = dataProcessor.WelcomeBackPlayer(playerData);
-
-        UpdateCosts();
-
         StartGame();
     }
 
-    void ResetGame()
-    {
-        playerData.iridium_Total = defaultValues.iridium_Total;
-        playerData.iridium_Current = defaultValues.iridium_Current;
-        playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
-        playerData.iridium_PerClick = defaultValues.iridium_PerClick;
-        playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
-        playerData.ownedBuildings = defaultValues.ownedBuildings;
-    }
-
     #endregion
-
 }

@@ -19,6 +19,7 @@ public class EnemyShip : MonoBehaviour
     [HideInInspector] public Vector2 zTorqueLimit;
 
     private bool hitByPlayer = false;
+    private bool firstCollision = false;
     private Vector3 gravity;
     private Rigidbody rb;
 
@@ -67,6 +68,7 @@ public class EnemyShip : MonoBehaviour
 
     private void ShipDestroyed()
     {
+        firstCollision = true;
         enemyShipManager.ShipDestroyed(iridiumReward, darkElixirReward, cosmiumReward);
         Debug.Log($"Iridium: {iridiumReward} \nDark Elixir: {darkElixirReward} \nCosmium: {cosmiumReward}");
         Destroy(gameObject);
@@ -74,7 +76,7 @@ public class EnemyShip : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (hitByPlayer)
+        if (hitByPlayer && !firstCollision)
             ShipDestroyed();
     }
 
