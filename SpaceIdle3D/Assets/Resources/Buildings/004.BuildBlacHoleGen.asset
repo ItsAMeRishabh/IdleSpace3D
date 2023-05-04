@@ -12,15 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d48f4752ffbcc14eb374de651ff1bd2, type: 3}
   m_Name: 004.BuildBlacHoleGen
   m_EditorClassIdentifier: 
-  building_Name: Black Hole Generator
+  building_Name: VAC3000
   building_Level: 1
   building_IridiumBoostPerLevel: 1
   building_BaseCost: 24000000
-  building_CostMultiplier: 1.25
+  building_CostMultiplier: 1
   building_UpgradeCosts:
+  - 24000000
   - -1
   buildingPrefabs:
-  - {fileID: 4548579041751584191, guid: d0749ca41fbce134896813ff1b64d263, type: 3}
+  - {fileID: 1377956029180070585, guid: 8c92ba371b66b1b42802265d3673e8d1, type: 3}
+  - {fileID: 4753837119050955449, guid: f7a7660ca78515047aa88d9395ed68d2, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:

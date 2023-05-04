@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a0528895cb020c4283e95d2d50c2237, type: 3}
-  m_Name: 008.BlackHole
+  m_Name: 010.Bobo
   m_EditorClassIdentifier: 
-  troop_Name: Black Hole
+  troop_Name: Bobo
   troop_Level: 1
   troops_Owned: 0
-  troop_BaseCost: 21000000
-  troop_BaseIridiumPerSecond: 8000
+  troop_BaseCost: 6000000000
+  troop_BaseIridiumPerSecond: 310000
   troop_IridiumBoostPerLevel: 1
   troop_CostMultiplier: 1.2
