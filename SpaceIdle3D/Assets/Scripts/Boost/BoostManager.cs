@@ -9,9 +9,40 @@ public class BoostManager : MonoBehaviour
     public List<Boost> activeBoosts = new List<Boost>();
     private GameManager gameManager;
 
+    public Boost iridium_LowestTime;
+    public Boost darkElixir_LowestTime;
+
     public void WakeUp()
     {
         gameManager = GetComponent<GameManager>();
+    }
+
+    public void StartGame()
+    {
+        CalculateNonSerializedBoost();
+
+        UpdateLowestTimeBoosts();
+    }
+
+    public void CalculateNonSerializedBoost()
+    {
+        activeBoosts = gameManager.playerData.activeBoosts;
+
+        for (int i = 0; i < activeBoosts.Count; i++)
+        {
+            BoostSO currentBoostSO = gameManager.BoostManagerRef.GetBoostSO(activeBoosts[i].boost_Name);
+
+            activeBoosts[i].boost_IridiumPerClick = currentBoostSO.boost_IridiumPerClick;
+            activeBoosts[i].boost_IridiumPerSecond = currentBoostSO.boost_IridiumPerSecond;
+            activeBoosts[i].boost_DarkElixirPerSecond = currentBoostSO.boost_DarkElixirPerSecond;
+        }
+    }
+
+    public void LoadBoosts(List<Boost> boosts)
+    {
+        activeBoosts = boosts;
+
+        UpdateLowestTimeBoosts();
     }
 
     public List<Boost> GetActiveBoosts()
@@ -19,14 +50,54 @@ public class BoostManager : MonoBehaviour
         return activeBoosts;
     }
 
-    public void LoadBoosts(List<Boost> activeBoosts)
+    public void UpdateLowestTimeBoosts()
     {
-        if (activeBoosts == null)
-            Debug.Log("activeBoosts is null");
+        iridium_LowestTime = null;
+        darkElixir_LowestTime = null;
 
-        this.activeBoosts = activeBoosts;
+        for (int i = 0; i < activeBoosts.Count; i++)
+        {
+            if (activeBoosts[i].boost_IridiumPerSecond == 1)
+            {
+                continue;
+            }
+            else
+            {
+                if (iridium_LowestTime == null)
+                {
+                    iridium_LowestTime = activeBoosts[i];
+                }
+                else
+                {
+                    if (iridium_LowestTime.boost_TimeRemaining > activeBoosts[i].boost_TimeRemaining)
+                    {
+                        iridium_LowestTime = activeBoosts[i];
+                    }
+                }
+            }
+        }
 
-        gameManager.UpdateResourceSources();
+        for (int i = 0; i < activeBoosts.Count; i++)
+        {
+            if (activeBoosts[i].boost_DarkElixirPerSecond == 1)
+            {
+                continue;
+            }
+            else
+            {
+                if (darkElixir_LowestTime == null)
+                {
+                    darkElixir_LowestTime = activeBoosts[i];
+                }
+                else
+                {
+                    if (darkElixir_LowestTime.boost_TimeRemaining > activeBoosts[i].boost_TimeRemaining)
+                    {
+                        darkElixir_LowestTime = activeBoosts[i];
+                    }
+                }
+            }
+        }
     }
 
     public void ProcessBoostTimers()
@@ -39,6 +110,7 @@ public class BoostManager : MonoBehaviour
             {
                 activeBoosts.RemoveAt(i);
                 gameManager.UpdateResourceSources();
+                UpdateLowestTimeBoosts();
             }
         }
     }
@@ -46,6 +118,7 @@ public class BoostManager : MonoBehaviour
     public void AddBoost(BoostSO boostSO)
     {
         Boost boost = Array.Find(activeBoosts.ToArray(), x => x.boost_Name == boostSO.boost_Name);
+
         if (boost != null)
         {
             boost.boost_TimeRemaining += boostSO.boost_Duration;
@@ -59,6 +132,7 @@ public class BoostManager : MonoBehaviour
             boost = new Boost(boostSO);
             activeBoosts.Add(boost);
             gameManager.UpdateResourceSources();
+            UpdateLowestTimeBoosts();
         }
     }
 
@@ -66,7 +140,7 @@ public class BoostManager : MonoBehaviour
     {
         BoostSO bSO = Array.Find(boostSOs.ToArray(), x => x.boost_Name == boostName);
 
-        if(bSO == null)
+        if (bSO == null)
         {
             Debug.LogError($"Boost \"{boostName}\" not found!");
         }

@@ -11,7 +11,8 @@ public class LoadSaveSystem : MonoBehaviour
     [Header("Save Configuration")]
     public bool startFreshOnLaunch = false;
     public float saveInterval = 5f;
-    public bool autoSave = false;
+
+    [HideInInspector] public bool autoSave = false;
 
     private string saveDir;
 

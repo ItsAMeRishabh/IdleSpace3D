@@ -9,15 +9,6 @@ public class Boost
     [NonSerialized] public double boost_DarkElixirPerSecond;
     public double boost_TimeRemaining;
 
-    public Boost()
-    {
-        boost_Name = "Name";
-        boost_IridiumPerClick = 0;
-        boost_IridiumPerSecond = 0;
-        boost_DarkElixirPerSecond = 0;
-        boost_TimeRemaining = 0;
-    }
-
     public Boost(BoostSO boostSO)
     {
         boost_Name = boostSO.boost_Name;

@@ -56,6 +56,12 @@ public class Building : MonoBehaviour
         return x;
     }
 
+    public double GetDarkElixirPerTick()
+    {
+        if (buildingData.building_Level == 0) return 0;
+        else return buildingSO.building_DarkElixirPerSecond * Math.Pow(buildingSO.building_DarkElixirBoostPerLevel, buildingData.building_Level - 1);
+    }
+
     private IEnumerator ClickTimeoutCoroutine()
     {
         clickExplired = false;

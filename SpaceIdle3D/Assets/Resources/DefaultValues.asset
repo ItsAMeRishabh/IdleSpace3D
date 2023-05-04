@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfdd0f4c372ef6e4a9762ec9a764b10e, type: 3}
   m_Name: DefaultValues
   m_EditorClassIdentifier: 
+  maxIdleTime: 3600
   iridium_Total: 0
+  iridium_Current: 0
   iridium_PerSecond: 0
   darkElixir_Total: 0
   darkElixir_PerSecond: 0.001

@@ -22,9 +22,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject mainUI;
     [SerializeField] private Button button_GetIridium;
     [SerializeField] private Button button_GetBoost;
+    [SerializeField] private GameObject iridiumBoost_QuickInfo;
+    [SerializeField] private GameObject darkElixirBoost_QuickInfo;
     [SerializeField] private Button button_StocksMenu;
     [SerializeField] private Button button_SellStocksMenu;
     [SerializeField] private Button button_UpgradeClick;
+
+    private TMP_Text text_IridiumBoostQuickInfoMultiplier;
+    private TMP_Text text_IridiumBoostQuickInfoTimer;
+    private TMP_Text text_DarkElixirBoostQuickInfoMultiplier;
+    private TMP_Text text_DarkElixirBoostQuickInfoTimer;
 
     private TMP_Text text_GetIridiumButton;
     private TMP_Text text_UpgradeClickButton;
@@ -121,6 +128,8 @@ public class UIManager : MonoBehaviour
         CloseAllPanels();
 
         OpenAlwaysOnUI();
+
+        OpenMainUI();
     }
 
     public void UpdateAllUI()
@@ -175,7 +184,7 @@ public class UIManager : MonoBehaviour
         text_IridiumPerSecond.text = NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerSecond * gameManager.playerData.iridium_PerSecondBoost), FormattingTypes.IridiumPerSecond) + " /s";
 
         text_TotalDarkElixir.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_Total, FormattingTypes.DarkElixer);
-        text_DarkElixirPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecond, FormattingTypes.DarkElixer);
+        text_DarkElixirPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecond * gameManager.playerData.darkElixir_PerSecondBoost, FormattingTypes.DarkElixer);
 
         UpdateBuildingCosts();
     }
@@ -209,6 +218,12 @@ public class UIManager : MonoBehaviour
         text_UpgradeClickButton = button_UpgradeClick.GetComponentInChildren<TMP_Text>();
         text_UpgradeBuildingButton = button_UpgradeBuilding.GetComponentInChildren<TMP_Text>();
 
+        text_IridiumBoostQuickInfoMultiplier = iridiumBoost_QuickInfo.transform.GetChild(0).GetComponent<TMP_Text>();
+        text_IridiumBoostQuickInfoTimer = iridiumBoost_QuickInfo.transform.GetChild(1).GetComponent<TMP_Text>();
+
+        text_DarkElixirBoostQuickInfoMultiplier = darkElixirBoost_QuickInfo.transform.GetChild(0).GetComponent<TMP_Text>();
+        text_DarkElixirBoostQuickInfoTimer = darkElixirBoost_QuickInfo.transform.GetChild(1).GetComponent<TMP_Text>();
+
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
         button_StocksMenu.onClick.AddListener(() => OpenStocksMenu(false));
         button_SellStocksMenu.onClick.AddListener(() => OpenStocksMenu(true));
@@ -229,6 +244,30 @@ public class UIManager : MonoBehaviour
         text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
 
         button_UpgradeClick.interactable = gameManager.playerData.iridium_Current > gameManager.upgradeClick_CurrentCost;
+
+        if(gameManager.BoostManagerRef.iridium_LowestTime == null)
+        {
+            iridiumBoost_QuickInfo.SetActive(false);
+        }
+        else
+        {
+            iridiumBoost_QuickInfo.SetActive(true);
+
+            text_IridiumBoostQuickInfoMultiplier.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerSecondBoost, FormattingTypes.Cost) + "X";
+            text_IridiumBoostQuickInfoTimer.text = NumberFormatter.FormatNumber(gameManager.BoostManagerRef.iridium_LowestTime.boost_TimeRemaining, FormattingTypes.BoostDuration);
+        }
+
+        if (gameManager.BoostManagerRef.darkElixir_LowestTime == null)
+        {
+            darkElixirBoost_QuickInfo.SetActive(false);
+        }
+        else
+        {
+            darkElixirBoost_QuickInfo.SetActive(true);
+
+            text_DarkElixirBoostQuickInfoMultiplier.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecondBoost, FormattingTypes.Cost) + "X";
+            text_DarkElixirBoostQuickInfoTimer.text = NumberFormatter.FormatNumber(gameManager.BoostManagerRef.darkElixir_LowestTime.boost_TimeRemaining, FormattingTypes.BoostDuration);
+        }
     }
 
     public void CloseMainUI()
@@ -372,6 +411,8 @@ public class UIManager : MonoBehaviour
 
     public void CloseBuildingMenu()
     {
+        if (!buildingUI.activeSelf) return;
+
         OpenMainUI();
 
         buildingUI.SetActive(false);
@@ -482,6 +523,7 @@ public class UIManager : MonoBehaviour
 
     public void CloseBoostMenu()
     {
+        if (!boostUI.activeSelf) return;
         OpenMainUI();
 
         boostUI.SetActive(false);
@@ -576,6 +618,8 @@ public class UIManager : MonoBehaviour
 
     public void CloseStocksMenu()
     {
+        if (!stocksUI.activeSelf) return;
+
         OpenMainUI();
 
         stocksUI.SetActive(false);
@@ -646,6 +690,8 @@ public class UIManager : MonoBehaviour
 
     public void CloseProfileUI()
     {
+        if (!profileSelectionUI.activeSelf) return;
+
         profileSelectionUI.SetActive(false);
     }
 
@@ -682,6 +728,8 @@ public class UIManager : MonoBehaviour
 
     public void CloseProfileCreatePanel()
     {
+        if (!profileCreationUI.activeSelf) return;
+
         OpenMainUI();
 
         profileCreationUI.SetActive(false);

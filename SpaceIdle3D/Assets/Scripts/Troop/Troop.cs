@@ -13,16 +13,7 @@ public class Troop
     [NonSerialized] public double troop_IridiumBoostPerLevel = 1.2;
     [NonSerialized] public double troop_IridiumMultiplier = 1;
     [NonSerialized] public double troop_CostMultiplier = 1.25;
-
-    public Troop(string name, int baseCost, int baseIridiumPerSecond, double iridiumBoostPerLevel, double costMultiplier)
-    {
-        troop_Name = name;
-        troop_BaseCost = baseCost;
-        troop_BaseIridiumPerSecond = baseIridiumPerSecond;
-        troop_IridiumBoostPerLevel = iridiumBoostPerLevel;
-        troop_IridiumMultiplier = Mathf.Pow((float)troop_IridiumBoostPerLevel, troop_Level - 1);
-        troop_CostMultiplier = costMultiplier;
-    }
+    [NonSerialized] public GameObject troop_Prefab;
 
     public Troop(TroopSO so)
     {
@@ -34,6 +25,7 @@ public class Troop
         troop_IridiumBoostPerLevel = so.troop_IridiumBoostPerLevel;
         troop_IridiumMultiplier = Mathf.Pow((float)troop_IridiumBoostPerLevel, troop_Level - 1);
         troop_CostMultiplier = so.troop_CostMultiplier;
+        troop_Prefab = so.troop_Prefab;
     }
 
     public double GetIridiumPerTick()
