@@ -173,6 +173,7 @@ public class GameManager : MonoBehaviour
         playerData.iridium_Current = defaultValues.iridium_Current;
         playerData.iridium_PerSecond = defaultValues.iridium_PerSecond;
         playerData.darkElixir_Total = defaultValues.darkElixir_Total;
+        playerData.darkElixir_Current = defaultValues.darkElixir_Current;
         playerData.darkElixir_PerSecond = defaultValues.darkElixir_PerSecond;
         playerData.iridium_PerClickLevel = defaultValues.iridium_PerClickLevel;
         playerData.iridium_PerClick = defaultValues.iridium_PerClick;
@@ -276,6 +277,7 @@ public class GameManager : MonoBehaviour
 
     private void ProcessDarkElixirAdded()
     {
+        playerData.darkElixir_Current += (playerData.darkElixir_PerSecond * playerData.darkElixir_PerSecondBoost) / ticksPerSecond;
         playerData.darkElixir_Total += (playerData.darkElixir_PerSecond * playerData.darkElixir_PerSecondBoost) / ticksPerSecond;
     }
 
@@ -340,6 +342,10 @@ public class GameManager : MonoBehaviour
         buildingManager.TroopBuyClicked(troopIndex);
     }
 
+    public void TroopUpgradeClicked(int troopIndex)
+    {
+        buildingManager.TroopUpgradeClicked(troopIndex);
+    }
 
     public void BuyBuildingClicked(BuildingSO buildingSO)
     {
@@ -519,6 +525,7 @@ public class GameManager : MonoBehaviour
         playerData.iridium_Total += iridiumToAdd;
 
         Debug.Log($"Dark Elixir Added: {darkelixerToAdd}");
+        playerData.darkElixir_Current += darkelixerToAdd;
         playerData.darkElixir_Total += darkelixerToAdd;
     }
 

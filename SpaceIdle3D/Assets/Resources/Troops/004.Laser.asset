@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: 004.Laser
   m_EditorClassIdentifier: 
   troop_Name: Mining Laser
+  troop_Prefab: {fileID: 0}
   troop_Level: 1
   troops_Owned: 0
   troop_BaseCost: 1100
-  troop_BaseIridiumPerSecond: 25
-  troop_IridiumBoostPerLevel: 1
   troop_CostMultiplier: 1.2
+  troop_BaseUpgradeCost: 0.1
+  troop_UpgradeCostMultiplier: 1.25
+  troop_BaseIridiumPerSecond: 25
+  troop_IridiumBoostPerLevel: 1.5

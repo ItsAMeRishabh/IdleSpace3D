@@ -58,9 +58,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject troopButtonParent;
     [SerializeField] private GameObject troopButtonPrefab;
 
-    private List<Button> button_Troop;
+    private List<Button> button_TroopBuy;
+    private List<Button> button_TroopUpgrade;
     private List<TMP_Text> text_TroopNames;
     private List<TMP_Text> text_TroopCosts;
+    private List<TMP_Text> text_TroopUpgradeCosts;
     private List<TMP_Text> text_TroopsOwned;
     private List<TMP_Text> text_TroopIPS;
 
@@ -183,8 +185,8 @@ public class UIManager : MonoBehaviour
         text_TotalIridium.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_Current, FormattingTypes.Iridium);
         text_IridiumPerSecond.text = NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerSecond * gameManager.playerData.iridium_PerSecondBoost), FormattingTypes.IridiumPerSecond) + " /s";
 
-        text_TotalDarkElixir.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_Total, FormattingTypes.DarkElixer);
-        text_DarkElixirPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecond * gameManager.playerData.darkElixir_PerSecondBoost, FormattingTypes.DarkElixer);
+        text_TotalDarkElixir.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_Current, FormattingTypes.DarkElixir);
+        text_DarkElixirPerSecond.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecond * gameManager.playerData.darkElixir_PerSecondBoost, FormattingTypes.DarkElixirPerSecond);
 
         UpdateBuildingCosts();
     }
@@ -195,7 +197,7 @@ public class UIManager : MonoBehaviour
         {
             for (int i = 0; i < levelZeroBuildings.Count; i++)
             {
-                text_BuildingCosts[i].text = NumberFormatter.FormatNumber(levelZeroBuildings[i].buildingSO.building_UpgradeCosts[0], FormattingTypes.Cost);
+                text_BuildingCosts[i].text = NumberFormatter.FormatNumber(levelZeroBuildings[i].buildingSO.building_UpgradeCosts[0], FormattingTypes.IridiumCost);
             }
         }
     }
@@ -241,7 +243,7 @@ public class UIManager : MonoBehaviour
 
         text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerClick * gameManager.playerData.iridium_PerClickBoost), FormattingTypes.IridiumPerSecond) + " Iridium)";
 
-        text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.Cost) + ")";
+        text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.IridiumCost) + ")";
 
         button_UpgradeClick.interactable = gameManager.playerData.iridium_Current > gameManager.upgradeClick_CurrentCost;
 
@@ -253,8 +255,8 @@ public class UIManager : MonoBehaviour
         {
             iridiumBoost_QuickInfo.SetActive(true);
 
-            text_IridiumBoostQuickInfoMultiplier.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerSecondBoost, FormattingTypes.Cost) + "X";
-            text_IridiumBoostQuickInfoTimer.text = NumberFormatter.FormatNumber(gameManager.BoostManagerRef.iridium_LowestTime.boost_TimeRemaining, FormattingTypes.BoostDuration);
+            text_IridiumBoostQuickInfoMultiplier.text = NumberFormatter.FormatNumber(gameManager.playerData.iridium_PerSecondBoost, FormattingTypes.BoostMultiplier) + "X";
+            text_IridiumBoostQuickInfoTimer.text = NumberFormatter.FormatNumber(gameManager.BoostManagerRef.iridium_LowestTime.boost_TimeRemaining, FormattingTypes.BoostTimer);
         }
 
         if (gameManager.BoostManagerRef.darkElixir_LowestTime == null)
@@ -265,8 +267,8 @@ public class UIManager : MonoBehaviour
         {
             darkElixirBoost_QuickInfo.SetActive(true);
 
-            text_DarkElixirBoostQuickInfoMultiplier.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecondBoost, FormattingTypes.Cost) + "X";
-            text_DarkElixirBoostQuickInfoTimer.text = NumberFormatter.FormatNumber(gameManager.BoostManagerRef.darkElixir_LowestTime.boost_TimeRemaining, FormattingTypes.BoostDuration);
+            text_DarkElixirBoostQuickInfoMultiplier.text = NumberFormatter.FormatNumber(gameManager.playerData.darkElixir_PerSecondBoost, FormattingTypes.BoostMultiplier) + "X";
+            text_DarkElixirBoostQuickInfoTimer.text = NumberFormatter.FormatNumber(gameManager.BoostManagerRef.darkElixir_LowestTime.boost_TimeRemaining, FormattingTypes.BoostTimer);
         }
     }
 
@@ -301,9 +303,11 @@ public class UIManager : MonoBehaviour
 
         if (gameManager.BuildingManagerRef.selectedBuilding != null)
         {
-            button_Troop = new List<Button>();
+            button_TroopBuy = new List<Button>();
+            button_TroopUpgrade = new List<Button>();
             text_TroopNames = new List<TMP_Text>();
             text_TroopCosts = new List<TMP_Text>();
+            text_TroopUpgradeCosts = new List<TMP_Text>();
             text_TroopsOwned = new List<TMP_Text>();
             text_TroopIPS = new List<TMP_Text>();
 
@@ -316,13 +320,18 @@ public class UIManager : MonoBehaviour
                 GameObject newButton = Instantiate(troopButtonPrefab, troopButtonParent.transform);
                 newButton.name = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name + " Button";
 
-                button_Troop.Add(newButton.transform.GetChild(0).GetComponent<Button>());
-                text_TroopNames.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
+                button_TroopBuy.Add(newButton.transform.GetChild(0).GetComponent<Button>());
                 text_TroopCosts.Add(newButton.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>());
-                text_TroopsOwned.Add(newButton.transform.GetChild(2).GetComponent<TMP_Text>());
-                text_TroopIPS.Add(newButton.transform.GetChild(3).GetComponent<TMP_Text>());
 
-                button_Troop[i].onClick.AddListener(() => gameManager.TroopBuyClicked(j));
+                button_TroopUpgrade.Add(newButton.transform.GetChild(1).GetComponent<Button>());
+                text_TroopUpgradeCosts.Add(newButton.transform.GetChild(1).GetChild(0).GetComponent<TMP_Text>());
+
+                text_TroopNames.Add(newButton.transform.GetChild(2).GetComponent<TMP_Text>());
+                text_TroopsOwned.Add(newButton.transform.GetChild(3).GetComponent<TMP_Text>());
+                text_TroopIPS.Add(newButton.transform.GetChild(4).GetComponent<TMP_Text>());
+
+                button_TroopBuy[i].onClick.AddListener(() => gameManager.TroopBuyClicked(j));
+                button_TroopUpgrade[i].onClick.AddListener(() => gameManager.TroopUpgradeClicked(j));
             }
         }
     }
@@ -351,21 +360,31 @@ public class UIManager : MonoBehaviour
                 button_UpgradeBuilding.interactable = true;
             }
 
-            text_UpgradeBuildingButton.text = "Upgrade (" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_Level], FormattingTypes.Cost) + ")";
+            text_UpgradeBuildingButton.text = "Upgrade (" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_Level], FormattingTypes.IridiumCost) + ")";
         }
 
         for (int i = 0; i < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
         {
-            text_TroopNames[i].text = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name;
+            text_TroopNames[i].text = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name + "(Lvl " + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Level, FormattingTypes.Level) + ")";
 
-            text_TroopCosts[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost, FormattingTypes.Cost);
+            text_TroopCosts[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost, FormattingTypes.IridiumCost);
             if (gameManager.playerData.iridium_Current < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost)
             {
-                button_Troop[i].interactable = false;
+                button_TroopBuy[i].interactable = false;
             }
             else
             {
-                button_Troop[i].interactable = true;
+                button_TroopBuy[i].interactable = true;
+            }
+
+            text_TroopUpgradeCosts[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentUpgradeCost, FormattingTypes.DarkElixirCost);
+            if (gameManager.playerData.darkElixir_Current < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentUpgradeCost)
+            {
+                button_TroopUpgrade[i].interactable = false;
+            }
+            else
+            {
+                button_TroopUpgrade[i].interactable = true;
             }
 
             text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned) + " owned";
@@ -378,19 +397,34 @@ public class UIManager : MonoBehaviour
         if (button_UpgradeBuilding != null)
             button_UpgradeBuilding.onClick.RemoveAllListeners();
 
-        if (button_Troop != null)
+        if (button_TroopBuy != null)
         {
-            foreach (Button button in button_Troop)
+            foreach (Button button in button_TroopBuy)
             {
                 button.onClick.RemoveAllListeners();
             }
 
-            foreach (Button button in button_Troop)
+            foreach (Button button in button_TroopBuy)
             {
                 Destroy(button.transform.parent.gameObject);
             }
 
-            button_Troop.Clear();
+            button_TroopBuy.Clear();
+        }
+
+        if (button_TroopUpgrade != null)
+        {
+            foreach (Button button in button_TroopUpgrade)
+            {
+                button.onClick.RemoveAllListeners();
+            }
+
+            foreach (Button button in button_TroopUpgrade)
+            {
+                Destroy(button.transform.parent.gameObject);
+            }
+
+            button_TroopUpgrade.Clear();
         }
 
         RectTransform rTransform = troopButtonParent.GetComponent<RectTransform>();
@@ -471,19 +505,19 @@ public class UIManager : MonoBehaviour
         {
             text_BoostNames[i].text = gameManager.BoostManagerRef.boostSOs[i].boost_Name;
 
-            text_BoostDurations[i].text = "+ " + NumberFormatter.FormatNumber(gameManager.BoostManagerRef.boostSOs[i].boost_Duration, FormattingTypes.BoostDuration);
+            text_BoostDurations[i].text = "+ " + NumberFormatter.FormatNumber(gameManager.BoostManagerRef.boostSOs[i].boost_Duration, FormattingTypes.BoostTimer);
 
             Boost boost = Array.Find(gameManager.BoostManagerRef.activeBoosts.ToArray(), x => x.boost_Name == gameManager.BoostManagerRef.boostSOs[i].boost_Name);
 
             if (boost != null)
             {
                 image_BoostDurationRemainings[i].fillAmount = (float)(boost.boost_TimeRemaining / gameManager.BoostManagerRef.boostSOs[i].boost_MaxDuration);
-                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(boost.boost_TimeRemaining, FormattingTypes.BoostDuration) + " Left";
+                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(boost.boost_TimeRemaining, FormattingTypes.BoostTimer) + " Left";
             }
             else
             {
                 image_BoostDurationRemainings[i].fillAmount = 0f;
-                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(0f, FormattingTypes.BoostDuration) + " Left";
+                text_BoostDurationRemainings[i].text = NumberFormatter.FormatNumber(0f, FormattingTypes.BoostTimer) + " Left";
             }
         }
     }
@@ -583,11 +617,11 @@ public class UIManager : MonoBehaviour
         DateTime localNow = DateTime.Now;
 
         text_StockName.text = localSM.stocks[localSM.selectedStockIndex].stockName;
-        text_StockNextExpire.text = "Expires in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.Time);
+        text_StockNextExpire.text = "Expires in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
 
-        text_StockOwned.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockOwned, FormattingTypes.Iridium) + " Owned";
+        text_StockOwned.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockOwned, FormattingTypes.Stocks) + " Owned";
 
-        text_StockNextRefresh.text = "Refreshes in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.Time);
+        text_StockNextRefresh.text = "Refreshes in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
 
         if (localSM.sellMode)
         {
@@ -611,9 +645,9 @@ public class UIManager : MonoBehaviour
         button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
         button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
 
-        text_CurrentPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].stockCurrentValue, FormattingTypes.Stocks);
-        text_AmountToBuy.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].amountToBuy, FormattingTypes.Iridium);
-        text_TotalPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].totalPrice, FormattingTypes.IridiumPerSecond);
+        text_CurrentPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].stockCurrentValue, FormattingTypes.StocksPrice);
+        text_AmountToBuy.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].amountToBuy, FormattingTypes.Stocks);
+        text_TotalPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].totalPrice, FormattingTypes.StocksPrice);
     }
 
     public void CloseStocksMenu()

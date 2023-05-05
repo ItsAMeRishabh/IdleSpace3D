@@ -110,6 +110,7 @@ public class BuildingManager : MonoBehaviour
             for(int i = 0; i< building.buildingData.building_OwnedTroops.Count; i++)
             {
                 building.buildingData.building_OwnedTroops[i].troop_CurrentCost = building.buildingData.building_OwnedTroops[i].troop_BaseCost * Math.Pow(building.buildingData.building_OwnedTroops[i].troop_CostMultiplier, building.buildingData.building_OwnedTroops[i].troops_Owned);
+                building.buildingData.building_OwnedTroops[i].troop_CurrentUpgradeCost = building.buildingData.building_OwnedTroops[i].troop_BaseUpgradeCost * Math.Pow(building.buildingData.building_OwnedTroops[i].troop_UpgradeCostMultiplier, building.buildingData.building_OwnedTroops[i].troop_Level - 1);
             }
         }
     }
@@ -364,6 +365,24 @@ public class BuildingManager : MonoBehaviour
             }
         }
 
+        gameManager.UpdateResourceSources();
+        gameManager.UpdateCosts();
+    }
+
+    public void TroopUpgradeClicked(int troopIndex)
+    {
+        if(selectedBuilding == null)
+        {
+            Debug.LogError("No building selected, cannot upgrade troop");
+        }
+        else
+        {
+            if(gameManager.playerData.darkElixir_Current >= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentUpgradeCost)
+            {
+                gameManager.playerData.darkElixir_Current -= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentUpgradeCost;
+                selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_Level += 1;
+            }
+        }
         gameManager.UpdateResourceSources();
         gameManager.UpdateCosts();
     }
