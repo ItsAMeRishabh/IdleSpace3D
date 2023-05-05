@@ -149,6 +149,7 @@ public class StockManager : MonoBehaviour
     {
         stocks[index].stockOwned = 0;
         stocks[index].purchasedThisCycle = false;
+        stocks[index].lastBuyPrice = -1;
     }
 
     public void RefreshPrices()
@@ -186,6 +187,7 @@ public class StockManager : MonoBehaviour
             stocks[selectedStockIndex].stockOwned += stocks[selectedStockIndex].amountToBuy;
             gameManager.playerData.iridium_Current -= stocks[selectedStockIndex].totalPrice;
             stocks[selectedStockIndex].purchasedThisCycle = true;
+            stocks[selectedStockIndex].lastBuyPrice = stocks[selectedStockIndex].stockCurrentValue;
         }
         else
         {

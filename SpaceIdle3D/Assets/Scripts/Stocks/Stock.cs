@@ -62,6 +62,7 @@ public class Stock
 
         stockOwned = s.stockOwned;
         purchasedThisCycle = s.purchasedThisCycle;
+        lastBuyPrice = s.lastBuyPrice;
         nextRefreshTime = s.nextRefreshTime;
         nextExpireTime = s.nextExpireTime;
     }
