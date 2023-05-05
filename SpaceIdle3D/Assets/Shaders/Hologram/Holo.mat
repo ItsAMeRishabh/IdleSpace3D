@@ -54,7 +54,7 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _ScrollSpeed: 0.4
+    - _ScrollSpeed: 0.1
     m_Colors:
     - _FresnelColor: {r: 2.7800655, g: 32.737217, b: 0, a: 1}
     - _HologramTiling: {r: 1, g: 2.56, b: 0, a: 0}
