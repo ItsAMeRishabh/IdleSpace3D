@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 
-
+[RequireComponent(typeof(VisualEffect))]
 public class Building : MonoBehaviour
 {
     private float clickTimeout = 0.2f;
@@ -14,12 +15,22 @@ public class Building : MonoBehaviour
     public BuildingSO buildingSO;
     public BuildingData buildingData;
 
+    public VisualEffect upgradeEffect;
+
     private GameManager gameManager;
 
     public void Initialize()
     {
         gameManager = FindObjectOfType<GameManager>();
+        upgradeEffect = GetComponent<VisualEffect>();
+
         clickWait = new WaitForSeconds(clickTimeout);
+    }
+
+    public void SpawnUpgradeEffect(VisualEffectAsset vfxAsset)
+    {
+        upgradeEffect.visualEffectAsset = vfxAsset;
+        upgradeEffect.Play();
     }
 
     void OnMouseDown()

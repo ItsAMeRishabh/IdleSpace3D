@@ -283,6 +283,7 @@ public class BuildingManager : MonoBehaviour
             Destroy(building.transform.parent.gameObject);
             
             selectedBuilding = PlaceBuilding(buildingSO, buildingData);
+            selectedBuilding.SpawnUpgradeEffect(buildingSO.upgradeVisualFX[buildingData.building_Level - 1]);
             gameManager.UpdateResourceSources();
             gameManager.UpdateCosts();
             gameManager.UIManagerRef.UpdateLevelZeroBuildingList();

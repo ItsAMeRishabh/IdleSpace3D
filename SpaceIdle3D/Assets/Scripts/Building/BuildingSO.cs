@@ -14,6 +14,6 @@ public class BuildingSO : ScriptableObject
     public double building_CostMultiplier = 1.25f;
     public List<double> building_UpgradeCosts;
     public List<GameObject> buildingPrefabs;
-    public List<VisualEffect> upgradeVisualFX;
+    public List<VisualEffectAsset> upgradeVisualFX;
     public List<LevelUpUnlocks> levelUpUnlocks;
 }
