@@ -49,7 +49,7 @@ public class CameraManager : MonoBehaviour
     {
         if (Input.mouseScrollDelta.y != 0)
         {
-            newZoom += Input.mouseScrollDelta.y * zoomAmount;
+            newZoom -= Input.mouseScrollDelta.y * zoomAmount;
         }
 
         if (Input.GetMouseButtonDown(0))

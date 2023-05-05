@@ -27,6 +27,14 @@ public class GameManager : MonoBehaviour
     [Header("Default Values SO")]
     [SerializeField] private DefaultValues defaultValues;
 
+    [Header("Iridium Truck")]
+    [SerializeField] private Transform truckRouteParent;
+    [SerializeField] private GameObject truckPrefab;
+    public float truckMoveSpeed = 5;
+    public float truckRotationSpeed = 5;
+    [HideInInspector] public List<Transform> truckRoute;
+    private GameObject iridiumTruck;
+
     private bool gameHathStarted = false;
 
     private Coroutine tickCoroutine;
@@ -135,6 +143,8 @@ public class GameManager : MonoBehaviour
     {
         gameHathStarted = true;
 
+        GrabTruckRoute();
+
         StartAllManagers();
 
         ResourcesGainedAfterIdle();
@@ -182,6 +192,17 @@ public class GameManager : MonoBehaviour
         if (loadSaveSystem.autoSave) SaveGame();
 
         StartGame();
+    }
+
+    private void GrabTruckRoute()
+    {
+        for (int i = 0; i < truckRouteParent.childCount; i++)
+        {
+            int j = i;
+            truckRoute.Add(truckRouteParent.GetChild(j));
+        }
+
+        SpawnTruck();
     }
 
     private void StartTickCoroutine()
@@ -359,6 +380,12 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    private void SpawnTruck()
+    {
+        if(iridiumTruck != null) return;
+        iridiumTruck = Instantiate(truckPrefab, truckRouteParent);
+        iridiumTruck.GetComponent<IridiumTruck>().StartMove(this);
+    }
     public double GetBaseIridiumPerSecond()
     {
         double baseIPS = 0;
