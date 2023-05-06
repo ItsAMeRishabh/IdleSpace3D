@@ -163,9 +163,7 @@ public class StockManager : MonoBehaviour
             stocks[i].totalPricePlusNext = (stocks[i].amountToBuy + stocks[i].nextStep) * stocks[i].stockCurrentBuyValue;
             stocks[i].totalPricePlusMegaNext = (stocks[i].amountToBuy + stocks[i].megaNextStep) * stocks[i].stockCurrentBuyValue;
 
-            stocks[i].totalPrice = stocks[i].amountToSell * stocks[i].stockCurrentSaleValue;
-            stocks[i].totalPricePlusNext = (stocks[i].amountToSell + stocks[i].nextStep) * stocks[i].stockCurrentSaleValue;
-            stocks[i].totalPricePlusMegaNext = (stocks[i].amountToSell + stocks[i].megaNextStep) * stocks[i].stockCurrentSaleValue;
+            stocks[i].totalSale = stocks[i].amountToSell * stocks[i].stockCurrentSaleValue;
         }
     }
 
@@ -204,14 +202,14 @@ public class StockManager : MonoBehaviour
 
     public void SellStocks()
     {
-        if (stocks[selectedStockIndex].amountToBuy >= stocks[selectedStockIndex].stockOwned)
+        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].amountToSell)
         {
-            stocks[selectedStockIndex].stockOwned -= stocks[selectedStockIndex].amountToBuy;
-            gameManager.playerData.iridium_Current += stocks[selectedStockIndex].totalPrice;
+            stocks[selectedStockIndex].stockOwned -= stocks[selectedStockIndex].amountToSell;
+            gameManager.playerData.iridium_Current += stocks[selectedStockIndex].totalSale;
         }
         else
         {
-            Debug.LogError($"Not Enough {stocks[selectedStockIndex].amountToBuy} stocks to sell!");
+            Debug.LogError($"Not Enough {stocks[selectedStockIndex].amountToSell} stocks to sell!");
         }
     }
 
@@ -259,7 +257,7 @@ public class StockManager : MonoBehaviour
 
     public void NextAmountSell()
     {
-        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].stockOwned + stocks[selectedStockIndex].nextStep)
+        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].amountToSell + stocks[selectedStockIndex].nextStep)
         {
             stocks[selectedStockIndex].amountToSell += stocks[selectedStockIndex].nextStep;
 
@@ -273,7 +271,7 @@ public class StockManager : MonoBehaviour
 
     public void MegaNextAmountSell()
     {
-        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].stockOwned + stocks[selectedStockIndex].totalPricePlusMegaNext)
+        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].amountToSell + stocks[selectedStockIndex].megaNextStep)
         {
             stocks[selectedStockIndex].amountToSell += stocks[selectedStockIndex].megaNextStep;
 

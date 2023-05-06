@@ -13,9 +13,15 @@ MonoBehaviour:
   m_Name: 008.MegatronPrimePlus
   m_EditorClassIdentifier: 
   troop_Name: Megatron Prime Plus
+  troop_LockedSprite: {fileID: 21300000, guid: 2e6e30b89e98c7c4ab88b8be49fb08ee, type: 3}
+  troop_UnlockedSprite: {fileID: 21300000, guid: 2606a2e6a832fbf4193bbb2101598b93,
+    type: 3}
+  troop_Prefab: {fileID: 0}
   troop_Level: 1
   troops_Owned: 0
   troop_BaseCost: 70000000000
+  troop_CostMultiplier: 1.2
+  troop_BaseUpgradeCost: 0
+  troop_UpgradeCostMultiplier: 1.25
   troop_BaseIridiumPerSecond: 1500000
   troop_IridiumBoostPerLevel: 1
-  troop_CostMultiplier: 1.2

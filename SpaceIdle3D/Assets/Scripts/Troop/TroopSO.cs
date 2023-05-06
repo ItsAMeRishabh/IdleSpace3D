@@ -6,6 +6,8 @@ using UnityEngine;
 public class TroopSO : ScriptableObject
 {
     public string troop_Name = "Name";
+    public Sprite troop_LockedSprite;
+    public Sprite troop_UnlockedSprite;
     public GameObject troop_Prefab;
     public int troop_Level = 1;
     public int troops_Owned = 0;

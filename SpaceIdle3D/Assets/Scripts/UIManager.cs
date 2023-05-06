@@ -56,16 +56,50 @@ public class UIManager : MonoBehaviour
     private TMP_Text text_UpgradeBuildingButton;
 
     [SerializeField] private GameObject troopButtonParent;
-    [SerializeField] private GameObject troopButtonPrefab;
+    [SerializeField] private GameObject troopLockedButtonPrefab;
+    [SerializeField] private string lockedHexCode = "FF6F12";
+
+    private List<Image> image_TroopSpriteLocked;
+    private List<TMP_Text> text_TroopLockedUpgrade;
+
+    [SerializeField] private GameObject troopUnlockedButtonPrefab;
 
     private List<Button> button_TroopBuy;
     private List<Button> button_TroopUpgrade;
-    private List<TMP_Text> text_TroopNames;
+    private List<Image> image_TroopSpriteUnlocked;
     private List<TMP_Text> text_TroopCosts;
     private List<TMP_Text> text_TroopUpgradeCosts;
     private List<TMP_Text> text_TroopsOwned;
     private List<TMP_Text> text_TroopIPS;
 
+    [Header("Stocks Buy UI")]
+    [SerializeField] private GameObject stockBuyUI;
+    [SerializeField] private TMP_Text text_BuyStockCurrentValue;
+    [SerializeField] private TMP_Text text_AmountToBuy;
+    [SerializeField] private Button button_BuyStocks;
+    private TMP_Text text_BuyStocksButton;
+    [SerializeField] private Button button_BuyPrev;
+    [SerializeField] private Button button_BuyMegaPrev;
+    [SerializeField] private Button button_BuyNext;
+    [SerializeField] private Button button_BuyMegaNext;
+    [SerializeField] private Button button_BuyStocksBack;
+    [SerializeField] private TMP_Text text_BuyStockNextExpire;
+
+    [Header("Stock Sell UI")]
+    [SerializeField] private GameObject stockSellUI;
+    [SerializeField] private TMP_Text text_StockOwned;
+    [SerializeField] private TMP_Text text_StockNextRefresh;
+    [SerializeField] private TMP_Text text_SellStockCurrentValue;
+    [SerializeField] private TMP_Text text_AmountToSell;
+    [SerializeField] private Button button_SellNext;
+    [SerializeField] private Button button_SellMegaNext;
+    [SerializeField] private Button button_SellPrev;
+    [SerializeField] private Button button_SellMegaPrev;
+    [SerializeField] private Button button_SellAllOwned;
+    [SerializeField] private Button button_SellStock;
+    private TMP_Text text_SellStockButton;
+    [SerializeField] private Button button_SellStockBack;
+    [SerializeField] private TMP_Text text_SellStockNextExpire;
 
     [Header("Profile Selection UI")]
     [SerializeField] private GameObject profileSelectionUI;
@@ -82,24 +116,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button button_CreateProfile;
     [SerializeField] private TMP_InputField inputField_ProfileName;
 
-    [Header("Stocks UI")]
-    [SerializeField] private GameObject stocksUI;
-    [SerializeField] private TMP_Text text_StockName;
-    [SerializeField] private TMP_Text text_StockNextExpire;
-    [SerializeField] private Button nextStock;
-    [SerializeField] private Button prevStock;
-    [SerializeField] private TMP_Text text_StockOwned;
-    [SerializeField] private TMP_Text text_StockNextRefresh;
-    [SerializeField] private TMP_Text text_CurrentPrice;
-    [SerializeField] private TMP_Text text_AmountToBuy;
-    [SerializeField] private Button button_BuyStocks;
-    private TMP_Text text_BuyStocksButton;
-    [SerializeField] private Button button_Prev;
-    [SerializeField] private Button button_MegaPrev;
-    [SerializeField] private Button button_Next;
-    [SerializeField] private Button button_MegaNext;
-    [SerializeField] private TMP_Text text_TotalPrice;
-    [SerializeField] private Button button_StocksBack;
 
     private GameManager gameManager;
 
@@ -118,7 +134,9 @@ public class UIManager : MonoBehaviour
 
         InitializeBoostUI();
 
-        InitializeStocksUI();
+        InitializeStockBuyUI();
+
+        InitializeStockSellUI();
 
         InitializeProfileSelectUI();
 
@@ -144,7 +162,9 @@ public class UIManager : MonoBehaviour
 
         UpdateBoostUI();
 
-        UpdateStocksMenu();
+        UpdateStockBuyMenu();
+
+        UpdateStockSellMenu();
     }
 
     public void CloseAllPanels()
@@ -227,8 +247,8 @@ public class UIManager : MonoBehaviour
         text_DarkElixirBoostQuickInfoTimer = darkElixirBoost_QuickInfo.transform.GetChild(1).GetComponent<TMP_Text>();
 
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
-        button_StocksMenu.onClick.AddListener(() => OpenStocksMenu(false));
-        button_SellStocksMenu.onClick.AddListener(() => OpenStocksMenu(true));
+        button_StocksMenu.onClick.AddListener(OpenStockBuyMenu);
+        button_SellStocksMenu.onClick.AddListener(OpenStockSellMenu);
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
     }
 
@@ -303,22 +323,27 @@ public class UIManager : MonoBehaviour
 
         if (gameManager.BuildingManagerRef.selectedBuilding != null)
         {
+            image_TroopSpriteLocked = new List<Image>();
+            image_TroopSpriteUnlocked = new List<Image>();
+
             button_TroopBuy = new List<Button>();
             button_TroopUpgrade = new List<Button>();
-            text_TroopNames = new List<TMP_Text>();
+
+            text_TroopLockedUpgrade = new List<TMP_Text>();
             text_TroopCosts = new List<TMP_Text>();
             text_TroopUpgradeCosts = new List<TMP_Text>();
             text_TroopsOwned = new List<TMP_Text>();
             text_TroopIPS = new List<TMP_Text>();
 
             button_UpgradeBuilding.onClick.AddListener(() => gameManager.BuildingManagerRef.UpgradeBuilding(gameManager.BuildingManagerRef.selectedBuilding));
+            BuildingSO populatingBuildingSO = gameManager.BuildingManagerRef.selectedBuilding.buildingSO;
 
             for (int i = 0; i < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
             {
                 int j = i;
 
-                GameObject newButton = Instantiate(troopButtonPrefab, troopButtonParent.transform);
-                newButton.name = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name + " Button";
+                GameObject newButton = Instantiate(troopUnlockedButtonPrefab, troopButtonParent.transform);
+                newButton.name = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name + "_Button";
 
                 button_TroopBuy.Add(newButton.transform.GetChild(0).GetComponent<Button>());
                 text_TroopCosts.Add(newButton.transform.GetChild(0).GetChild(0).GetComponent<TMP_Text>());
@@ -326,12 +351,26 @@ public class UIManager : MonoBehaviour
                 button_TroopUpgrade.Add(newButton.transform.GetChild(1).GetComponent<Button>());
                 text_TroopUpgradeCosts.Add(newButton.transform.GetChild(1).GetChild(0).GetComponent<TMP_Text>());
 
-                text_TroopNames.Add(newButton.transform.GetChild(2).GetComponent<TMP_Text>());
+                image_TroopSpriteUnlocked.Add(newButton.transform.GetChild(2).GetComponent<Image>());
                 text_TroopsOwned.Add(newButton.transform.GetChild(3).GetComponent<TMP_Text>());
                 text_TroopIPS.Add(newButton.transform.GetChild(4).GetComponent<TMP_Text>());
 
                 button_TroopBuy[i].onClick.AddListener(() => gameManager.TroopBuyClicked(j));
                 button_TroopUpgrade[i].onClick.AddListener(() => gameManager.TroopUpgradeClicked(j));
+            }
+
+            for (int i = 0; i < populatingBuildingSO.levelUpUnlocks.Count; i++)
+            {
+                if (gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_Level >= populatingBuildingSO.levelUpUnlocks[i].level) continue;
+
+                for (int j = 0; j < populatingBuildingSO.levelUpUnlocks[i].unlockedTroops.Count; j++)
+                {
+                    GameObject newButton = Instantiate(troopLockedButtonPrefab, troopButtonParent.transform);
+                    newButton.name = populatingBuildingSO.levelUpUnlocks[i].unlockedTroops[j].troop_Name + "_Locked";
+
+                    image_TroopSpriteLocked.Add(newButton.transform.GetChild(0).GetComponent<Image>());
+                    text_TroopLockedUpgrade.Add(newButton.transform.GetChild(1).GetComponent<TMP_Text>());
+                }
             }
         }
     }
@@ -365,7 +404,7 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
         {
-            text_TroopNames[i].text = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Name + "(Lvl " + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_Level, FormattingTypes.Level) + ")";
+            image_TroopSpriteUnlocked[i].sprite = gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_UnlockedSprite;
 
             text_TroopCosts[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost, FormattingTypes.IridiumCost);
             if (gameManager.playerData.iridium_Current < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troop_CurrentCost)
@@ -389,6 +428,20 @@ public class UIManager : MonoBehaviour
 
             text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned) + " owned";
             text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTickPerTroop() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + "i/s";
+        }
+
+        BuildingSO populatingBuildingSO = gameManager.BuildingManagerRef.selectedBuilding.buildingSO;
+
+        for (int i = 0, n = 0; i < populatingBuildingSO.levelUpUnlocks.Count; i++)
+        {
+            if (gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_Level >= populatingBuildingSO.levelUpUnlocks[i].level) continue;
+
+            for (int j = 0; j < populatingBuildingSO.levelUpUnlocks[i].unlockedTroops.Count; j++)
+            {
+                image_TroopSpriteLocked[n].sprite = populatingBuildingSO.levelUpUnlocks[i].unlockedTroops[j].troop_LockedSprite;
+                text_TroopLockedUpgrade[n].text = $"UPGRADE TO <color=#{lockedHexCode}>{populatingBuildingSO.building_Name} {populatingBuildingSO.levelUpUnlocks[i].level}";
+                n++;
+            }
         }
     }
 
@@ -430,8 +483,24 @@ public class UIManager : MonoBehaviour
         RectTransform rTransform = troopButtonParent.GetComponent<RectTransform>();
         rTransform.anchoredPosition = new Vector3(rTransform.anchoredPosition.x, 0);
 
-        if (text_TroopNames != null)
-            text_TroopNames.Clear();
+        if (image_TroopSpriteLocked != null)
+            image_TroopSpriteLocked.Clear();
+
+        if(text_TroopLockedUpgrade!=null)
+        {
+            foreach (TMP_Text text in text_TroopLockedUpgrade)
+            {
+                Destroy(text.transform.parent.gameObject);
+            }
+
+            text_TroopLockedUpgrade.Clear();
+        }
+
+        if(image_TroopSpriteUnlocked!=null)
+            image_TroopSpriteUnlocked.Clear();
+
+        if (text_TroopUpgradeCosts != null)
+            text_TroopUpgradeCosts.Clear();
 
         if (text_TroopCosts != null)
             text_TroopCosts.Clear();
@@ -566,97 +635,138 @@ public class UIManager : MonoBehaviour
 
     #endregion
 
-    #region Stocks UI
+    #region Stock Buy UI
 
-    public void InitializeStocksUI()
+    public void InitializeStockBuyUI()
     {
-        nextStock.onClick.AddListener(gameManager.StockManagerRef.NextStock);
-        prevStock.onClick.AddListener(gameManager.StockManagerRef.PreviousStock);
+        button_BuyStocksBack.onClick.AddListener(CloseStockBuyMenu);
 
-        button_Prev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountBuy);
-        button_MegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountBuy);
+        button_BuyPrev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountBuy);
+        button_BuyMegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountBuy);
 
-        button_Next.onClick.AddListener(gameManager.StockManagerRef.NextAmountBuy);
-        button_MegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountBuy);
+        button_BuyNext.onClick.AddListener(gameManager.StockManagerRef.NextAmountBuy);
+        button_BuyMegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountBuy);
 
-        button_StocksBack.onClick.AddListener(CloseStocksMenu);
-
-        text_BuyStocksButton = button_BuyStocks.GetComponentInChildren<TMP_Text>();
+        button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
+        text_BuyStocksButton = button_BuyStocks.transform.GetChild(0).GetComponent<TMP_Text>();
     }
 
-    public void OpenStocksMenu(bool sellMode)
+    public void OpenStockBuyMenu()
     {
         CloseAllPanels();
-
-        gameManager.StockManagerRef.sellMode = sellMode;
 
         for (int i = 0; i < gameManager.StockManagerRef.stocks.Count; i++)
         {
             gameManager.StockManagerRef.stocks[i].amountToBuy = gameManager.StockManagerRef.stocks[i].stockMinimumBuy;
         }
 
-        button_BuyStocks.onClick.RemoveAllListeners();
-
-        if (sellMode)
-        {
-            button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.SellStocks);
-        }
-        else
-        {
-            button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
-        }
-
-        stocksUI.SetActive(true);
+        stockBuyUI.SetActive(true);
     }
 
-    public void UpdateStocksMenu()
+    public void UpdateStockBuyMenu()
     {
-        if (!stocksUI.activeSelf) return;
+        if (!stockBuyUI.activeSelf) return;
 
         StockManager localSM = gameManager.StockManagerRef;
         DateTime localNow = DateTime.Now;
 
-        text_StockName.text = localSM.stocks[localSM.selectedStockIndex].stockName;
-        text_StockNextExpire.text = "Expires in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
+        text_BuyStockCurrentValue.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockCurrentBuyValue, FormattingTypes.StocksPrice);
 
-        text_StockOwned.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockOwned, FormattingTypes.Stocks) + " Owned";
+        text_AmountToBuy.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].amountToBuy, FormattingTypes.Stocks);
 
-        text_StockNextRefresh.text = "Refreshes in: " + NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
+        text_BuyStocksButton.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].totalPrice, FormattingTypes.StocksPrice);
 
-        if (localSM.sellMode)
-        {
-            text_BuyStocksButton.text = "Sell";
+        button_BuyNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
+        button_BuyMegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;
 
-            button_Next.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].nextStep);
-            button_MegaNext.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToBuy + localSM.stocks[localSM.selectedStockIndex].megaNextStep);
+        button_BuyStocks.interactable = ((gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice) && !localSM.stocks[localSM.selectedStockIndex].purchasedThisCycle);
 
-            button_BuyStocks.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= localSM.stocks[localSM.selectedStockIndex].amountToBuy;
-        }
-        else
-        {
-            text_BuyStocksButton.text = "Buy";
+        button_BuyMegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
+        button_BuyPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
 
-            button_Next.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusNext;
-            button_MegaNext.interactable = gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPricePlusMegaNext;
+        text_BuyStocksButton.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].totalPrice, FormattingTypes.StocksPrice);
 
-            button_BuyStocks.interactable = ((gameManager.playerData.iridium_Current >= localSM.stocks[localSM.selectedStockIndex].totalPrice) && !localSM.stocks[localSM.selectedStockIndex].purchasedThisCycle);
-        }
-
-        button_MegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
-        button_Prev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToBuy > localSM.stocks[localSM.selectedStockIndex].stockMinimumBuy;
-
-        text_CurrentPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].stockCurrentValue, FormattingTypes.StocksPrice);
-        text_AmountToBuy.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].amountToBuy, FormattingTypes.Stocks);
-        text_TotalPrice.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].totalPrice, FormattingTypes.StocksPrice);
+        text_BuyStockNextExpire.text = NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
     }
 
-    public void CloseStocksMenu()
+    public void CloseStockBuyMenu()
     {
-        if (!stocksUI.activeSelf) return;
+        if (!stockBuyUI.activeSelf) return;
 
         OpenMainUI();
 
-        stocksUI.SetActive(false);
+        stockBuyUI.SetActive(false);
+    }
+
+    #endregion
+
+    #region Stock Sell UI
+
+    public void InitializeStockSellUI()
+    {
+        button_SellStockBack.onClick.AddListener(CloseStockSellMenu);
+
+        button_SellPrev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountSell);
+        button_SellMegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountSell);
+
+        button_SellNext.onClick.AddListener(gameManager.StockManagerRef.NextAmountSell);
+        button_SellMegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountSell);
+
+        button_SellAllOwned.onClick.AddListener(gameManager.StockManagerRef.AllInSell);
+
+        button_SellStock.onClick.AddListener(gameManager.StockManagerRef.SellStocks);
+        text_SellStockButton = button_SellStock.transform.GetChild(0).GetComponent<TMP_Text>();
+    }
+
+    public void OpenStockSellMenu()
+    {
+        CloseAllPanels();
+
+        for (int i = 0; i < gameManager.StockManagerRef.stocks.Count; i++)
+        {
+            gameManager.StockManagerRef.stocks[i].amountToSell = gameManager.StockManagerRef.stocks[i].stockMinimumSell;
+        }
+
+        stockSellUI.SetActive(true);
+    }
+
+    public void UpdateStockSellMenu()
+    {
+        if (!stockSellUI.activeSelf) return;
+
+        StockManager localSM = gameManager.StockManagerRef;
+        DateTime localNow = DateTime.Now;
+
+        text_StockOwned.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].stockOwned, FormattingTypes.Stocks);
+
+        text_StockNextRefresh.text = NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextRefreshTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
+
+
+        text_SellStockCurrentValue.text = NumberFormatter.FormatNumber((localSM.stocks[localSM.selectedStockIndex].stockCurrentSaleValue), FormattingTypes.StocksPrice);
+
+        text_AmountToSell.text = NumberFormatter.FormatNumber(localSM.stocks[localSM.selectedStockIndex].amountToSell, FormattingTypes.Stocks);
+
+        button_SellMegaPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToSell > localSM.stocks[localSM.selectedStockIndex].stockMinimumSell;
+        button_SellPrev.interactable = localSM.stocks[localSM.selectedStockIndex].amountToSell > localSM.stocks[localSM.selectedStockIndex].stockMinimumSell;
+
+        button_SellNext.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToSell + localSM.stocks[localSM.selectedStockIndex].nextStep);
+        button_SellMegaNext.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= (localSM.stocks[localSM.selectedStockIndex].amountToSell + localSM.stocks[localSM.selectedStockIndex].megaNextStep);
+
+        button_SellAllOwned.interactable = !(localSM.stocks[localSM.selectedStockIndex].stockOwned == localSM.stocks[localSM.selectedStockIndex].amountToSell);
+
+        text_SellStockButton.text = NumberFormatter.FormatNumber(gameManager.StockManagerRef.stocks[localSM.selectedStockIndex].totalSale, FormattingTypes.StocksPrice);
+        button_SellStock.interactable = localSM.stocks[localSM.selectedStockIndex].stockOwned >= localSM.stocks[localSM.selectedStockIndex].amountToSell;
+
+        text_SellStockNextExpire.text = NumberFormatter.FormatNumber(((DateTime)localSM.stocks[localSM.selectedStockIndex].nextExpireTime - localNow).TotalSeconds, FormattingTypes.StocksTimer);
+    }
+
+    public void CloseStockSellMenu()
+    {
+        if (!stockSellUI.activeSelf) return;
+
+        OpenMainUI();
+
+        stockSellUI.SetActive(false);
     }
 
     #endregion

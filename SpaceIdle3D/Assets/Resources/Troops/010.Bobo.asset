@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: 010.Bobo
   m_EditorClassIdentifier: 
   troop_Name: Bobo
+  troop_LockedSprite: {fileID: 21300000, guid: 4d0e4709be79d0542a648e30bdf156e1, type: 3}
+  troop_UnlockedSprite: {fileID: 21300000, guid: 8c2e879fde1b3a44ca6818d8209ea2d7,
+    type: 3}
   troop_Prefab: {fileID: 0}
   troop_Level: 1
   troops_Owned: 0

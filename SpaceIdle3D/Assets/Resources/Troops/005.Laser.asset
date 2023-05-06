@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: 005.Laser
   m_EditorClassIdentifier: 
   troop_Name: Plasma Ray
+  troop_LockedSprite: {fileID: 21300000, guid: ac9f3eaee22a64e488a9bd84a379a789, type: 3}
+  troop_UnlockedSprite: {fileID: 21300000, guid: 6613d53910374f14799ccbbe23e3fb21,
+    type: 3}
   troop_Prefab: {fileID: 0}
   troop_Level: 1
   troops_Owned: 0

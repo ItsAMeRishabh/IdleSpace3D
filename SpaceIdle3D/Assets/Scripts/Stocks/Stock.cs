@@ -44,6 +44,8 @@ public class Stock
         stockExpireTime = so.stockExpireTime;
 
         stockMinimumBuy = so.stockMinimumBuy;
+        stockMinimumSell = so.stockMinimumSell;
+        amountToSell = so.stockMinimumSell;
         amountToBuy = so.stockMinimumBuy;
         nextStep = so.nextStep;
         megaNextStep = so.megaNextStep;
@@ -62,6 +64,8 @@ public class Stock
         stockExpireTime = so.stockExpireTime;
 
         stockMinimumBuy = so.stockMinimumBuy;
+        stockMinimumSell = so.stockMinimumSell;
+        amountToSell = so.stockMinimumSell;
         amountToBuy = so.stockMinimumBuy;
         nextStep = so.nextStep;
         megaNextStep = so.megaNextStep;

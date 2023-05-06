@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: 009.BlackHole
   m_EditorClassIdentifier: 
   troop_Name: Black Hole
+  troop_LockedSprite: {fileID: 21300000, guid: ac9f3eaee22a64e488a9bd84a379a789, type: 3}
+  troop_UnlockedSprite: {fileID: 21300000, guid: 22e75618a96fddd4aaaad3cb10227eae,
+    type: 3}
   troop_Prefab: {fileID: 0}
   troop_Level: 1
   troops_Owned: 0
