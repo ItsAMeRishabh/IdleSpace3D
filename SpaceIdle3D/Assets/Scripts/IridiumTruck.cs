@@ -12,11 +12,15 @@ public class IridiumTruck : MonoBehaviour
     private Vector3 targetPosition;
     private Quaternion targetRotation;
 
+    private GameManager gameManager;
+
     public void StartMove(GameManager gameManager)
     {
         targets = gameManager.truckRoute;
         moveSpeed = gameManager.truckMoveSpeed;
         rotationSpeed = gameManager.truckRotationSpeed;
+
+        this.gameManager = gameManager;
     }
 
     private void Update()
@@ -29,7 +33,13 @@ public class IridiumTruck : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPosition) < minimumDistance)
         {
+            if (currentTargetIndex == targets.Count - 1)
+            {
+                gameManager.SpawnTruck();
+                Destroy(gameObject);
+            }
             currentTargetIndex = (currentTargetIndex + 1) % targets.Count;
+
         }
     }
 
