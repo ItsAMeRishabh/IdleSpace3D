@@ -196,15 +196,6 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
-    private void GrabTruckRoute()
-    {
-        for (int i = 0; i < truckRouteParent.childCount; i++)
-        {
-            int j = i;
-            truckRoute.Add(truckRouteParent.GetChild(j));
-        }
-    }
-
     private void StartTickCoroutine()
     {
         if (tickCoroutine != null)
@@ -230,62 +221,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void StartSaveCoroutine()
-    {
-        if (saveCoroutine != null)
-            StopCoroutine(saveCoroutine);
-
-        saveWait = new WaitForSeconds(loadSaveSystem.saveInterval);
-        saveCoroutine = StartCoroutine(SaveCoroutine());
-    }
-
-    private IEnumerator SaveCoroutine()
-    {
-        while (true)
-        {
-            yield return saveWait;
-            if (loadSaveSystem.autoSave) SaveGame();
-        }
-    }
-
-    private IEnumerator HoldFarmCoroutine()
-    {
-        yield return holdFarmWait;
-
-        canGetIridium = true;
-    }
-
-    public void UpdateCosts()
-    {
-        upgradeClick_CurrentCost = upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1);
-
-        buildingManager.UpdateCosts();
-    }
-
-    public void UpdateResourceSources()
-    {
-        UpdateIridiumSources();
-        UpdateDarkElixirSources();
-    }
-
-    public void UpdateIridiumSources()
-    {
-        playerData.iridium_PerSecond = GetBaseIridiumPerSecond();
-        playerData.iridium_PerSecondBoost = GetIridiumPerSecondBoost();
-
-        playerData.iridium_PerClick = GetBaseIridiumPerClick();
-        playerData.iridium_PerClickBoost = GetIridiumPerClickBoost();
-
-        if (iridiumTruck == null && playerData.iridium_PerSecond >= truckSpawn_MinimumIPS)
-            StartCoroutine(SpawnTruck());
-            
-    }
-
-    public void UpdateDarkElixirSources()
-    {
-        playerData.darkElixir_PerSecond = GetBaseDarkElixirPerSecond();
-        playerData.darkElixir_PerSecondBoost = GetDarkElixirPerSecondBoost();
-    }
+    #region Iridium Processors
 
     private void ProcessResourcesAdded()
     {
@@ -300,13 +236,17 @@ public class GameManager : MonoBehaviour
         ProcessClickedIridium();
     }
 
+    private void ProcessIridiumPerBuilding()
+    {
+        playerData.iridium_Total += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
+        playerData.iridium_Current += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
+    }
+
     private void ProcessDarkElixirAdded()
     {
         playerData.darkElixir_Current += (playerData.darkElixir_PerSecond * playerData.darkElixir_PerSecondBoost) / ticksPerSecond;
         playerData.darkElixir_Total += (playerData.darkElixir_PerSecond * playerData.darkElixir_PerSecondBoost) / ticksPerSecond;
     }
-
-    #region Iridium Processors
 
     private void ProcessClickedIridium()
     {
@@ -330,15 +270,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ProcessIridiumPerBuilding()
+    private IEnumerator HoldFarmCoroutine()
     {
-        playerData.iridium_Total += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
-        playerData.iridium_Current += (playerData.iridium_PerSecond * playerData.iridium_PerClickBoost) / ticksPerSecond;
+        yield return holdFarmWait;
+
+        canGetIridium = true;
     }
 
     #endregion
 
-    #region Button Callbacks
+    #region Callbacks
 
     public void GetIridiumButton(InputAction.CallbackContext context)
     {
@@ -355,10 +296,10 @@ public class GameManager : MonoBehaviour
         if (playerData.iridium_Current >= upgradeClick_CurrentCost)
         {
             playerData.iridium_Current -= upgradeClick_CurrentCost;
-            upgradeClick_CurrentCost = (int)(upgradeClick_CurrentCost * upgradeClick_PriceMultiplier);
             playerData.iridium_PerClickLevel += 1;
         }
 
+        UpdateCosts();
         UpdateResourceSources();
     }
 
@@ -384,6 +325,17 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region Iridium Truck stuff
+
+    private void GrabTruckRoute()
+    {
+        for (int i = 0; i < truckRouteParent.childCount; i++)
+        {
+            int j = i;
+            truckRoute.Add(truckRouteParent.GetChild(j));
+        }
+    }
+
     public IEnumerator SpawnTruck()
     {
         float delay = UnityEngine.Random.Range(truckSpawnDelay.x, truckSpawnDelay.y);
@@ -393,6 +345,38 @@ public class GameManager : MonoBehaviour
         iridiumTruck = Instantiate(truckPrefab, truckRouteParent);
         iridiumTruck.GetComponent<IridiumTruck>().StartMove(this);
     }
+
+    #endregion
+
+    #region Update Variables
+
+    #region Update Resources
+
+    public void UpdateResourceSources()
+    {
+        UpdateIridiumSources();
+        UpdateDarkElixirSources();
+    }
+
+    public void UpdateIridiumSources()
+    {
+        playerData.iridium_PerSecond = GetBaseIridiumPerSecond();
+        playerData.iridium_PerSecondBoost = GetIridiumPerSecondBoost();
+
+        playerData.iridium_PerClick = GetBaseIridiumPerClick();
+        playerData.iridium_PerClickBoost = GetIridiumPerClickBoost();
+
+        if (iridiumTruck == null && playerData.iridium_PerSecond >= truckSpawn_MinimumIPS)
+            StartCoroutine(SpawnTruck());
+
+    }
+
+    public void UpdateDarkElixirSources()
+    {
+        playerData.darkElixir_PerSecond = GetBaseDarkElixirPerSecond();
+        playerData.darkElixir_PerSecondBoost = GetDarkElixirPerSecondBoost();
+    }
+
     public double GetBaseIridiumPerSecond()
     {
         double baseIPS = 0;
@@ -458,6 +442,61 @@ public class GameManager : MonoBehaviour
         }
 
         return DEPS_Boost;
+    }
+    #endregion
+
+    #region Update Costs
+
+    public void UpdateCosts()
+    {
+        upgradeClick_CurrentCost = upgradeClick_BaseCost * Math.Pow(upgradeClick_PriceMultiplier, playerData.iridium_PerClickLevel - 1);
+
+        buildingManager.UpdateCosts();
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Save And Load
+
+    private void StartSaveCoroutine()
+    {
+        if (saveCoroutine != null)
+            StopCoroutine(saveCoroutine);
+
+        saveWait = new WaitForSeconds(loadSaveSystem.saveInterval);
+        saveCoroutine = StartCoroutine(SaveCoroutine());
+    }
+
+    private IEnumerator SaveCoroutine()
+    {
+        while (true)
+        {
+            yield return saveWait;
+            if (loadSaveSystem.autoSave) SaveGame();
+        }
+    }
+
+    [ContextMenu("Try Save!")]
+    public void SaveGame()
+    {
+        if (!gameHathStarted)
+            return;
+
+        playerData.lastSaveTime = DateTime.Now;
+        playerData.ownedBuildings = buildingManager.GetBuildingDataList();
+        playerData.activeBoosts = boostManager.GetActiveBoosts();
+        playerData.ownedStocks = stockManager.GetStocks();
+
+        loadSaveSystem.Save(playerData);
+    }
+
+    public void LoadGame(string profileName)
+    {
+        playerData = loadSaveSystem.LoadProfile(profileName);
+
+        StartGame();
     }
 
     public void ResourcesGainedAfterIdle()
@@ -563,24 +602,5 @@ public class GameManager : MonoBehaviour
         playerData.darkElixir_Total += darkelixerToAdd;
     }
 
-    [ContextMenu("Try Save!")]
-    public void SaveGame()
-    {
-        if (!gameHathStarted)
-            return;
-
-        playerData.lastSaveTime = DateTime.Now;
-        playerData.ownedBuildings = buildingManager.GetBuildingDataList();
-        playerData.activeBoosts = boostManager.GetActiveBoosts();
-        playerData.ownedStocks = stockManager.GetStocks();
-
-        loadSaveSystem.Save(playerData);
-    }
-
-    public void LoadGame(string profileName)
-    {
-        playerData = loadSaveSystem.LoadProfile(profileName);
-
-        StartGame();
-    }
+    #endregion
 }
