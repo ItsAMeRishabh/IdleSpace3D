@@ -176,7 +176,7 @@ public class UIManager : MonoBehaviour
                 continue;
 
             levelZeroBuildings.Add(building);
-            text_BuildingCosts.Add(building.transform.parent.GetChild(2).GetChild(1).GetComponent<TMP_Text>());
+            text_BuildingCosts.Add(building.transform.parent.GetChild(3).GetChild(1).GetComponent<TMP_Text>());
         }
     }
 

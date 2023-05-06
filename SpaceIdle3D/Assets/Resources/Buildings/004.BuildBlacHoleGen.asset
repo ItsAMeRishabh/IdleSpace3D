@@ -23,7 +23,7 @@ MonoBehaviour:
   - 24000000
   - -1
   buildingPrefabs:
-  - {fileID: 1377956029180070585, guid: 8c92ba371b66b1b42802265d3673e8d1, type: 3}
+  - {fileID: 5614279667518886707, guid: 226519b3099cc6543b01238dd152c3a0, type: 3}
   - {fileID: 4753837119050955449, guid: f7a7660ca78515047aa88d9395ed68d2, type: 3}
   upgradeVisualFX:
   - {fileID: 8926484042661614526, guid: bcf1a86eaf4509d48af7c12f4070f6ca, type: 3}

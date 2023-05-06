@@ -19,7 +19,8 @@ public class EnemyShip : MonoBehaviour
     [HideInInspector] public Vector2 zTorqueLimit;
 
     private Vector2 mousePos;
-    public GameObject HitByPlayerParticleSys;
+    public GameObject HitTheGroundParticleSys;
+    [SerializeField] private GameObject floatingTextReward;
 
     private bool hitByPlayer = false;
     private bool firstCollision = false;
@@ -66,12 +67,7 @@ public class EnemyShip : MonoBehaviour
             gravity = fallSpeed * Vector3.down;
 
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameObject particle = Instantiate(HitByPlayerParticleSys);
-            //HitByPlayerParticleSys.GetComponent<ParticleSystem>().Play();
-            particle.transform.position = new Vector3(mousePos.x, mousePos.y, 0f);
-            Debug.Log(transform.position);
-            Debug.Log(particle.transform.position);
-
+            Debug.Log(mousePos);
             hitByPlayer = true;
         }
     }
@@ -81,6 +77,27 @@ public class EnemyShip : MonoBehaviour
         firstCollision = true;
         enemyShipManager.ShipDestroyed(iridiumReward, darkElixirReward, cosmiumReward);
         Debug.Log($"Iridium: {iridiumReward} \nDark Elixir: {darkElixirReward} \nCosmium: {cosmiumReward}");
+        GameObject particle = Instantiate(HitTheGroundParticleSys);
+
+        if(iridiumReward > 0)
+        {
+            ShowReward(NumberFormatter.FormatNumber(iridiumReward, FormattingTypes.Iridium) + " Iridium");
+        }
+        else if(darkElixirReward > 0)
+        {
+            ShowReward(darkElixirReward.ToString("F2") + " Dark Elixir");
+        }
+        else if(cosmiumReward > 0)
+        {
+            ShowReward(cosmiumReward.ToString("F2") + " Cosmium");
+        }
+        else
+        {
+            ShowReward("0");
+        }
+
+        //Ship Destory Particles
+        particle.transform.position = gameObject.transform.position - new Vector3(0f, 1f, 0f);
         Destroy(gameObject);
     }
 
@@ -100,5 +117,15 @@ public class EnemyShip : MonoBehaviour
         yield return new WaitForSeconds(timer);
 
         Destroy(this.gameObject);
+    }
+
+    void ShowReward(string text)
+    {
+        if(floatingTextReward)
+        {
+            FloatingTextDestroy.floatTextDes.EnableObject(text, transform.position);
+            //GameObject prefab = Instantiate(floatingTextReward, transform.position, Quaternion.identity);
+            //prefab.GetComponentInChildren<TextMesh>().text = text;
+        }
     }
 }
