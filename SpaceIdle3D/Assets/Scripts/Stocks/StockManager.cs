@@ -11,7 +11,6 @@ public class StockManager : MonoBehaviour
 
     public int selectedStockIndex;
 
-    public bool sellMode = false;
     private DateTime localNow;
     private GameManager gameManager;
 
@@ -23,6 +22,7 @@ public class StockManager : MonoBehaviour
     public void StartGame()
     {
         List<Stock> playerStocks = gameManager.playerData.ownedStocks;
+
         localNow = DateTime.Now;
 
         foreach (Stock stock in playerStocks)
@@ -139,7 +139,7 @@ public class StockManager : MonoBehaviour
     public void RefreshStockValue(int index = 0)
     {
         float currentStockVariance = UnityEngine.Random.Range(stocks[index].stockVariance.x, stocks[index].stockVariance.y);
-        stocks[index].stockCurrentValue = currentStockVariance * stocks[index].stockBaseValue;
+        stocks[index].stockCurrentSaleValue = currentStockVariance * stocks[index].stockBaseValue;
 
         RefreshPrices();
     }
@@ -150,15 +150,22 @@ public class StockManager : MonoBehaviour
         stocks[index].stockOwned = 0;
         stocks[index].purchasedThisCycle = false;
         stocks[index].lastBuyPrice = -1;
+
+        float currentStockVariance = UnityEngine.Random.Range(stocks[index].stockVariance.x, stocks[index].stockVariance.y);
+        stocks[index].stockCurrentBuyValue = currentStockVariance * stocks[index].stockBaseValue;
     }
 
     public void RefreshPrices()
     {
         for (int i = 0; i < stocks.Count; i++)
         {
-            stocks[i].totalPrice = stocks[i].amountToBuy * stocks[i].stockCurrentValue;
-            stocks[i].totalPricePlusNext = (stocks[i].amountToBuy + stocks[i].nextStep) * stocks[i].stockCurrentValue;
-            stocks[i].totalPricePlusMegaNext = (stocks[i].amountToBuy + stocks[i].megaNextStep) * stocks[i].stockCurrentValue;
+            stocks[i].totalPrice = stocks[i].amountToBuy * stocks[i].stockCurrentBuyValue;
+            stocks[i].totalPricePlusNext = (stocks[i].amountToBuy + stocks[i].nextStep) * stocks[i].stockCurrentBuyValue;
+            stocks[i].totalPricePlusMegaNext = (stocks[i].amountToBuy + stocks[i].megaNextStep) * stocks[i].stockCurrentBuyValue;
+
+            stocks[i].totalPrice = stocks[i].amountToSell * stocks[i].stockCurrentSaleValue;
+            stocks[i].totalPricePlusNext = (stocks[i].amountToSell + stocks[i].nextStep) * stocks[i].stockCurrentSaleValue;
+            stocks[i].totalPricePlusMegaNext = (stocks[i].amountToSell + stocks[i].megaNextStep) * stocks[i].stockCurrentSaleValue;
         }
     }
 
@@ -187,7 +194,7 @@ public class StockManager : MonoBehaviour
             stocks[selectedStockIndex].stockOwned += stocks[selectedStockIndex].amountToBuy;
             gameManager.playerData.iridium_Current -= stocks[selectedStockIndex].totalPrice;
             stocks[selectedStockIndex].purchasedThisCycle = true;
-            stocks[selectedStockIndex].lastBuyPrice = stocks[selectedStockIndex].stockCurrentValue;
+            stocks[selectedStockIndex].lastBuyPrice = stocks[selectedStockIndex].stockCurrentBuyValue;
         }
         else
         {
@@ -247,6 +254,54 @@ public class StockManager : MonoBehaviour
     {
         stocks[selectedStockIndex].amountToBuy -= stocks[selectedStockIndex].megaPreviousStep;
         stocks[selectedStockIndex].amountToBuy = Math.Clamp(stocks[selectedStockIndex].amountToBuy, stocks[selectedStockIndex].stockMinimumBuy, long.MaxValue);
+        RefreshPrices();
+    }
+
+    public void NextAmountSell()
+    {
+        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].stockOwned + stocks[selectedStockIndex].nextStep)
+        {
+            stocks[selectedStockIndex].amountToSell += stocks[selectedStockIndex].nextStep;
+
+            RefreshPrices();
+        }
+        else
+        {
+            Debug.LogError("Not enough Iridium to buy mega next");
+        }
+    }
+
+    public void MegaNextAmountSell()
+    {
+        if (stocks[selectedStockIndex].stockOwned >= stocks[selectedStockIndex].stockOwned + stocks[selectedStockIndex].totalPricePlusMegaNext)
+        {
+            stocks[selectedStockIndex].amountToSell += stocks[selectedStockIndex].megaNextStep;
+
+            RefreshPrices();
+        }
+        else
+        {
+            Debug.LogError("Not enough Iridium to buy mega next");
+        }
+    }
+
+    public void PreviousAmountSell()
+    {
+        stocks[selectedStockIndex].amountToSell -= stocks[selectedStockIndex].previousStep;
+        stocks[selectedStockIndex].amountToSell = Math.Clamp(stocks[selectedStockIndex].amountToSell, stocks[selectedStockIndex].stockMinimumSell, long.MaxValue);
+        RefreshPrices();
+    }
+
+    public void MegaPreviousAmountSell()
+    {
+        stocks[selectedStockIndex].amountToSell -= stocks[selectedStockIndex].megaPreviousStep;
+        stocks[selectedStockIndex].amountToSell = Math.Clamp(stocks[selectedStockIndex].amountToSell, stocks[selectedStockIndex].stockMinimumSell, long.MaxValue);
+        RefreshPrices();
+    }
+
+    public void AllInSell()
+    {
+        stocks[selectedStockIndex].amountToSell = stocks[selectedStockIndex].stockOwned;
         RefreshPrices();
     }
 
