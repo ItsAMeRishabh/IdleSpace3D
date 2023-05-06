@@ -33,6 +33,12 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+        if (buildingManager == null)
+        {
+            HandleMouseInput();
+            return;
+        }
+
         if (buildingManager.selectedBuilding != null)
         {
             newPosition = buildingManager.selectedBuilding.transform.position;
