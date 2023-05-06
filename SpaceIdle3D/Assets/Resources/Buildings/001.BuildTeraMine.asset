@@ -15,10 +15,12 @@ MonoBehaviour:
   building_Name: Tera Mine
   building_Level: 0
   building_IridiumBoostPerLevel: 1
+  building_DarkElixirPerSecond: 0
+  building_DarkElixirBoostPerLevel: 1
   building_BaseCost: 20
   building_CostMultiplier: 1
   building_UpgradeCosts:
-  - 30
+  - 20
   - 250
   - 20000
   - -1
@@ -27,6 +29,10 @@ MonoBehaviour:
   - {fileID: 1660457794083897724, guid: d0749ca41fbce134896813ff1b64d263, type: 3}
   - {fileID: 2371419009935829031, guid: 26ec342eaf0d9f44da552a36cb97e6dd, type: 3}
   - {fileID: 2270235752660297568, guid: e146a53c30ffb494283a14a6cd9ba254, type: 3}
+  upgradeVisualFX:
+  - {fileID: 8926484042661614526, guid: c82a16858ae53ac4a96ec0419cee7f9d, type: 3}
+  - {fileID: 8926484042661614526, guid: 722bb59a97afd384ea6b88a0a596acd5, type: 3}
+  - {fileID: 8926484042661614526, guid: 17302fedeb0b63f4cb7add754e70855b, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:

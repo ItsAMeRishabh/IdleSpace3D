@@ -29,7 +29,10 @@ MonoBehaviour:
   - {fileID: 4268541519508701774, guid: 10b19f76aaa5c944281294b4b9023bd3, type: 3}
   - {fileID: 8833628608593566758, guid: 64b6ba3453396ba48aefd87bc92968e5, type: 3}
   - {fileID: 6827496708047233620, guid: ca4a3b8520cbb6f47b8b192422be31cc, type: 3}
-  upgradeVisualFX: []
+  upgradeVisualFX:
+  - {fileID: 8926484042661614526, guid: cce9a89a87b04d64d81d2ffebc7e213e, type: 3}
+  - {fileID: 8926484042661614526, guid: ae90a4c06f948764893048a9d3b8455e, type: 3}
+  - {fileID: 8926484042661614526, guid: 5a80946504b979a46bdb24c1d1d67aa6, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:

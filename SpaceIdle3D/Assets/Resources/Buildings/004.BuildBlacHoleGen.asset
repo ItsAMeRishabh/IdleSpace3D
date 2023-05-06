@@ -15,6 +15,8 @@ MonoBehaviour:
   building_Name: VAC3000
   building_Level: 1
   building_IridiumBoostPerLevel: 1
+  building_DarkElixirPerSecond: 0
+  building_DarkElixirBoostPerLevel: 1
   building_BaseCost: 24000000
   building_CostMultiplier: 1
   building_UpgradeCosts:
@@ -23,6 +25,8 @@ MonoBehaviour:
   buildingPrefabs:
   - {fileID: 1377956029180070585, guid: 8c92ba371b66b1b42802265d3673e8d1, type: 3}
   - {fileID: 4753837119050955449, guid: f7a7660ca78515047aa88d9395ed68d2, type: 3}
+  upgradeVisualFX:
+  - {fileID: 8926484042661614526, guid: bcf1a86eaf4509d48af7c12f4070f6ca, type: 3}
   levelUpUnlocks:
   - level: 1
     unlockedTroops:
