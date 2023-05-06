@@ -7,11 +7,13 @@ public class CameraManager : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float movementTime;
+    [SerializeField] private Vector3 buildingOffset;
     [SerializeField] private Vector3 movementLowerLimit;
     [SerializeField] private Vector3 movementUpperLimit;
 
     [Header("Zoom")]
     [SerializeField] private Vector3 zoomAmount;
+    [SerializeField] private float buildingZoomLevel;
     [SerializeField] private float zoomLowerLimit;
     [SerializeField] private float zoomUpperLimit;
 
@@ -20,8 +22,6 @@ public class CameraManager : MonoBehaviour
 
     private Vector3 dragStartPosition;
     private Vector3 dragCurrentPosition;
-
-    private Vector3 lastCameraPosition;
     private BuildingManager buildingManager;
 
     private void Start()
@@ -35,7 +35,9 @@ public class CameraManager : MonoBehaviour
     {
         if (buildingManager != null && buildingManager.selectedBuilding != null)
         {
-            newPosition = buildingManager.selectedBuilding.transform.position;
+            newPosition = buildingManager.selectedBuilding.transform.position + buildingOffset;
+
+            newZoom = new Vector3(newZoom.x, buildingZoomLevel, -buildingZoomLevel);
         }
         else
         {
@@ -79,7 +81,6 @@ public class CameraManager : MonoBehaviour
 
                 // Update the camera's position by adding the drag offset to the initial position
                 newPosition = transform.position + dragOffset;
-                lastCameraPosition = newPosition;
             }
         }
     }
