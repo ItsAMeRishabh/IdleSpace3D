@@ -7,6 +7,10 @@ public class DetectClickOnUI : MonoBehaviour
 {
     public static bool IsPointerOverUIElement()
     {
+        if (EventSystem.current == null)
+        {
+            return false;
+        }
         return IsPointerOverUIElement(GetEventSystemRaycastResults());
     }
     public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
