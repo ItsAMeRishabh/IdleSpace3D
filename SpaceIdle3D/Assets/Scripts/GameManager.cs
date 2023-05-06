@@ -277,7 +277,8 @@ public class GameManager : MonoBehaviour
         playerData.iridium_PerClickBoost = GetIridiumPerClickBoost();
 
         if (iridiumTruck == null && playerData.iridium_PerSecond >= truckSpawn_MinimumIPS)
-            SpawnTruck();
+            StartCoroutine(SpawnTruck());
+            
     }
 
     public void UpdateDarkElixirSources()
