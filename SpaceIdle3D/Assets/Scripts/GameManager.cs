@@ -30,10 +30,12 @@ public class GameManager : MonoBehaviour
     [Header("Iridium Truck")]
     [SerializeField] private Transform truckRouteParent;
     [SerializeField] private GameObject truckPrefab;
+    [SerializeField] private Vector2 truckSpawnDelay;
+    [SerializeField] private double truckSpawn_MinimumIPS = 50;
     public float truckMoveSpeed = 5;
     public float truckRotationSpeed = 5;
     [HideInInspector] public List<Transform> truckRoute;
-    private GameObject iridiumTruck;
+    [HideInInspector] public GameObject iridiumTruck;
 
     private bool gameHathStarted = false;
 
@@ -201,8 +203,6 @@ public class GameManager : MonoBehaviour
             int j = i;
             truckRoute.Add(truckRouteParent.GetChild(j));
         }
-
-        SpawnTruck();
     }
 
     private void StartTickCoroutine()
@@ -275,6 +275,9 @@ public class GameManager : MonoBehaviour
 
         playerData.iridium_PerClick = GetBaseIridiumPerClick();
         playerData.iridium_PerClickBoost = GetIridiumPerClickBoost();
+
+        if (iridiumTruck == null && playerData.iridium_PerSecond >= truckSpawn_MinimumIPS)
+            SpawnTruck();
     }
 
     public void UpdateDarkElixirSources()
@@ -380,9 +383,12 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    private void SpawnTruck()
+    public IEnumerator SpawnTruck()
     {
-        if(iridiumTruck != null) return;
+        float delay = UnityEngine.Random.Range(truckSpawnDelay.x, truckSpawnDelay.y);
+
+        yield return new WaitForSeconds(delay);
+
         iridiumTruck = Instantiate(truckPrefab, truckRouteParent);
         iridiumTruck.GetComponent<IridiumTruck>().StartMove(this);
     }
