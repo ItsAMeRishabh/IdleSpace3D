@@ -374,6 +374,7 @@ GameObject:
   - component: {fileID: 4968211447498287547}
   - component: {fileID: 5744747395541529344}
   - component: {fileID: 4863317573000007851}
+  - component: {fileID: 5069213845156857627}
   m_Layer: 0
   m_Name: IridiumTruck
   m_TagString: Untagged
@@ -430,6 +431,26 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.0813866, y: 2.142053, z: 9.53158}
   m_Center: {x: 0.032322407, y: 1.7992705, z: 0.96892214}
+--- !u!95 &5069213845156857627
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5744747395541529345}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0b7dee84564b5da4e89bd7e5561e2857, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 1
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &7130853613672340686
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 003.BuildMegatron
   m_EditorClassIdentifier: 
   building_Name: Megatron Dock
-  building_Level: 1
+  building_Level: 0
   building_IridiumBoostPerLevel: 1
   building_DarkElixirPerSecond: 0
   building_DarkElixirBoostPerLevel: 1
@@ -25,7 +25,7 @@ MonoBehaviour:
   - 90000000000
   - -1
   buildingPrefabs:
-  - {fileID: 1377956029180070585, guid: 8c92ba371b66b1b42802265d3673e8d1, type: 3}
+  - {fileID: 4803976287489277585, guid: 67340608ee56727458fd54097e2b2f00, type: 3}
   - {fileID: 4268541519508701774, guid: 10b19f76aaa5c944281294b4b9023bd3, type: 3}
   - {fileID: 8833628608593566758, guid: 64b6ba3453396ba48aefd87bc92968e5, type: 3}
   - {fileID: 6827496708047233620, guid: ca4a3b8520cbb6f47b8b192422be31cc, type: 3}

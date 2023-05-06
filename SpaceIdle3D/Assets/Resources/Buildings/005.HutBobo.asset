@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 005.HutBobo
   m_EditorClassIdentifier: 
   building_Name: Bobo's Hut
-  building_Level: 1
+  building_Level: 0
   building_IridiumBoostPerLevel: 1
   building_DarkElixirPerSecond: 0
   building_DarkElixirBoostPerLevel: 1

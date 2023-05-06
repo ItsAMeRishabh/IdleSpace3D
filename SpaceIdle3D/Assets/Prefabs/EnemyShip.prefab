@@ -190,11 +190,14 @@ MonoBehaviour:
   iridiumReward: 0
   darkElixirReward: 0
   cosmiumReward: 0
+  selfDestroyDelay: 0
   speed: 3
   fallSpeed: 10
   xTorqueLimit: {x: 0, y: 0}
   yTorqueLimit: {x: 0, y: 0}
   zTorqueLimit: {x: 0, y: 0}
+  HitByPlayerParticleSys: {fileID: 7591701949245859387, guid: f10e7e11c9354bc439d9ff572016e4e8,
+    type: 3}
 --- !u!65 &1313171405078626819
 BoxCollider:
   m_ObjectHideFlags: 0

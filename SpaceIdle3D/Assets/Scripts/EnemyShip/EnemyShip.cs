@@ -18,6 +18,9 @@ public class EnemyShip : MonoBehaviour
     [HideInInspector] public Vector2 yTorqueLimit;
     [HideInInspector] public Vector2 zTorqueLimit;
 
+    private Vector2 mousePos;
+    public GameObject HitByPlayerParticleSys;
+
     private bool hitByPlayer = false;
     private bool firstCollision = false;
     private Vector3 gravity;
@@ -61,6 +64,13 @@ public class EnemyShip : MonoBehaviour
             rb.AddTorque(randomTorque, ForceMode.Impulse);
 
             gravity = fallSpeed * Vector3.down;
+
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            GameObject particle = Instantiate(HitByPlayerParticleSys);
+            //HitByPlayerParticleSys.GetComponent<ParticleSystem>().Play();
+            particle.transform.position = new Vector3(mousePos.x, mousePos.y, 0f);
+            Debug.Log(transform.position);
+            Debug.Log(particle.transform.position);
 
             hitByPlayer = true;
         }

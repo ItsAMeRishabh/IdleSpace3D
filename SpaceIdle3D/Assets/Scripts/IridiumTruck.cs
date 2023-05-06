@@ -37,7 +37,7 @@ public class IridiumTruck : MonoBehaviour
     {
         if (other.name.Equals("BunkerDoor"))
         {
-            other.GetComponent<Animator>().Play("BunkderDoorOpen");
+            other.GetComponent<Animator>().Play("BunkerDoorOpen");
         }
     }
 
@@ -45,7 +45,7 @@ public class IridiumTruck : MonoBehaviour
     {
         if (other.name.Equals("BunkerDoor"))
         {
-            other.GetComponent<Animator>().Play("BunkderDoorClose");
+            other.GetComponent<Animator>().Play("BunkerDoorClose");
         }
     }
 }
