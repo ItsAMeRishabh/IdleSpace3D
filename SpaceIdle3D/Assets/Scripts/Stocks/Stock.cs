@@ -6,12 +6,14 @@ public class Stock
 {
     public string stockName;
     [NonSerialized] public double stockBaseValue;
-    public double stockCurrentValue;
+    public double stockCurrentBuyValue;
+    public double stockCurrentSaleValue;
     [NonSerialized] public Vector2 stockVariance;
     [NonSerialized] public double stockRefreshTime = 3600.0;
     [NonSerialized] public double stockExpireTime = 86400.0;
 
     [NonSerialized] public long stockMinimumBuy;
+    [NonSerialized] public long stockMinimumSell;
     [NonSerialized] public long nextStep;
     [NonSerialized] public long megaNextStep;
     [NonSerialized] public long previousStep;
@@ -20,6 +22,7 @@ public class Stock
     public long stockOwned;
     public bool purchasedThisCycle;
     [NonSerialized] public long amountToBuy;
+    [NonSerialized] public long amountToSell;
     public double lastBuyPrice;
     public JsonDateTime nextRefreshTime;
     public JsonDateTime nextExpireTime;
@@ -27,6 +30,10 @@ public class Stock
     [NonSerialized] public double totalPrice;
     [NonSerialized] public double totalPricePlusNext;
     [NonSerialized] public double totalPricePlusMegaNext;
+
+    [NonSerialized] public double totalSale;
+    [NonSerialized] public double totalSalePlusNext;
+    [NonSerialized] public double totalSalePlusMegaNext;
 
     public Stock(StockSO so)
     {
@@ -48,7 +55,8 @@ public class Stock
     {
         stockName = so.stockName;
         stockBaseValue = so.stockBaseValue;
-        stockCurrentValue = s.stockCurrentValue;
+        stockCurrentBuyValue = s.stockCurrentBuyValue;
+        stockCurrentSaleValue = s.stockCurrentSaleValue;
         stockVariance = so.stockVariance;
         stockRefreshTime = so.stockRefreshTime;
         stockExpireTime = so.stockExpireTime;

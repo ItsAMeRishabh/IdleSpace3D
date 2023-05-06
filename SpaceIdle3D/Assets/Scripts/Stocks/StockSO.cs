@@ -12,6 +12,7 @@ public class StockSO : ScriptableObject
     public double stockExpireTime = 86400.0;
 
     public long stockMinimumBuy = 10;
+    public long stockMinimumSell = 10;
     public long nextStep = 10;
     public long megaNextStep = 100;
     public long previousStep = 10;
