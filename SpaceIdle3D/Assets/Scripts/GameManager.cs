@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     public float truckRotationSpeed = 5;
     [HideInInspector] public List<Transform> truckRoute;
     [HideInInspector] public GameObject iridiumTruck;
+    private Coroutine truckCoroutine;
 
     private bool gameHathStarted = false;
 
@@ -349,6 +350,8 @@ public class GameManager : MonoBehaviour
             int j = i;
             truckRoute.Add(truckRouteParent.GetChild(j));
         }
+
+        StartCoroutine(SpawnTruck());
     }
 
     public IEnumerator SpawnTruck()
@@ -380,10 +383,6 @@ public class GameManager : MonoBehaviour
 
         playerData.iridium_PerClick = GetBaseIridiumPerClick();
         playerData.iridium_PerClickBoost = GetIridiumPerClickBoost();
-
-        if (iridiumTruck == null && playerData.iridium_PerSecond >= truckSpawn_MinimumIPS)
-            StartCoroutine(SpawnTruck());
-
     }
 
     public void UpdateDarkElixirSources()
