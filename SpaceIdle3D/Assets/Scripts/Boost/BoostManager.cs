@@ -120,6 +120,7 @@ public class BoostManager : MonoBehaviour
     {
         Boost boost = Array.Find(activeBoosts.ToArray(), x => x.boost_Name == boostSO.boost_Name);
 
+        gameManager.AudioManagerRef.Play("BoostActivate");
         if (boost != null)
         {
             boost.boost_TimeRemaining += boostSO.boost_Duration;
@@ -132,7 +133,6 @@ public class BoostManager : MonoBehaviour
         {
             boost = new Boost(boostSO);
             activeBoosts.Add(boost);
-            gameManager.AudioManagerRef.Play("BoostActivate");
             gameManager.UpdateResourceSources();
             UpdateLowestTimeBoosts();
         }

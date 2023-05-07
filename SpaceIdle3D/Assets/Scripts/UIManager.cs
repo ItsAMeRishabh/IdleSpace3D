@@ -575,6 +575,7 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         buildingUI.SetActive(false);
+        gameManager.AudioManagerRef.Play("PanelClose");
         gameManager.BuildingManagerRef.selectedBuilding = null;
     }
 
@@ -688,6 +689,7 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         boostUI.SetActive(false);
+        gameManager.AudioManagerRef.Play("PanelClose");
         CleanUpBoostUI();
     }
 
@@ -766,6 +768,7 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         stockBuyUI.SetActive(false);
+        gameManager.AudioManagerRef.Play("PanelClose");
     }
 
     #endregion
@@ -850,6 +853,7 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         stockSellUI.SetActive(false);
+        gameManager.AudioManagerRef.Play("PanelClose");
     }
 
     #endregion
