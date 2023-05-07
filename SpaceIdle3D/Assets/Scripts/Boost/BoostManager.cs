@@ -108,6 +108,7 @@ public class BoostManager : MonoBehaviour
 
             if (activeBoosts[i].boost_TimeRemaining <= 0)
             {
+                gameManager.AudioManagerRef.Play("BoostFinish");
                 activeBoosts.RemoveAt(i);
                 gameManager.UpdateResourceSources();
                 UpdateLowestTimeBoosts();
@@ -131,6 +132,7 @@ public class BoostManager : MonoBehaviour
         {
             boost = new Boost(boostSO);
             activeBoosts.Add(boost);
+            gameManager.AudioManagerRef.Play("BoostActivate");
             gameManager.UpdateResourceSources();
             UpdateLowestTimeBoosts();
         }

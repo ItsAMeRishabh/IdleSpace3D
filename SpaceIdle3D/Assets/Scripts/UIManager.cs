@@ -283,9 +283,17 @@ public class UIManager : MonoBehaviour
         text_DarkElixirBoostQuickInfoTimer = darkElixirBoost_QuickInfo.transform.GetChild(1).GetComponent<TMP_Text>();
 
         button_GetBoost.onClick.AddListener(OpenBoostMenu);
+        button_GetBoost.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_StocksMenu.onClick.AddListener(OpenStockBuyMenu);
+        button_StocksMenu.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_SellStocksMenu.onClick.AddListener(OpenStockSellMenu);
+        button_SellStocksMenu.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_UpgradeClick.onClick.AddListener(gameManager.UpgradeClickClicked);
+        button_UpgradeClick.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
     }
 
     public void OpenMainUI()
@@ -340,9 +348,13 @@ public class UIManager : MonoBehaviour
     public void InitializeBuildingUI()
     {
         button_Back_Building.onClick.AddListener(CloseBuildingMenu);
+        button_Back_Building.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
 
         button_NextBuilding.onClick.AddListener(gameManager.BuildingManagerRef.NextBuilding);
+        button_NextBuilding.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_PreviousBuilding.onClick.AddListener(gameManager.BuildingManagerRef.PreviousBuilding);
+        button_PreviousBuilding.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
     }
 
     public void OpenBuildingMenu()
@@ -375,6 +387,8 @@ public class UIManager : MonoBehaviour
             text_TroopIPS = new List<TMP_Text>();
 
             button_UpgradeBuilding.onClick.AddListener(() => gameManager.BuildingManagerRef.UpgradeBuilding(gameManager.BuildingManagerRef.selectedBuilding));
+            button_UpgradeBuilding.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
             BuildingSO populatingBuildingSO = gameManager.BuildingManagerRef.selectedBuilding.buildingSO;
 
             for (int i = 0; i < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
@@ -395,7 +409,10 @@ public class UIManager : MonoBehaviour
                 text_TroopIPS.Add(newButton.transform.GetChild(4).GetComponent<TMP_Text>());
 
                 button_TroopBuy[i].onClick.AddListener(() => gameManager.TroopBuyClicked(j));
+                button_TroopBuy[i].onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
                 button_TroopUpgrade[i].onClick.AddListener(() => gameManager.TroopUpgradeClicked(j));
+                button_TroopUpgrade[i].onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
             }
 
             for (int i = 0; i < populatingBuildingSO.levelUpUnlocks.Count; i++)
@@ -568,6 +585,7 @@ public class UIManager : MonoBehaviour
     public void InitializeBoostUI()
     {
         button_Back_Boost.onClick.AddListener(CloseBoostMenu);
+        button_Back_Boost.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
     }
 
     public void OpenBoostMenu()
@@ -602,6 +620,7 @@ public class UIManager : MonoBehaviour
             text_BoostDurationRemainings.Add(newButton.transform.GetChild(3).GetComponent<TMP_Text>());
 
             button_Boosts[i].onClick.AddListener(() => gameManager.BoostManagerRef.AddBoost(gameManager.BoostManagerRef.boostSOs[j]));
+            button_Boosts[i].onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
         }
     }
 
@@ -679,14 +698,26 @@ public class UIManager : MonoBehaviour
     public void InitializeStockBuyUI()
     {
         button_BuyStocksBack.onClick.AddListener(CloseStockBuyMenu);
+        button_BuyStocksBack.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
 
         button_BuyPrev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountBuy);
+        button_BuyPrev.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_BuyMegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountBuy);
+        button_BuyMegaPrev.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
 
         button_BuyNext.onClick.AddListener(gameManager.StockManagerRef.NextAmountBuy);
+        button_BuyNext.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_BuyMegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountBuy);
+        button_BuyMegaNext.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
 
         button_BuyStocks.onClick.AddListener(gameManager.StockManagerRef.BuyStocks);
+        button_BuyStocks.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         text_BuyStocksButton = button_BuyStocks.transform.GetChild(0).GetComponent<TMP_Text>();
     }
 
@@ -744,16 +775,29 @@ public class UIManager : MonoBehaviour
     public void InitializeStockSellUI()
     {
         button_SellStockBack.onClick.AddListener(CloseStockSellMenu);
+        button_SellStockBack.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
 
         button_SellPrev.onClick.AddListener(gameManager.StockManagerRef.PreviousAmountSell);
+        button_SellPrev.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_SellMegaPrev.onClick.AddListener(gameManager.StockManagerRef.MegaPreviousAmountSell);
+        button_SellMegaPrev.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
 
         button_SellNext.onClick.AddListener(gameManager.StockManagerRef.NextAmountSell);
+        button_SellNext.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         button_SellMegaNext.onClick.AddListener(gameManager.StockManagerRef.MegaNextAmountSell);
+        button_SellMegaNext.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
 
         button_SellAllOwned.onClick.AddListener(gameManager.StockManagerRef.AllInSell);
+        button_SellAllOwned.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
 
         button_SellStock.onClick.AddListener(gameManager.StockManagerRef.SellStocks);
+        button_SellStock.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
         text_SellStockButton = button_SellStock.transform.GetChild(0).GetComponent<TMP_Text>();
     }
 
@@ -815,6 +859,7 @@ public class UIManager : MonoBehaviour
     public void InitializeProfileSelectUI()
     {
         button_newProfile.onClick.AddListener(OpenProfileCreatePanel);
+        button_newProfile.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
     }
 
     public void OpenProfileSelect()
@@ -844,6 +889,8 @@ public class UIManager : MonoBehaviour
             text_ProfileNames.Add(tmp_text);
 
             button.onClick.AddListener(() => gameManager.LoadGame(profilesList[j].profileName));
+            button.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
             tmp_text.text = profilesList[i].profileName;
         }
     }
@@ -885,6 +932,7 @@ public class UIManager : MonoBehaviour
     public void InitializeProfileCreateUI()
     {
         button_CreateProfile.onClick.AddListener(CreateProfile);
+        button_CreateProfile.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
     }
 
     public void OpenProfileCreatePanel()

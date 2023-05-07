@@ -59,7 +59,7 @@ public class BuildingManager : MonoBehaviour
 
     public void NextBuilding()
     {
-        if(selectedBuilding == null) return;
+        if (selectedBuilding == null) return;
 
         selectedBuildingIndex = (selectedBuildingIndex + 1) % ownedBuildings.Count;
 
@@ -315,6 +315,9 @@ public class BuildingManager : MonoBehaviour
 
         if (gameManager.playerData.iridium_Current >= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level])
         {
+            if (building.buildingData.building_Level == 0) gameManager.AudioManagerRef.Play("PoofSound");
+            else gameManager.AudioManagerRef.Play("BuildingUpgrades");
+
             gameManager.playerData.iridium_Current -= building.buildingSO.building_UpgradeCosts[building.buildingData.building_Level];
             Transform buildingTransform = buildingLocationsDict.FirstOrDefault(x => x.Value == building).Key;
 

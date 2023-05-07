@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
         enemyShipManager = GetComponent<EnemyShipManager>();
         buildingManager = GetComponent<BuildingManager>();
         loadSaveSystem = GetComponent<LoadSaveSystem>();
+        audioManager = GetComponent<AudioManager>();
         boostManager = GetComponent<BoostManager>();
         stockManager = GetComponent<StockManager>();
         npcManager = GetComponent<NPCManager>();
@@ -274,6 +275,7 @@ public class GameManager : MonoBehaviour
                     holdFarmCoroutine = null;
                 }
 
+                audioManager.Play("IridiumFarming");
                 playerData.iridium_Total += (playerData.iridium_PerClick * playerData.iridium_PerClickBoost);
                 playerData.iridium_Current += (playerData.iridium_PerClick * playerData.iridium_PerClickBoost);
 
