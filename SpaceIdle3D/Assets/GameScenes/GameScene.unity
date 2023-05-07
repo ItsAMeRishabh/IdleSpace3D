@@ -7729,7 +7729,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 29
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &185326106
 PrefabInstance:
@@ -8598,6 +8598,7 @@ GameObject:
   - component: {fileID: 202234310}
   - component: {fileID: 202234316}
   - component: {fileID: 202234317}
+  - component: {fileID: 202234318}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -8792,7 +8793,7 @@ MonoBehaviour:
   truckRouteParent: {fileID: 7546149043162366763}
   truckPrefab: {fileID: 5744747395541529345, guid: e1fa3c7effcbca840906d9ef5b35f02d,
     type: 3}
-  truckSpawnDelay: {x: 0, y: 0}
+  truckSpawnDelay: {x: 10, y: 30}
   truckSpawn_MinimumIPS: 0
   truckMoveSpeed: 10
   truckRotationSpeed: 10
@@ -8829,10 +8830,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyShipPrefab: {fileID: 9185423045841417309, guid: bd9bbda1118b0344b91b99bc0d70a554,
     type: 3}
-  spawnDelayRange: {x: 1, y: 2}
-  shipHeight: 60
-  shipDistance: 120
-  selfDestroyDelay: 30
+  spawnDelayRange: {x: 30, y: 60}
+  shipHeight: 100
+  shipDistance: 150
+  selfDestroyDelay: 40
   shipFallSpeed: 20
   xTorqueLimit: {x: -2, y: 4}
   yTorqueLimit: {x: -2, y: 4}
@@ -8858,6 +8859,50 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 47825471530ff9648ae7f41003db4b55, type: 2}
   stocks: []
   selectedStockIndex: 0
+--- !u!114 &202234318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 202234309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f913accc6cc2ba4a907b21b61c06484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - source: {fileID: 0}
+    name: ButtonClick
+    clip: {fileID: 8300000, guid: 92f284671773fe44e88e2a9f271e5355, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: BoostActivate
+    clip: {fileID: 8300000, guid: c89b35326e2a7af45b63be96ea2178f9, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  - source: {fileID: 0}
+    name: UpgradeBuild
+    clip: {fileID: 8300000, guid: 49c9502840e0d1446b09f44ab881614b, type: 3}
+    loop: 0
+    volume: 0.12
+    pitch: 1
+  - source: {fileID: 0}
+    name: GetIridium
+    clip: {fileID: 8300000, guid: 6886b7236a6015445a2082088a70a161, type: 3}
+    loop: 0
+    volume: 0.5
+    pitch: 1
+  music:
+  - source: {fileID: 0}
+    name: Background Music
+    clip: {fileID: 8300000, guid: e6a1608b90d789f45b3ef9de35aaf8e4, type: 3}
+    loop: 1
+    volume: 0.3
+    pitch: 1
 --- !u!1001 &203467390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15192,70 +15237,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8550fe0c0535b654ead12b778eaebf50, type: 3}
---- !u!1 &384604538
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 384604540}
-  - component: {fileID: 384604539}
-  m_Layer: 0
-  m_Name: AudioManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &384604539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 384604538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f913accc6cc2ba4a907b21b61c06484, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sounds:
-  - source: {fileID: 0}
-    name: ButtonClick
-    clip: {fileID: 8300000, guid: 92f284671773fe44e88e2a9f271e5355, type: 3}
-    loop: 0
-    volume: 0.5
-    pitch: 1
-  - source: {fileID: 0}
-    name: BoostActivate
-    clip: {fileID: 8300000, guid: c89b35326e2a7af45b63be96ea2178f9, type: 3}
-    loop: 0
-    volume: 0.5
-    pitch: 1
-  music:
-  - source: {fileID: 0}
-    name: Background Music
-    clip: {fileID: 8300000, guid: e6a1608b90d789f45b3ef9de35aaf8e4, type: 3}
-    loop: 1
-    volume: 0.3
-    pitch: 1
---- !u!4 &384604540
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 384604538}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 28
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &385088396
 GameObject:
   m_ObjectHideFlags: 0
@@ -36500,6 +36481,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 852501199}
+  - component: {fileID: 852501200}
   m_Layer: 0
   m_Name: t3 (1)
   m_TagString: Untagged
@@ -36525,6 +36507,19 @@ Transform:
   m_Father: {fileID: 594578050}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -269.96, z: 0}
+--- !u!65 &852501200
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852501198}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.047049806, y: 0.021554284, z: 0.05502924}
+  m_Center: {x: -0.01618423, y: 0.022984793, z: 0.06663081}
 --- !u!1001 &852585978
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47210,7 +47205,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1114532778}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 202234318}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: GetIridium
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1114532778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64601,6 +64608,25 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 679297428}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1510840412 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e2d803f22402bf4f8a1eff0c74de1d9,
+    type: 3}
+  m_PrefabInstance: {fileID: 399581633}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1510840413
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1510840412}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.16235186, y: 0.12556985, z: 0.13439414}
+  m_Center: {x: 0.14781107, y: 0.05718793, z: 0.44831106}
 --- !u!1001 &1513278456
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79708,7 +79734,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1869390371}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 202234318}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: UpgradeBuild
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1869390371
 MonoBehaviour:
   m_ObjectHideFlags: 0
