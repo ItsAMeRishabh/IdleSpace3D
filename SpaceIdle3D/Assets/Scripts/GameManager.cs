@@ -8,6 +8,7 @@ using System;
 [RequireComponent (typeof(NPCManager))]
 [RequireComponent(typeof(BoostManager))]
 [RequireComponent(typeof(StockManager))]
+[RequireComponent(typeof(AudioManager))]
 [RequireComponent(typeof(LoadSaveSystem))]
 [RequireComponent(typeof(BuildingManager))]
 [RequireComponent(typeof(EnemyShipManager))]
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour
     private EnemyShipManager enemyShipManager;
     private BuildingManager buildingManager;
     private LoadSaveSystem loadSaveSystem;
+    private AudioManager audioManager;
     private StockManager stockManager;
     private BoostManager boostManager;
     private InputManager inputManager;
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
     public EnemyShipManager EnemyShipManagerRef => enemyShipManager;
     public BuildingManager BuildingManagerRef => buildingManager;
     public LoadSaveSystem LoadSaveSystemRef => loadSaveSystem;
+    public AudioManager AudioManagerRef => audioManager;
     public StockManager StockManagerRef => stockManager;
     public BoostManager BoostManagerRef => boostManager;
     public NPCManager NPCManagerRef => npcManager;
@@ -122,6 +125,7 @@ public class GameManager : MonoBehaviour
 
     public void WakeAllManagers()
     {
+        audioManager.WakeUp();
         enemyShipManager.WakeUp();
         buildingManager.WakeUp();
         loadSaveSystem.WakeUp();
@@ -166,6 +170,8 @@ public class GameManager : MonoBehaviour
 
     private void StartAllManagers()
     {
+        audioManager.StartGame();
+
         boostManager.StartGame();
 
         stockManager.StartGame();

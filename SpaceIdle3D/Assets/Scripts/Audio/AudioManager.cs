@@ -7,7 +7,7 @@ public class AudioManager : MonoBehaviour
     public Sound[] music;
     public static AudioManager audioManagerInstance;
 
-    void Awake()
+    public void WakeUp()
     {
         if (audioManagerInstance == null)
             audioManagerInstance = this;
@@ -38,7 +38,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void StartGame()
     {
         ChangeTrack();
     }
