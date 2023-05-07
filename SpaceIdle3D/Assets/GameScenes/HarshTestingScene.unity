@@ -7560,6 +7560,14 @@ MonoBehaviour:
   text_IridiumPerSecond: {fileID: 8527595905721631873}
   text_TotalDarkElixir: {fileID: 8527595906210786495}
   text_DarkElixirPerSecond: {fileID: 8527595906319185593}
+  purchasePlotFrame_CanBuy: {fileID: 2100000, guid: 68c2857475829884296bbbd8715c557c,
+    type: 2}
+  purchasePlotFill_CanBuy: {fileID: 2100000, guid: 370b74e99c349ec478a5bb0b1dbd986c,
+    type: 2}
+  purchasePlotFrame_CannotBuy: {fileID: 2100000, guid: 8e43994a06115d446b3593459606ec83,
+    type: 2}
+  purchasePlotFill_CannotBuy: {fileID: 2100000, guid: 3d252f2d146bace429e493280f36c8fd,
+    type: 2}
   mainUI: {fileID: 8527595906182483161}
   button_GetIridium: {fileID: 8527595906417997692}
   button_GetBoost: {fileID: 6432113531425191590}

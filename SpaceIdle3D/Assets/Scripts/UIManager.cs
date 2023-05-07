@@ -15,8 +15,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text text_TotalDarkElixir;
     [SerializeField] private TMP_Text text_DarkElixirPerSecond;
 
+    [SerializeField] private Material purchasePlotFrame_CanBuy;
+    [SerializeField] private Material purchasePlotFill_CanBuy;
+    [SerializeField] private Material purchasePlotFrame_CannotBuy;
+    [SerializeField] private Material purchasePlotFill_CannotBuy;
+
     private List<TMP_Text> text_BuildingCosts;
     private List<Building> levelZeroBuildings;
+    private List<Transform> frameParents;
+    private List<Transform> fillParents;
 
     [Header("Main UI")]
     [SerializeField] private GameObject mainUI;
@@ -189,6 +196,8 @@ public class UIManager : MonoBehaviour
     {
         text_BuildingCosts = new List<TMP_Text>();
         levelZeroBuildings = new List<Building>();
+        frameParents = new List<Transform>();
+        fillParents = new List<Transform>();
 
         foreach (Building building in gameManager.BuildingManagerRef.ownedBuildings)
         {
@@ -196,6 +205,8 @@ public class UIManager : MonoBehaviour
                 continue;
 
             levelZeroBuildings.Add(building);
+            frameParents.Add(building.transform.parent.GetChild(1));
+            fillParents.Add(building.transform.parent.GetChild(2));
             text_BuildingCosts.Add(building.transform.parent.GetChild(3).GetChild(1).GetComponent<TMP_Text>());
         }
     }
@@ -218,6 +229,29 @@ public class UIManager : MonoBehaviour
             for (int i = 0; i < levelZeroBuildings.Count; i++)
             {
                 text_BuildingCosts[i].text = NumberFormatter.FormatNumber(levelZeroBuildings[i].buildingSO.building_UpgradeCosts[0], FormattingTypes.IridiumCost);
+
+                if (gameManager.playerData.iridium_Current >= levelZeroBuildings[i].buildingSO.building_UpgradeCosts[0])
+                {
+                    for (int j = 0; j < frameParents[i].childCount; j++)
+                    {
+                        frameParents[i].GetChild(j).GetComponent<MeshRenderer>().material = purchasePlotFrame_CanBuy;
+                    }
+                    for (int j = 0; j < fillParents[i].childCount; j++)
+                    {
+                        fillParents[i].GetChild(j).GetComponent<MeshRenderer>().material = purchasePlotFill_CanBuy;
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < frameParents[i].childCount; j++)
+                    {
+                        frameParents[i].GetChild(j).GetComponent<MeshRenderer>().material = purchasePlotFrame_CannotBuy;
+                    }
+                    for (int j = 0; j < fillParents[i].childCount; j++)
+                    {
+                        fillParents[i].GetChild(j).GetComponent<MeshRenderer>().material = purchasePlotFill_CannotBuy;
+                    }
+                }
             }
         }
     }
@@ -486,7 +520,7 @@ public class UIManager : MonoBehaviour
         if (image_TroopSpriteLocked != null)
             image_TroopSpriteLocked.Clear();
 
-        if(text_TroopLockedUpgrade!=null)
+        if (text_TroopLockedUpgrade != null)
         {
             foreach (TMP_Text text in text_TroopLockedUpgrade)
             {
@@ -496,7 +530,7 @@ public class UIManager : MonoBehaviour
             text_TroopLockedUpgrade.Clear();
         }
 
-        if(image_TroopSpriteUnlocked!=null)
+        if (image_TroopSpriteUnlocked != null)
             image_TroopSpriteUnlocked.Clear();
 
         if (text_TroopUpgradeCosts != null)
