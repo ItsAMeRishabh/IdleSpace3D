@@ -56,6 +56,8 @@ public class UIManager : MonoBehaviour
 
     [Header("Building UI")]
     [SerializeField] private GameObject buildingUI;
+    [SerializeField] private Button button_NextBuilding;
+    [SerializeField] private Button button_PreviousBuilding;
     [SerializeField] private TMP_Text text_BuildingName;
     [SerializeField] private TMP_Text text_BuildingIridiumPerSecond;
     [SerializeField] private Button button_UpgradeBuilding;
@@ -338,6 +340,9 @@ public class UIManager : MonoBehaviour
     public void InitializeBuildingUI()
     {
         button_Back_Building.onClick.AddListener(CloseBuildingMenu);
+
+        button_NextBuilding.onClick.AddListener(gameManager.BuildingManagerRef.NextBuilding);
+        button_PreviousBuilding.onClick.AddListener(gameManager.BuildingManagerRef.PreviousBuilding);
     }
 
     public void OpenBuildingMenu()

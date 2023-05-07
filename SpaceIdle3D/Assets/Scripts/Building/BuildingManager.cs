@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(GameManager))]
 public class BuildingManager : MonoBehaviour
 {
     [HideInInspector] public Building selectedBuilding;
+    [HideInInspector] public int selectedBuildingIndex;
 
     public List<BuildingLocation> buildingLocations;
     [HideInInspector] public List<Building> ownedBuildings = new List<Building>();
@@ -39,8 +41,47 @@ public class BuildingManager : MonoBehaviour
         else
         {
             selectedBuilding = building;
+            selectedBuildingIndex = GetBuildingIndex(building);
             gameManager.UIManagerRef.OpenBuildingMenu();
         }
+    }
+
+    public int GetBuildingIndex(Building building)
+    {
+        for (int i = 0; i < ownedBuildings.Count; i++)
+        {
+            if (ownedBuildings[i] == building)
+                return i;
+        }
+
+        return -1;
+    }
+
+    public void NextBuilding()
+    {
+        if(selectedBuilding == null) return;
+
+        selectedBuildingIndex = (selectedBuildingIndex + 1) % ownedBuildings.Count;
+
+        while (ownedBuildings[selectedBuildingIndex].buildingData.building_Level == 0)
+        {
+            selectedBuildingIndex = (selectedBuildingIndex + 1) % ownedBuildings.Count;
+        }
+
+        ClickedOnBuilding(ownedBuildings[selectedBuildingIndex]);
+    }
+
+    public void PreviousBuilding()
+    {
+        if (selectedBuilding == null) return;
+        selectedBuildingIndex = (selectedBuildingIndex - 1 + ownedBuildings.Count) % ownedBuildings.Count;
+
+        while (ownedBuildings[selectedBuildingIndex].buildingData.building_Level == 0)
+        {
+            selectedBuildingIndex = (selectedBuildingIndex - 1 + ownedBuildings.Count) % ownedBuildings.Count;
+        }
+
+        ClickedOnBuilding(ownedBuildings[selectedBuildingIndex]);
     }
 
     public void InitializeNewBuildings()
@@ -107,7 +148,7 @@ public class BuildingManager : MonoBehaviour
 
         foreach (Building building in ownedBuildings)
         {
-            for(int i = 0; i< building.buildingData.building_OwnedTroops.Count; i++)
+            for (int i = 0; i < building.buildingData.building_OwnedTroops.Count; i++)
             {
                 building.buildingData.building_OwnedTroops[i].troop_CurrentCost = building.buildingData.building_OwnedTroops[i].troop_BaseCost * Math.Pow(building.buildingData.building_OwnedTroops[i].troop_CostMultiplier, building.buildingData.building_OwnedTroops[i].troops_Owned);
                 building.buildingData.building_OwnedTroops[i].troop_CurrentUpgradeCost = building.buildingData.building_OwnedTroops[i].troop_BaseUpgradeCost * Math.Pow(building.buildingData.building_OwnedTroops[i].troop_UpgradeCostMultiplier, building.buildingData.building_OwnedTroops[i].troop_Level - 1);
@@ -282,7 +323,7 @@ public class BuildingManager : MonoBehaviour
             BuildingData buildingData = building.buildingData;
             buildingData.building_Level++;
             Destroy(building.transform.parent.gameObject);
-            
+
             selectedBuilding = PlaceBuilding(buildingSO, buildingData);
             selectedBuilding.SpawnUpgradeEffect(buildingSO.upgradeVisualFX[buildingData.building_Level - 1]);
             gameManager.UpdateResourceSources();
@@ -371,13 +412,13 @@ public class BuildingManager : MonoBehaviour
 
     public void TroopUpgradeClicked(int troopIndex)
     {
-        if(selectedBuilding == null)
+        if (selectedBuilding == null)
         {
             Debug.LogError("No building selected, cannot upgrade troop");
         }
         else
         {
-            if(gameManager.playerData.darkElixir_Current >= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentUpgradeCost)
+            if (gameManager.playerData.darkElixir_Current >= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentUpgradeCost)
             {
                 gameManager.playerData.darkElixir_Current -= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentUpgradeCost;
                 selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_Level += 1;
