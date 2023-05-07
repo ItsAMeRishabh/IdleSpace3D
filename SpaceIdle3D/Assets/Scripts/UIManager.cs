@@ -166,6 +166,8 @@ public class UIManager : MonoBehaviour
         CloseAllPanels();
 
         OpenAlwaysOnUI();
+
+        OpenMainUI();
     }
 
     public void UpdateAllUI()
