@@ -35,7 +35,7 @@ public class IridiumTruck : MonoBehaviour
         {
             if (currentTargetIndex == targets.Count - 1)
             {
-                StartCoroutine(gameManager.SpawnTruck());
+                gameManager.StartCoroutine(gameManager.SpawnTruck());
                 Destroy(gameObject);
             }
             currentTargetIndex = (currentTargetIndex + 1) % targets.Count;
