@@ -466,7 +466,7 @@ public class UIManager : MonoBehaviour
             }
 
             text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned);
-            text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTickPerTroop() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + "i/s";
+            text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTickPerTroop() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + " i/s";
         }
 
         BuildingSO populatingBuildingSO = gameManager.BuildingManagerRef.selectedBuilding.buildingSO;
