@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 
 [RequireComponent(typeof(UIManager))]
+[RequireComponent (typeof(NPCManager))]
 [RequireComponent(typeof(BoostManager))]
 [RequireComponent(typeof(StockManager))]
 [RequireComponent(typeof(LoadSaveSystem))]
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
     private StockManager stockManager;
     private BoostManager boostManager;
     private InputManager inputManager;
+    private NPCManager npcManager;
     private UIManager uiManager;
 
     [HideInInspector] public bool getIridiumButtonPressedDown = false;
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
     public LoadSaveSystem LoadSaveSystemRef => loadSaveSystem;
     public StockManager StockManagerRef => stockManager;
     public BoostManager BoostManagerRef => boostManager;
+    public NPCManager NPCManagerRef => npcManager;
     public UIManager UIManagerRef => uiManager;
 
     #region Unity Functions
@@ -73,6 +76,7 @@ public class GameManager : MonoBehaviour
         loadSaveSystem = GetComponent<LoadSaveSystem>();
         boostManager = GetComponent<BoostManager>();
         stockManager = GetComponent<StockManager>();
+        npcManager = GetComponent<NPCManager>();
         uiManager = GetComponent<UIManager>();
 
         inputManager = new InputManager();
@@ -171,6 +175,9 @@ public class GameManager : MonoBehaviour
         enemyShipManager.StartGame();
 
         uiManager.StartGame();
+
+        npcManager.StartGame();
+        
     }
 
     public void StartNewGame(string profileName)
