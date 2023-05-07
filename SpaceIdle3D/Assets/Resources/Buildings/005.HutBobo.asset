@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d48f4752ffbcc14eb374de651ff1bd2, type: 3}
   m_Name: 005.HutBobo
   m_EditorClassIdentifier: 
-  building_Name: Bobo's Hut
+  building_Name: BOBO'S HUT
   building_Level: 0
   building_IridiumBoostPerLevel: 1
   building_DarkElixirPerSecond: 0
