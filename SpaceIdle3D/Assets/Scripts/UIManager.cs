@@ -297,9 +297,9 @@ public class UIManager : MonoBehaviour
     {
         if (!mainUI.activeSelf) return;
 
-        text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerClick * gameManager.playerData.iridium_PerClickBoost), FormattingTypes.IridiumPerSecond) + " Iridium)";
+        //text_GetIridiumButton.text = "Get Iridium \n(+" + NumberFormatter.FormatNumber((gameManager.playerData.iridium_PerClick * gameManager.playerData.iridium_PerClickBoost), FormattingTypes.IridiumPerSecond) + " Iridium)";
 
-        text_UpgradeClickButton.text = "Upgrade Click (" + NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.IridiumCost) + ")";
+        text_UpgradeClickButton.text = NumberFormatter.FormatNumber(gameManager.upgradeClick_CurrentCost, FormattingTypes.IridiumCost);
 
         button_UpgradeClick.interactable = gameManager.playerData.iridium_Current > gameManager.upgradeClick_CurrentCost;
 
@@ -438,7 +438,7 @@ public class UIManager : MonoBehaviour
                 button_UpgradeBuilding.interactable = true;
             }
 
-            text_UpgradeBuildingButton.text = "Upgrade (" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_Level], FormattingTypes.IridiumCost) + ")";
+            text_UpgradeBuildingButton.text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingSO.building_UpgradeCosts[gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_Level], FormattingTypes.IridiumCost);
         }
 
         for (int i = 0; i < gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops.Count; i++)
@@ -465,7 +465,7 @@ public class UIManager : MonoBehaviour
                 button_TroopUpgrade[i].interactable = true;
             }
 
-            text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned) + " owned";
+            text_TroopsOwned[i].text = NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].troops_Owned, FormattingTypes.Owned);
             text_TroopIPS[i].text = "+" + NumberFormatter.FormatNumber(gameManager.BuildingManagerRef.selectedBuilding.buildingData.building_OwnedTroops[i].GetIridiumPerTickPerTroop() * GameManager.ticksPerSecond, FormattingTypes.IridiumPerSecond) + "i/s";
         }
 
