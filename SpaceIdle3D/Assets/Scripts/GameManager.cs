@@ -605,16 +605,13 @@ public class GameManager : MonoBehaviour
 
         boostManager.LoadBoosts(localBoostList);
 
+        uiManager.OpenAFKReportUI(timeElapsed, iridiumToAdd, darkelixerToAdd);
+
         Debug.Log($"{playerData.profileName} was idle for {timeElapsed} seconds");
 
         Debug.Log($"Iridium Added: {iridiumToAdd}");
 
-        playerData.iridium_Current += iridiumToAdd;
-        playerData.iridium_Total += iridiumToAdd;
-
         Debug.Log($"Dark Elixir Added: {darkelixerToAdd}");
-        playerData.darkElixir_Current += darkelixerToAdd;
-        playerData.darkElixir_Total += darkelixerToAdd;
     }
 
     #endregion

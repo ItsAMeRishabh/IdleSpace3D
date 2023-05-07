@@ -7661,6 +7661,7 @@ GameObject:
   - component: {fileID: 202234316}
   - component: {fileID: 202234317}
   - component: {fileID: 202234318}
+  - component: {fileID: 202234319}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -7794,6 +7795,13 @@ MonoBehaviour:
   profileCreationUI: {fileID: 8527595907537398558}
   button_CreateProfile: {fileID: 8527595907100793430}
   inputField_ProfileName: {fileID: 8527595906695863676}
+  afkReportUI: {fileID: 435772876}
+  text_AFKTime: {fileID: 48551714}
+  text_IridiumReward: {fileID: 1156493684}
+  text_DarkElixirReward: {fileID: 1807989342}
+  button_NoThanks: {fileID: 1471353420}
+  button_RewardX2: {fileID: 824946534}
+  button_RewardX3: {fileID: 471269819}
 --- !u!114 &202234313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7807,7 +7815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   folderName: Saves
-  startFreshOnLaunch: 1
+  startFreshOnLaunch: 0
   saveInterval: 5
   autoSave: 1
 --- !u!114 &202234314
@@ -7934,6 +7942,20 @@ MonoBehaviour:
   - {fileID: 1496800571601877551, guid: 79e723a88821aa7498a074828cda6b63, type: 3}
   - {fileID: 6180296290882863130, guid: 9a9bf57704a8d8f4d8055619d8ff2387, type: 3}
   NPC_Routes: {fileID: 1461386794}
+--- !u!114 &202234319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 202234309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f913accc6cc2ba4a907b21b61c06484, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds: []
+  music: []
 --- !u!1001 &203467390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16936,7 +16958,7 @@ RectTransform:
   - {fileID: 383381592}
   - {fileID: 1388373333}
   m_Father: {fileID: 1800442605}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -32648,7 +32670,7 @@ RectTransform:
   m_Children:
   - {fileID: 564423809}
   m_Father: {fileID: 1800442605}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -58204,7 +58226,7 @@ RectTransform:
   m_Children:
   - {fileID: 958617307}
   m_Father: {fileID: 1800442605}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -70800,9 +70822,9 @@ RectTransform:
   - {fileID: 623000101}
   - {fileID: 2027813556}
   - {fileID: 1517003704}
+  - {fileID: 1471353419}
   - {fileID: 824946533}
   - {fileID: 471269818}
-  - {fileID: 1471353419}
   m_Father: {fileID: 435772877}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

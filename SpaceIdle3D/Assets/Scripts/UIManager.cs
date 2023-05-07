@@ -125,6 +125,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button button_CreateProfile;
     [SerializeField] private TMP_InputField inputField_ProfileName;
 
+    [Header("AFK Report UI")]
+    [SerializeField] private GameObject afkReportUI;
+    [SerializeField] private TMP_Text text_AFKTime;
+    [SerializeField] private TMP_Text text_IridiumReward;
+    [SerializeField] private TMP_Text text_DarkElixirReward;
+    [SerializeField] private Button button_NoThanks;
+    [SerializeField] private Button button_RewardX2;
+    [SerializeField] private Button button_RewardX3;
+
 
     private GameManager gameManager;
 
@@ -157,8 +166,6 @@ public class UIManager : MonoBehaviour
         CloseAllPanels();
 
         OpenAlwaysOnUI();
-
-        OpenMainUI();
     }
 
     public void UpdateAllUI()
@@ -968,6 +975,49 @@ public class UIManager : MonoBehaviour
         OpenMainUI();
 
         profileCreationUI.SetActive(false);
+    }
+
+    #endregion
+
+    #region AFK Report UI
+
+    public void OpenAFKReportUI(long timeElapsed, double iridiumReward, double darkElixirReward)
+    {
+        CloseAllPanels();
+
+        button_NoThanks.onClick.AddListener(() => { CloseAFKReportUI(1, iridiumReward, darkElixirReward); });
+        button_NoThanks.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
+        button_RewardX2.onClick.AddListener(() => { CloseAFKReportUI(2, iridiumReward, darkElixirReward); });
+        button_NoThanks.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
+        button_RewardX3.onClick.AddListener(() => { CloseAFKReportUI(3, iridiumReward, darkElixirReward); });
+        button_NoThanks.onClick.AddListener(() => { gameManager.AudioManagerRef.Play("ButtonClick"); });
+
+        text_AFKTime.text = NumberFormatter.FormatNumber(timeElapsed, FormattingTypes.AFKTime);
+
+        text_IridiumReward.text = NumberFormatter.FormatNumber(iridiumReward, FormattingTypes.Iridium);
+        text_DarkElixirReward.text = NumberFormatter.FormatNumber(darkElixirReward, FormattingTypes.DarkElixir);
+
+        afkReportUI.SetActive(true);
+    }
+
+    public void CloseAFKReportUI(int multiplier, double iridiumReward, double darkElixirReward)
+    {
+        if (!afkReportUI.activeSelf) return;
+
+        button_NoThanks.onClick.RemoveAllListeners();
+        button_RewardX2.onClick.RemoveAllListeners();
+        button_RewardX3.onClick.RemoveAllListeners();
+
+        gameManager.playerData.iridium_Current += iridiumReward * multiplier;
+        gameManager.playerData.iridium_Total += iridiumReward * multiplier;
+
+        gameManager.playerData.darkElixir_Current += darkElixirReward * multiplier;
+        gameManager.playerData.darkElixir_Total += darkElixirReward * multiplier;
+
+        afkReportUI.SetActive(false);
+        OpenMainUI();
     }
 
     #endregion

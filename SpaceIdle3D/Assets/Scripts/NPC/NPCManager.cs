@@ -34,7 +34,6 @@ public class NPCManager : MonoBehaviour
                 float spawnChance = (float)(gameManager.playerData.iridium_PerSecond - minIPSToSpawnNPC) / (maxIPSToSpawnNPC - minIPSToSpawnNPC);
                 spawnChance = Mathf.Clamp(spawnChance, 0.25f, 0.80f);
 
-                Debug.Log("Trying to Spawn");
                 if(Random.Range(0f,1f) < spawnChance)
                 {
                     SpawnNPC();
@@ -45,7 +44,6 @@ public class NPCManager : MonoBehaviour
 
     public void SpawnNPC()
     {
-        Debug.Log("Spawning");
         int npcChoice = Random.Range(0, NPC_Prefabs.Count);
         int routeChoice = Random.Range(0, NPC_Routes.childCount);
 

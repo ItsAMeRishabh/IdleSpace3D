@@ -16,6 +16,7 @@ public enum FormattingTypes
     Stocks,
     StocksPrice,
     StocksTimer,
+    AFKTime,
     Level,
     Owned,
 }
@@ -71,6 +72,11 @@ public class NumberFormatter
         {
             TimeSpan time = TimeSpan.FromSeconds(number);
             return string.Format("{0:0}:{1:D2}:{2:D2}", time.Hours, time.Minutes, time.Seconds);
+        }
+        else if(format == FormattingTypes.AFKTime)
+        {
+            TimeSpan time = TimeSpan.FromSeconds(number);
+            return string.Format("{0:0}h:{1:D2}m:{2:D2}s", time.Hours, time.Minutes, time.Seconds);
         }
 
         if (number < 1000f)
