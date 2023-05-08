@@ -16,7 +16,10 @@ MonoBehaviour:
   troop_LockedSprite: {fileID: 21300000, guid: 663dac5b318e3e8448111c86f950eb85, type: 3}
   troop_UnlockedSprite: {fileID: 21300000, guid: 4b31884c4f93a944a823c91fcc2250c4,
     type: 3}
-  troop_Prefab: {fileID: 0}
+  troop_Prefab: {fileID: 8827858220071154008, guid: 98824f163332b474ea270b6b54ceefcc,
+    type: 3}
+  troop_SpawnParticleSystem: {fileID: 0}
+  troop_AfterReachAnimation: 
   troop_Level: 1
   troops_Owned: 0
   troop_BaseCost: 14500

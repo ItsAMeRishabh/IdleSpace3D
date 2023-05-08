@@ -5,10 +5,11 @@ using UnityEngine;
 public class Troop
 {
     public string troop_Name = "Name";
-    public Sprite troop_LockedSprite;
-    public Sprite troop_UnlockedSprite;
     public int troop_Level = 1;
     public int troops_Owned = 0;
+
+    [NonSerialized] public Sprite troop_UnlockedSprite;
+    [NonSerialized] public Sprite troop_LockedSprite;
     [NonSerialized] public double troop_BaseCost = 0;
     [NonSerialized] public double troop_CurrentCost = 0;
     [NonSerialized] public double troop_CostMultiplier = 1.25;
@@ -19,12 +20,15 @@ public class Troop
     [NonSerialized] public double troop_IridiumBoostPerLevel = 1.2;
     [NonSerialized] public double troop_IridiumMultiplier = 1;
     [NonSerialized] public GameObject troop_Prefab;
+    [NonSerialized] public string troop_AfterReachAnimation;
+    [NonSerialized] public GameObject troop_SpawnParticleSystem;
 
     public Troop(TroopSO so)
     {
         troop_Name = so.troop_Name;
         troop_LockedSprite = so.troop_LockedSprite;
         troop_UnlockedSprite = so.troop_UnlockedSprite;
+        troop_AfterReachAnimation = so.troop_AfterReachAnimation;
         troop_Level = so.troop_Level;
         troops_Owned = so.troops_Owned;
 
@@ -48,7 +52,7 @@ public class Troop
 
         troop_LockedSprite = so.troop_LockedSprite;
         troop_UnlockedSprite = so.troop_UnlockedSprite;
-
+        troop_AfterReachAnimation = so.troop_AfterReachAnimation;
         troop_BaseCost = so.troop_BaseCost;
         troop_CostMultiplier = so.troop_CostMultiplier;
         troop_CurrentCost = troop_BaseCost * Math.Pow(troop_CostMultiplier, troops_Owned);

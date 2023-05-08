@@ -42,6 +42,7 @@ public class NPCManager : MonoBehaviour
         }
     }
 
+    [ContextMenu("Spawn NPC")]
     public void SpawnNPC()
     {
         int npcChoice = Random.Range(0, NPC_Prefabs.Count);
@@ -54,7 +55,8 @@ public class NPCManager : MonoBehaviour
             finalRoute.Add(NPC_Routes.GetChild(routeChoice).GetChild(i));
         }
 
-        GameObject spawnedNPC = Instantiate(NPC_Prefabs[npcChoice], NPC_Routes.GetChild(routeChoice));
+        GameObject spawnedNPC = Instantiate(NPC_Prefabs[npcChoice]);
+        spawnedNPC.transform.position = NPC_Routes.GetChild(routeChoice).position;
         spawnedNPC.GetComponent<NPCMovement>().moveSpeed = NPC_MoveSpeed;
         spawnedNPC.GetComponent<NPCMovement>().rotationSpeed = NPC_RotateSpeed;
         spawnedNPC.GetComponent<NPCMovement>().StartMove(finalRoute);

@@ -25,6 +25,11 @@ public class BuildingManager : MonoBehaviour
     {
         CalculateNonSerializedTroop();
         InitializeNewBuildings();
+
+        foreach(Building building in ownedBuildings)
+        {
+            building.CheckSpawnConditions();
+        }
     }
 
     public void ClickedOnBuilding(Building building)
@@ -112,13 +117,7 @@ public class BuildingManager : MonoBehaviour
             {
                 TroopSO currentTroop = gameManager.BuildingManagerRef.GetTroopSO(currentBuildingSO, ownedBuildingDatas[i].building_OwnedTroops[j].troop_Name);
 
-                ownedBuildingDatas[i].building_OwnedTroops[j].troop_BaseCost = currentTroop.troop_BaseCost;
-                ownedBuildingDatas[i].building_OwnedTroops[j].troop_BaseIridiumPerSecond = currentTroop.troop_BaseIridiumPerSecond;
-                ownedBuildingDatas[i].building_OwnedTroops[j].troop_IridiumBoostPerLevel = currentTroop.troop_IridiumBoostPerLevel;
-                ownedBuildingDatas[i].building_OwnedTroops[j].troop_CostMultiplier = currentTroop.troop_CostMultiplier;
-
-                ownedBuildingDatas[i].building_OwnedTroops[j].troop_IridiumMultiplier = 1 * Math.Pow(ownedBuildingDatas[i].building_OwnedTroops[j].troop_IridiumBoostPerLevel, ownedBuildingDatas[i].building_OwnedTroops[j].troop_Level - 1);
-                ownedBuildingDatas[i].building_OwnedTroops[j].troop_CurrentCost = currentTroop.troop_BaseCost * Math.Pow(ownedBuildingDatas[i].building_OwnedTroops[j].troop_CostMultiplier, ownedBuildingDatas[i].building_OwnedTroops[j].troops_Owned);
+                ownedBuildingDatas[i].building_OwnedTroops[j] = new Troop(currentTroop, ownedBuildingDatas[i].building_OwnedTroops[j]);
             }
         }
 
@@ -283,6 +282,7 @@ public class BuildingManager : MonoBehaviour
                         }
                     }
                 }
+
                 building.Initialize();
 
                 ownedBuildings.Add(building);
@@ -401,6 +401,14 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
+            switch (selectedBuilding.buildingData.building_Name)
+            {
+                case "LASERVATORY": selectedBuilding.CheckLaservatorySpawn(); break;
+                case "MEGATRON DOCK": selectedBuilding.CheckMegatronSpawn(); break;
+                case "VAC3000": selectedBuilding.CheckBlackHoleSpawn(); break;
+                default: Debug.LogError($"Unknown Building {selectedBuilding.buildingData.building_Name}!"); break;
+            }
+
             if (gameManager.playerData.iridium_Current >= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
             {
                 gameManager.playerData.iridium_Current -= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;

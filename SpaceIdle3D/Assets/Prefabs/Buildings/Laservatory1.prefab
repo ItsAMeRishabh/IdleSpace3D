@@ -1410,6 +1410,7 @@ MonoBehaviour:
     building_Level: 1
     building_OwnedTroops: []
   upgradeEffect: {fileID: 0}
+  spawnPoint: {fileID: 0}
 --- !u!64 &5032860995317901524
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1968,12 +1969,12 @@ PrefabInstance:
     - target: {fileID: 8664317935869913828, guid: c230102f1a3955f4fb62c48fd15c7b37,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8664317936290903423, guid: c230102f1a3955f4fb62c48fd15c7b37,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c230102f1a3955f4fb62c48fd15c7b37, type: 3}

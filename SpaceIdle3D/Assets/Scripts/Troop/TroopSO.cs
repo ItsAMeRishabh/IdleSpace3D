@@ -9,6 +9,8 @@ public class TroopSO : ScriptableObject
     public Sprite troop_LockedSprite;
     public Sprite troop_UnlockedSprite;
     public GameObject troop_Prefab;
+    public GameObject troop_SpawnParticleSystem;
+    public string troop_AfterReachAnimation;
     public int troop_Level = 1;
     public int troops_Owned = 0;
     public double troop_BaseCost = 0;
