@@ -26,7 +26,7 @@ public class BuildingManager : MonoBehaviour
         CalculateNonSerializedTroop();
         InitializeNewBuildings();
 
-        foreach(Building building in ownedBuildings)
+        foreach (Building building in ownedBuildings)
         {
             building.CheckSpawnConditions();
         }
@@ -401,19 +401,21 @@ public class BuildingManager : MonoBehaviour
         }
         else
         {
-            switch (selectedBuilding.buildingData.building_Name)
-            {
-                case "LASERVATORY": selectedBuilding.CheckLaservatorySpawn(); break;
-                case "MEGATRON DOCK": selectedBuilding.CheckMegatronSpawn(); break;
-                case "VAC3000": selectedBuilding.CheckBlackHoleSpawn(); break;
-                default: Debug.LogError($"Unknown Building {selectedBuilding.buildingData.building_Name}!"); break;
-            }
-
             if (gameManager.playerData.iridium_Current >= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost)
             {
                 gameManager.playerData.iridium_Current -= selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost;
                 selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troops_Owned += 1;
                 selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost = (int)(selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CurrentCost * selectedBuilding.buildingData.building_OwnedTroops[troopIndex].troop_CostMultiplier);
+            }
+
+            switch (selectedBuilding.buildingData.building_Name)
+            {
+                case "TERRA MINE": break;
+                case "LASERVATORY": selectedBuilding.CheckLaservatorySpawn(); break;
+                case "MEGATRON DOCK": selectedBuilding.CheckMegatronSpawn(); break;
+                case "VAC3000": selectedBuilding.CheckBlackHoleSpawn(); break;
+                case "BOBO'S HUT": break;
+                default: Debug.LogError($"Unknown Building {selectedBuilding.buildingData.building_Name}!"); break;
             }
         }
 
