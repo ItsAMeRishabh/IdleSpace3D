@@ -168,6 +168,8 @@ public class GameManager : MonoBehaviour
         StartTickCoroutine(); //Setup the coroutine for the tick rate
 
         StartSaveCoroutine(); //Setup the coroutine for the save
+
+        FindObjectOfType<Stocker>().StartGame(this);
     }
 
     private void StartAllManagers()

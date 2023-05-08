@@ -17,11 +17,13 @@ MonoBehaviour:
   troop_UnlockedSprite: {fileID: 21300000, guid: 6613d53910374f14799ccbbe23e3fb21,
     type: 3}
   troop_Prefab: {fileID: 0}
+  troop_SpawnParticleSystem: {fileID: 0}
+  troop_AfterReachAnimation: 
   troop_Level: 1
   troops_Owned: 0
   troop_BaseCost: 1250000
   troop_CostMultiplier: 1.2
-  troop_BaseUpgradeCost: 0.1
+  troop_BaseUpgradeCost: 0.5
   troop_UpgradeCostMultiplier: 1.25
   troop_BaseIridiumPerSecond: 1200
   troop_IridiumBoostPerLevel: 1.5

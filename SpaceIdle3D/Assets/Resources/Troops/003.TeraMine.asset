@@ -24,7 +24,7 @@ MonoBehaviour:
   troops_Owned: 0
   troop_BaseCost: 14500
   troop_CostMultiplier: 1.2
-  troop_BaseUpgradeCost: 0.1
+  troop_BaseUpgradeCost: 0.3
   troop_UpgradeCostMultiplier: 1.25
   troop_BaseIridiumPerSecond: 58
   troop_IridiumBoostPerLevel: 1.5

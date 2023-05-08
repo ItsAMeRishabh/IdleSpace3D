@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   troop_Name: Miner
   troop_LockedSprite: {fileID: 21300000, guid: 233e63e6a4e6f5b4bb9c802c98d70ddd, type: 3}
-  troop_UnlockedSprite: {fileID: 21300000, guid: 13023d3b0486c614d80d4fe109e3d7d0,
+  troop_UnlockedSprite: {fileID: 21300000, guid: 4331501ebe274c94e815e9608338e0b5,
     type: 3}
   troop_Prefab: {fileID: 2671814863780956003, guid: ee39d57b55cdacc489f9e6c093207456,
     type: 3}
