@@ -5,10 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/GameScenes/HarshTestingScene.unity
-    guid: 304815ae234232e45afeedf76dd15f28
+    path: Assets/GameScenes/GameScene.unity
+    guid: 792d58eff6ae2554bbcaa64ff30aef66
   m_configObjects: {}

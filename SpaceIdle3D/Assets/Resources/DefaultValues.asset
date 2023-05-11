@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: DefaultValues
   m_EditorClassIdentifier: 
   maxIdleTime: 3600
-  iridium_Total: 9999999999
-  iridium_Current: 9999999999
+  iridium_Total: 99999999999999
+  iridium_Current: 99999999999999
   iridium_PerSecond: 0
   darkElixir_Total: 0
   darkElixir_Current: 0
