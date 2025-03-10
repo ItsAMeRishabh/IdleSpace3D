@@ -3,65 +3,71 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public Sound[] sounds;
-    public Sound[] music;
-    public static AudioManager audioManagerInstance;
+	public Sound[] sounds;
+	public Sound[] music;
+	public static AudioManager Instance { get; private set; }
 
-    public void WakeUp()
-    {
-        if (audioManagerInstance == null)
-            audioManagerInstance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+	public void Awake()
+	{
+		if ( Instance != null && Instance != this )
+		{
+			Destroy( gameObject );
+			return;
+		}
+		else
+		{
+			Instance = this;
+		}
 
-        DontDestroyOnLoad(gameObject);
+		DontDestroyOnLoad( gameObject );
 
-        foreach (Sound s in sounds)
-        {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop;
-        }
+		foreach ( Sound s in sounds )
+		{
+			s.source = gameObject.AddComponent<AudioSource>();
+			s.source.clip = s.clip;
+			s.source.volume = s.volume;
+			s.source.pitch = s.pitch;
+			s.source.loop = s.loop;
+		}
 
-        foreach (Sound m in music)
-        {
-            m.source = gameObject.AddComponent<AudioSource>();
-            m.source.clip = m.clip;
-            m.source.volume = m.volume;
-            m.source.pitch = m.pitch;
-            m.source.loop = m.loop;
-        }
-    }
+		foreach ( Sound m in music )
+		{
+			m.source = gameObject.AddComponent<AudioSource>();
+			m.source.clip = m.clip;
+			m.source.volume = m.volume;
+			m.source.pitch = m.pitch;
+			m.source.loop = m.loop;
+		}
+	}
 
-    public void StartGame()
-    {
-        ChangeTrack();
-    }
+	public void StartGame()
+	{
+		ChangeTrack();
+	}
 
-    public void Play(string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
+	public void Play( string name )
+	{
+		Sound s = Array.Find( sounds, sound => sound.name == name );
 
-        if (s == null)
-        {
-            Debug.LogWarning("Sound: " + name + " not found!");
-            return;
-        }
+		if ( s == null )
+		{
+			Debug.LogWarning( "Sound: " + name + " not found!" );
+			return;
+		}
 
-        s.source.Play();
-    }
+		s.source.Play();
+	}
 
-    public void ChangeTrack()
-    {
-        if (music.Length <= 0) return;
-        int trackNumber = UnityEngine.Random.Range(0, music.Length);
-        Sound m = music[trackNumber];
-        m.source.Play();
-        Invoke("ChangeTrack", m.clip.length);
-    }
+	public void ChangeTrack()
+	{
+		if ( music.Length <= 0 )
+		{
+			return;
+		}
+
+		int trackNumber = UnityEngine.Random.Range( 0, music.Length );
+		Sound m = music[ trackNumber ];
+		m.source.Play();
+		Invoke( "ChangeTrack", m.clip.length );
+	}
 }
