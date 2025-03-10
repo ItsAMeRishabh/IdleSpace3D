@@ -16,7 +16,6 @@ public class NewUIManager : MonoBehaviour
 		if ( alwaysOnUI != null )
 		{
 			alwaysOnUI.ShowScreen();
-			alwaysOnUI.InitializeScreen();
 			activeScreens.Add( alwaysOnUI );
 		}
 	}

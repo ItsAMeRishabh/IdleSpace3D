@@ -23,6 +23,8 @@ public abstract class BaseScreen : MonoBehaviour
 	public virtual void ShowScreen()
 	{
 		gameObject.SetActive( true );
+
+		InitializeScreen();
 	}
 
 	public abstract void InitializeScreen();
